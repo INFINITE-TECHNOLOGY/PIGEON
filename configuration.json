@@ -1,0 +1,16 @@
+{
+  "queues": [
+    {
+      "name": "EchoTestQueue",
+      "subscribers": [
+        {
+          "name": "EchoTestSubscriber",
+          "url": "https://i-t.io/TPN/EchoTest",
+          "retryCount": 0,
+          "normalThreadCount": 4,
+          "retryThreadCount": 0
+        }
+      ]
+    }
+  ]
+}
