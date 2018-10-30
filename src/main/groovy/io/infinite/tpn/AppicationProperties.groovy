@@ -14,4 +14,7 @@ class AppicationProperties {
     @Value('${tpn.splitter.poll.period.milliseconds}')
     public Long splitterPollPeriodMilliseconds
 
+    @Value('${tpn.master.poll.period.milliseconds}')
+    public Long masterPollPeriodMilliseconds
+
 }

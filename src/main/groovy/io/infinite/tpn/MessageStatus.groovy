@@ -3,8 +3,11 @@ package io.infinite.tpn
 enum MessageStatus {
 
     NEW("new"),
-    SPLITTED("splitted"),
-    READY_FOR_SENDING("ready_for_sending");
+    WAITING_FOR_MASTER_AFTER_RESTART("waiting_for_master_after_restart"),
+    SPLIT("split"),
+    DUPLICATE("duplicate"),
+    WAITING_FOR_MASTER("waiting_for_master"),
+    WAITING_FOR_WORKER("waiting_for_worker");
 
     private final String messageStatus
 

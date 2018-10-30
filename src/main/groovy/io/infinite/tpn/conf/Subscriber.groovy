@@ -2,14 +2,19 @@ package io.infinite.tpn.conf
 
 class Subscriber {
 
+    /**
+     * Subscriber Name, unique within all Queues.
+     */
     String name
 
     String url
 
-    Integer retryCount
+    Integer maxRetryCount = 0
 
-    Integer normalThreadCount
+    Integer resendIntervalSeconds = 86400
 
-    Integer retryThreadCount
+    Integer normalThreadCount = 4
+
+    Integer retryThreadCount = 0
 
 }

@@ -1,11 +1,8 @@
-package io.infinite.tpn.db
+package io.infinite.tpn.springdatarest
 
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.GenerationType
-import javax.persistence.Id
-import javax.persistence.Table
+import com.fasterxml.jackson.annotation.JsonRawValue
+
+import javax.persistence.*
 
 @Entity
 @Table(name = "messages")
@@ -17,11 +14,12 @@ class SourceMessage {
     Long id
 
     @Column(name = "TXN_ID")
-    String sourceId
+    String externalId
 
     @Column(name = "SOURCE")
     String sourceName
 
+    @Lob
     @Column(name = "PAYLOAD")
     String payload
 
@@ -30,5 +28,8 @@ class SourceMessage {
 
     @Column(name = "STATUS")
     String status
+
+    @Column(name = "insert_time")
+    Date insertTime = new Date()
 
 }

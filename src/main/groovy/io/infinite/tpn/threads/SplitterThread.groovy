@@ -5,15 +5,15 @@ import io.infinite.blackbox.BlackBoxLevel
 import io.infinite.tpn.AppicationProperties
 import io.infinite.tpn.MessageStatus
 import io.infinite.tpn.conf.Queue
-import io.infinite.tpn.db.DestinationMessage
-import io.infinite.tpn.db.DestinationMessageRepository
-import io.infinite.tpn.db.SourceMessage
-import io.infinite.tpn.db.SourceMessageRepository
+import io.infinite.tpn.springdatarest.DestinationMessage
+import io.infinite.tpn.springdatarest.DestinationMessageRepository
+import io.infinite.tpn.springdatarest.SourceMessage
+import io.infinite.tpn.springdatarest.SourceMessageRepository
 import org.springframework.beans.factory.annotation.Autowired
 
 class SplitterThread extends Thread {
 
-    Queue channel
+    Queue queue
 
     @Autowired
     SourceMessageRepository sourceMessageRepository
@@ -25,28 +25,29 @@ class SplitterThread extends Thread {
     AppicationProperties applicationProperties
 
     @BlackBox(blackBoxLevel = BlackBoxLevel.EXPRESSION)
-    SplitterThread(Queue channel) {
-        this.channel = channel
+    SplitterThread(Queue queue) {
+        this.queue = queue
     }
 
     @BlackBox(blackBoxLevel = BlackBoxLevel.EXPRESSION)
     @Override
     void run() {
         while (true) {
-            Set<SourceMessage> sourceMessages = sourceMessageRepository.findByQueueNameAndStatus(channel.getName(), MessageStatus.NEW.value())
+            Set<SourceMessage> sourceMessages = sourceMessageRepository.findByQueueNameAndStatus(queue.getName(), MessageStatus.NEW.value())
             if (sourceMessages.size() > 0) {
                 Set<DestinationMessage> destinationMessages = new HashSet<>()
-                sourceMessages.each {sourceMessage->
-                    channel.subscribers.each {subscriber->
+                sourceMessages.each { sourceMessage ->
+                    queue.subscribers.each { subscriber ->
                         DestinationMessage destinationMessage = new DestinationMessage(sourceMessage)
                         destinationMessage.setSubscriberName(subscriber.getName())
-                        destinationMessage.setRetryCount(subscriber.getRetryCount())
+                        destinationMessage.setRetryCount(subscriber.getMaxRetryCount())
                         destinationMessage.setUrl(subscriber.getUrl())
-                        destinationMessage.setStatus(MessageStatus.READY_FOR_SENDING.value())
+                        destinationMessage.setStatus(MessageStatus.WAITING_FOR_MASTER.value())
                         destinationMessages.add(destinationMessage)
                     }
-                    sourceMessage.setStatus(MessageStatus.SPLITTED.value())
+                    sourceMessage.setStatus(MessageStatus.SPLIT.value())
                 }
+                //todo: make transactional
                 sourceMessageRepository.save(sourceMessages)
                 destinationMessageRepository.save(destinationMessages)
             }

@@ -1,4 +1,4 @@
-package io.infinite.tpn.db
+package io.infinite.tpn.springdatarest
 
 
 import javax.persistence.*
@@ -22,6 +22,8 @@ class DestinationMessage {
     Integer retryCount
 
     String status
+
+    String threadName
 
     DestinationMessage() {
     }
