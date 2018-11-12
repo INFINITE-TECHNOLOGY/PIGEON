@@ -3,7 +3,7 @@ package io.infinite.tpn.conf
 class OutputQueue {
 
     /**
-     * OutputQueue Name, unique within all Queues.
+     * OutputQueue Name, must be unique within all Queues.
      */
     String name
 

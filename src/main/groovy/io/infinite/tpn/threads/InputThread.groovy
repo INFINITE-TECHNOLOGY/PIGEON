@@ -50,7 +50,7 @@ class InputThread extends Thread {
                     inputMessage.getOutputMessages().addAll(outputMessages)
                     inputMessage.setStatus(MessageStatuses.SPLIT.value())
                 }
-                outputMessageRepository.save(outputMessages)
+                inputMessageRepository.save(inputMessages)
             }
             sleep(applicationProperties.inputThreadPollPeriodMilliseconds)
         }

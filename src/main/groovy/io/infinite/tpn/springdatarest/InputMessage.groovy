@@ -30,7 +30,7 @@ class InputMessage {
     @Column(name = "insert_time")
     Date insertTime = new Date()
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "Input2output")
     Set<OutputMessage> outputMessages = new HashSet<>()
 
