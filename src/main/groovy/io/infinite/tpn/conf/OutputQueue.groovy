@@ -17,4 +17,6 @@ class OutputQueue {
 
     Integer retryThreadCount = 0
 
+    String conversionModuleName
+
 }

@@ -13,7 +13,7 @@ class OutputMessage {
     Long id
 
     @ManyToOne(fetch = FetchType.EAGER)
-    InputMessage sourceMessage
+    InputMessage inputMessage
 
     String outputQueueName
 
@@ -30,7 +30,7 @@ class OutputMessage {
     OutputMessage() {
     }
 
-    OutputMessage(InputMessage sourceMessage) {
-        this.sourceMessage = sourceMessage
+    OutputMessage(InputMessage inputMessage) {
+        this.inputMessage = inputMessage
     }
 }

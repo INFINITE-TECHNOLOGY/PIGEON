@@ -40,13 +40,13 @@ abstract class OutputThread extends Thread {
 
     @BlackBox(blackBoxLevel = BlackBoxLevel.EXPRESSION)
     void workerEnqueue(OutputMessage outputMessage) {
-        SenderThread workerThread = ++senderThreadRobin
+        SenderThread senderThread = ++senderThreadRobin.iterator()
         outputMessage.setStatus(MessageStatuses.WAITING.value())
-        outputMessage.setThreadName(workerThread.getName())
+        outputMessage.setThreadName(senderThread.getName())
         outputMessageRepository.save(outputMessage)
-        workerThread.getSendingQueue().put(outputMessage)
-        synchronized (workerThread) {
-            workerThread.notify()
+        senderThread.getSendingQueue().put(outputMessage)
+        synchronized (senderThread) {
+            senderThread.notify()
         }
     }
 
