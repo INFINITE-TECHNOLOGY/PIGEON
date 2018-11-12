@@ -1,12 +1,12 @@
 {
-  "queues": [
+  "inputQueues": [
     {
-      "name": "EchoTestQueue",
-      "subscribers": [
+      "name": "InputQueue",
+      "outputQueues": [
         {
-          "name": "EchoTestSubscriber",
+          "name": "OutputQueue",
           "url": "https://i-t.io/TPN/EchoTest",
-          "retryCount": 0,
+          "maxRetryCount": 0,
           "normalThreadCount": 4,
           "retryThreadCount": 0
         }

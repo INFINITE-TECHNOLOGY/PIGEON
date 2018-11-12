@@ -1,9 +1,9 @@
 package io.infinite.tpn.conf
 
-class Subscriber {
+class OutputQueue {
 
     /**
-     * Subscriber Name, unique within all Queues.
+     * OutputQueue Name, unique within all Queues.
      */
     String name
 

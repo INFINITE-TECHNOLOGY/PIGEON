@@ -12,21 +12,18 @@ class RoundRobin<Type> extends ArrayList<Type> {
     Iterator<Type> iterator() {
         return new Iterator<Type>() {
 
-            @BlackBox(blackBoxLevel = BlackBoxLevel.EXPRESSION)
             @Override
             boolean hasNext() {
                 return true
             }
 
-            @BlackBox(blackBoxLevel = BlackBoxLevel.EXPRESSION)
             @Override
             Type next() {
                 Type result = get(index)
-                index = ((index + 1) % size())
+                index = ((index + 1) % RoundRobin.this.size())
                 return result
             }
 
-            @BlackBox(blackBoxLevel = BlackBoxLevel.EXPRESSION)
             @Override
             void remove() {
                 throw new Exception("Unable to remove from RoundRobin")

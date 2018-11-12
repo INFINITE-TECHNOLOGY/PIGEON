@@ -4,11 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import io.infinite.blackbox.BlackBox
 import io.infinite.blackbox.BlackBoxLevel
 import io.infinite.tpn.conf.Configuration
-import io.infinite.tpn.other.Utils
-import io.infinite.tpn.threads.MasterThread
-import io.infinite.tpn.threads.MasterThreadWithNoRetries
-import io.infinite.tpn.threads.MasterThreadWithRetries
-import io.infinite.tpn.threads.SplitterThread
+import io.infinite.tpn.threads.InputThread
+import io.infinite.tpn.threads.OutputThread
+import io.infinite.tpn.threads.OutputThreadNormal
+import io.infinite.tpn.threads.OutputThreadRetry
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.SpringApplication
@@ -33,25 +32,28 @@ class App implements CommandLineRunner {
     @Override
     void run(String... args) throws Exception {
         System.setProperty("blackbox.mode", appicationProperties.blackboxMode)
+        Thread.currentThread().setName("App")
         runWithLogging()
     }
 
     @BlackBox(blackBoxLevel = BlackBoxLevel.EXPRESSION)
     void runWithLogging() {
         Configuration configuration = new ObjectMapper().readValue(new File("./configuration.json").getText(), Configuration.class)
-        configuration.queues.each {queue->
-            SplitterThread splitterThread = new SplitterThread(queue)
-            applicationContext.getAutowireCapableBeanFactory().autowireBean(splitterThread)
-            splitterThread.start()
-            queue.subscribers.each {subscriber->
-                MasterThread masterThread
-                if (subscriber.maxRetryCount == 0) {
-                    masterThread = new MasterThreadWithNoRetries(subscriber)
-                } else {
-                    masterThread = new MasterThreadWithRetries(subscriber)
+        configuration.inputQueues.each { inputQueue ->
+            InputThread inputThread = new InputThread(inputQueue)
+            applicationContext.getAutowireCapableBeanFactory().autowireBean(inputThread)
+            inputThread.start()
+            inputQueue.outputQueues.each { outputQueue ->
+                OutputThread outputThreadNormal
+                outputThreadNormal = new OutputThreadNormal(outputQueue)
+                applicationContext.getAutowireCapableBeanFactory().autowireBean(outputThreadNormal)
+                outputThreadNormal.start()
+                if (outputQueue.maxRetryCount > 0) {
+                    OutputThread outputThreadRetry
+                    outputThreadRetry = new OutputThreadRetry(outputQueue)
+                    applicationContext.getAutowireCapableBeanFactory().autowireBean(outputThreadRetry)
+                    outputThreadRetry.start()
                 }
-                applicationContext.getAutowireCapableBeanFactory().autowireBean(masterThread)
-                masterThread.start()
             }
         }
     }

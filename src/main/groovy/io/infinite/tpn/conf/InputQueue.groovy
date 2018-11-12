@@ -1,9 +1,9 @@
 package io.infinite.tpn.conf
 
-class Queue {
+class InputQueue {
 
     String name
 
-    Subscriber[] subscribers
+    OutputQueue[] outputQueues
 
 }

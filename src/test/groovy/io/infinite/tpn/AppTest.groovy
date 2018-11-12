@@ -3,7 +3,7 @@ package io.infinite.tpn
 import spock.lang.Specification
 
 class AppTest extends Specification {
-    def "application has a greeting"() {
+    /*def "application has a greeting"() {
         setup:
         def app = new App()
 
@@ -12,5 +12,5 @@ class AppTest extends Specification {
 
         then:
         result != null
-    }
+    }*/
 }

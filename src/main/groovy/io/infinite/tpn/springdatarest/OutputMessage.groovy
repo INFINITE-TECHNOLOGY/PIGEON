@@ -4,8 +4,8 @@ package io.infinite.tpn.springdatarest
 import javax.persistence.*
 
 @Entity
-@Table(name = "DestinationMessages")
-class DestinationMessage {
+@Table(name = "OutputMessages")
+class OutputMessage {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -13,22 +13,24 @@ class DestinationMessage {
     Long id
 
     @ManyToOne(fetch = FetchType.EAGER)
-    SourceMessage sourceMessage
+    InputMessage sourceMessage
 
-    String subscriberName
+    String outputQueueName
 
     String url
 
-    Integer retryCount
+    Integer retryCount = 0
 
     String status
 
     String threadName
 
-    DestinationMessage() {
+    Date lastSendTime
+
+    OutputMessage() {
     }
 
-    DestinationMessage(SourceMessage sourceMessage) {
+    OutputMessage(InputMessage sourceMessage) {
         this.sourceMessage = sourceMessage
     }
 }

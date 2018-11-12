@@ -1,12 +1,10 @@
 package io.infinite.tpn.springdatarest
 
-import com.fasterxml.jackson.annotation.JsonRawValue
-
 import javax.persistence.*
 
 @Entity
 @Table(name = "messages")
-class SourceMessage {
+class InputMessage {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,12 +22,16 @@ class SourceMessage {
     String payload
 
     @Column(name = "ENDPOINT")
-    String queueName
+    String inputQueueName
 
     @Column(name = "STATUS")
     String status
 
     @Column(name = "insert_time")
     Date insertTime = new Date()
+
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "Input2output")
+    Set<OutputMessage> outputMessages = new HashSet<>()
 
 }

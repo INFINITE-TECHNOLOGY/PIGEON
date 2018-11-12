@@ -11,10 +11,10 @@ class AppicationProperties {
     @Value('${blackbox.mode}')
     public String blackboxMode
 
-    @Value('${tpn.splitter.poll.period.milliseconds}')
-    public Long splitterPollPeriodMilliseconds
+    @Value('${tpn.input.thread.poll.period.milliseconds}')
+    public Long inputThreadPollPeriodMilliseconds
 
-    @Value('${tpn.master.poll.period.milliseconds}')
-    public Long masterPollPeriodMilliseconds
+    @Value('${tpn.output.thread.poll.period.milliseconds}')
+    public Long outputThreadPollPeriodMilliseconds
 
 }
