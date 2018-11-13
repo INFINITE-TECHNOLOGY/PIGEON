@@ -5,11 +5,12 @@
       "outputQueues": [
         {
           "name": "OutputQueue",
-          "url": "https://i-t.io/TPN/EchoTest",
+          "url": "http://localhost:8089/tpn/inputMessages",
           "maxRetryCount": 0,
           "normalThreadCount": 4,
           "retryThreadCount": 0,
-          "conversionModuleName": "SampleConversionModule.groovy"
+          "conversionModuleName": "SampleConversionModule.groovy",
+          "senderClassName": "io.infinite.tpn.http.SenderDefaultHttp"
         }
       ]
     }

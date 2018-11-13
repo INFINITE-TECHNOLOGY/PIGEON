@@ -3,7 +3,7 @@ package io.infinite.tpn.threads
 import groovy.time.TimeCategory
 import io.infinite.blackbox.BlackBox
 import io.infinite.blackbox.BlackBoxLevel
-import io.infinite.tpn.MessageStatusSets
+import io.infinite.tpn.other.MessageStatusSets
 import io.infinite.tpn.conf.OutputQueue
 import io.infinite.tpn.springdatarest.OutputMessage
 

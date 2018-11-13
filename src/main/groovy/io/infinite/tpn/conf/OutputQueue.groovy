@@ -19,4 +19,6 @@ class OutputQueue {
 
     String conversionModuleName
 
+    String senderClassName
+
 }

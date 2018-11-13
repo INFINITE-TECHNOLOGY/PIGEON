@@ -3,7 +3,7 @@ package io.infinite.tpn.threads
 import io.infinite.blackbox.BlackBox
 import io.infinite.blackbox.BlackBoxLevel
 import io.infinite.tpn.conf.OutputQueue
-import io.infinite.tpn.http.HttpMessage
+import io.infinite.tpn.http.HttpMessageAbstract
 import io.infinite.tpn.springdatarest.InputMessageRepository
 import io.infinite.tpn.springdatarest.OutputMessage
 import org.springframework.beans.factory.annotation.Autowired
@@ -19,7 +19,7 @@ class SenderThread extends Thread {
 
     LinkedBlockingQueue<OutputMessage> sendingQueue = new LinkedBlockingQueue<>()
 
-    GroovyScriptEngine groovyScriptEngine = new GroovyScriptEngine()
+    GroovyScriptEngine groovyScriptEngine = new GroovyScriptEngine("./")
 
     @BlackBox(blackBoxLevel = BlackBoxLevel.EXPRESSION)
     SenderThread(OutputQueue outputQueue) {
@@ -35,7 +35,7 @@ class SenderThread extends Thread {
                 sendMessage(sendingQueue.poll())
             }
             synchronized (this) {
-                wait()
+                this.wait()
             }
         }
     }
@@ -43,11 +43,13 @@ class SenderThread extends Thread {
     @BlackBox(blackBoxLevel = BlackBoxLevel.EXPRESSION)
     void sendMessage(OutputMessage outputMessage) {
         Binding binding = new Binding()
-        HttpMessage httpMessage = new HttpMessage()
+        HttpMessageAbstract httpMessage = new HttpMessageAbstract()
         binding.setVariable("outputMessage", outputMessage)
         binding.setVariable("inputMessage", outputMessage.getInputMessage())
-        binding.setVariable("httpMessage", httpMessage)
-        groovyScriptEngine.run(outputQueue.getConversionModuleName(), binding)
+        binding.setVariable("httpRequest", httpMessage)
+        /*\/\/\/\/\/\/\/\/*/
+        groovyScriptEngine.run(outputQueue.getConversionModuleName(), binding)//<<<<<<<<<<<<<conversion happens here
+        /*/\/\/\/\/\/\/\/\*/
     }
 
 }

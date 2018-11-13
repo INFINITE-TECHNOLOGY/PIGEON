@@ -1,4 +1,4 @@
-package io.infinite.tpn
+package io.infinite.tpn.other
 
 enum MessageStatusSets {
 

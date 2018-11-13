@@ -3,7 +3,7 @@ package io.infinite.tpn.threads
 import io.infinite.blackbox.BlackBox
 import io.infinite.blackbox.BlackBoxLevel
 import io.infinite.tpn.AppicationProperties
-import io.infinite.tpn.MessageStatuses
+import io.infinite.tpn.other.MessageStatuses
 import io.infinite.tpn.conf.InputQueue
 import io.infinite.tpn.springdatarest.OutputMessage
 import io.infinite.tpn.springdatarest.OutputMessageRepository
