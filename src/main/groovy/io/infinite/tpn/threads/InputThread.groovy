@@ -41,7 +41,7 @@ class InputThread extends Thread {
                     inputQueue.outputQueues.each { outputQueue ->
                         OutputMessage outputMessage = new OutputMessage(inputMessage)
                         outputMessage.setOutputQueueName(outputQueue.getName())
-                        outputMessage.setRetryCount(outputQueue.getMaxRetryCount())
+                        outputMessage.setAttemptsCount(outputQueue.getMaxRetryCount())
                         outputMessage.setUrl(outputQueue.getUrl())
                         outputMessage.setStatus(MessageStatuses.NEW.value())
                         outputMessage.setInputMessage(inputMessage)

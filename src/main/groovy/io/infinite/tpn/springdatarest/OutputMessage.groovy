@@ -19,13 +19,17 @@ class OutputMessage {
 
     String url
 
-    Integer retryCount = 0
+    Integer attemptsCount = 0
 
     String status
 
     String threadName
 
     Date lastSendTime
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "Output2httplog")
+    Set<HttpLog> httpLogs = new HashSet<>()
 
     OutputMessage() {
     }

@@ -25,7 +25,7 @@ interface OutputMessageRepository extends JpaRepository<OutputMessage, Long> {
     @Query("""select o from OutputMessage o where
         outputQueueName = :outputQueueName and
         status in :messageStatusList and
-        retryCount <= :maxRetryCount and
+        attemptsCount <= :maxRetryCount and
         coalesce(lastSendTime, current_date) < :maxLastSendTime
         order by id asc""")
     LinkedHashSet<OutputMessage> masterQueryRetry(

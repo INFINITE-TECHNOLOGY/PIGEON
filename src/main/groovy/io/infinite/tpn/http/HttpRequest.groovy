@@ -9,5 +9,6 @@ class HttpRequest extends HttpMessageAbstract {
     String url
     String requestStatus
     String exceptionString
+    Date sendDate
 
 }

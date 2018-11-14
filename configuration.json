@@ -5,7 +5,7 @@
       "outputQueues": [
         {
           "name": "OutputQueue",
-          "url": "http://localhost:8089/tpn/inputMessages",
+          "url": "https://localhost:8089/tpn/inputMessages",
           "maxRetryCount": 0,
           "normalThreadCount": 4,
           "retryThreadCount": 0,

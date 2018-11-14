@@ -1,9 +1,9 @@
 def inputMessage = binding.getVariable("inputMessage")
 def outputMessage = binding.getVariable("outputMessage")
-def httpMessage = binding.getVariable("httpMessage")
+def httpRequest = binding.getVariable("httpRequest")
 
-httpMessage.method = "POST"
-httpMessage.headers = [
+httpRequest.method = "POST"
+httpRequest.headers = [
         "content-type": "application/json"
 ]
-httpMessage.body = inputMessage.payload
+httpRequest.body = inputMessage.payload

@@ -10,6 +10,7 @@ import java.security.SecureRandom
 
 class SenderDefaultHttpsUnsecure extends SenderDefault {
 
+    @BlackBox(blackBoxLevel = BlackBoxLevel.EXPRESSION)
     SenderDefaultHttpsUnsecure(HttpRequest httpRequest) {
         super(httpRequest)
         SSLContext sslContext = SSLContext.getInstance("TLS")
