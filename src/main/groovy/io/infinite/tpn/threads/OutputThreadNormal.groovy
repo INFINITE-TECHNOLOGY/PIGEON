@@ -5,14 +5,15 @@ import io.infinite.blackbox.BlackBoxLevel
 import io.infinite.tpn.other.MessageStatusSets
 import io.infinite.tpn.conf.OutputQueue
 import io.infinite.tpn.springdatarest.OutputMessage
+import org.springframework.context.ApplicationContext
 
 class OutputThreadNormal extends OutputThread {
 
     Long lastId
 
     @BlackBox(blackBoxLevel = BlackBoxLevel.EXPRESSION)
-    OutputThreadNormal(OutputQueue outputQueue) {
-        super(outputQueue)
+    OutputThreadNormal(OutputQueue outputQueue, ApplicationContext applicationContext) {
+        super(outputQueue, applicationContext)
     }
 
     @BlackBox(blackBoxLevel = BlackBoxLevel.EXPRESSION)

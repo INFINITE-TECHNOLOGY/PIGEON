@@ -10,6 +10,7 @@ import io.infinite.tpn.springdatarest.OutputMessage
 import io.infinite.tpn.springdatarest.OutputMessageRepository
 import io.infinite.tpn.springdatarest.InputMessageRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.ApplicationContext
 
 abstract class OutputThread extends Thread {
 
@@ -26,11 +27,12 @@ abstract class OutputThread extends Thread {
     AppicationProperties applicationProperties
 
     @BlackBox(blackBoxLevel = BlackBoxLevel.EXPRESSION)
-    OutputThread(OutputQueue outputQueue) {
+    OutputThread(OutputQueue outputQueue, ApplicationContext applicationContext) {
         setName(outputQueue.getName())
         this.outputQueue = outputQueue
         [1..outputQueue.normalThreadCount].each {
             SenderThread senderThread = new SenderThread(outputQueue)
+            applicationContext.getAutowireCapableBeanFactory().autowireBean(senderThread)
             senderThreadRobin.add(senderThread)
             senderThread.start()
         }

@@ -1,5 +1,6 @@
 package io.infinite.tpn.http
 
+import groovy.util.logging.Slf4j
 import io.infinite.blackbox.BlackBox
 import io.infinite.blackbox.BlackBoxLevel
 
@@ -8,6 +9,7 @@ import javax.net.ssl.KeyManager
 import javax.net.ssl.SSLContext
 import java.security.SecureRandom
 
+@Slf4j
 class SenderDefaultHttpsUnsecure extends SenderDefault {
 
     @BlackBox(blackBoxLevel = BlackBoxLevel.EXPRESSION)

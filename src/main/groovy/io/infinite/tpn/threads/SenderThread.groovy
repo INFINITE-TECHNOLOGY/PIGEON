@@ -7,11 +7,13 @@ import io.infinite.tpn.conf.OutputQueue
 import io.infinite.tpn.http.HttpRequest
 import io.infinite.tpn.http.SenderAbstract
 import io.infinite.tpn.other.MessageStatuses
+import io.infinite.tpn.other.TpnException
 import io.infinite.tpn.springdatarest.HttpLog
 import io.infinite.tpn.springdatarest.InputMessageRepository
 import io.infinite.tpn.springdatarest.OutputMessage
 import io.infinite.tpn.springdatarest.OutputMessageRepository
 import org.apache.commons.lang3.exception.ExceptionUtils
+import org.codehaus.groovy.runtime.StackTraceUtils
 import org.springframework.beans.factory.annotation.Autowired
 
 import java.util.concurrent.LinkedBlockingQueue
@@ -50,18 +52,18 @@ class SenderThread extends Thread {
         }
     }
 
-    @BlackBox(blackBoxLevel = BlackBoxLevel.EXPRESSION)
+    @BlackBox(blackBoxLevel = BlackBoxLevel.EXPRESSION, suppressExceptions = true)
     void sendMessage(OutputMessage outputMessage) {
-        Binding binding = new Binding()
-        HttpRequest httpRequest = new HttpRequest()
-        httpRequest.setUrl(outputQueue.getUrl())
-        binding.setVariable("outputMessage", outputMessage)
-        binding.setVariable("inputMessage", outputMessage.getInputMessage())
-        binding.setVariable("httpRequest", httpRequest)
-        /*\/\/\/\/\/\/\/\/*/
-        groovyScriptEngine.run(outputQueue.getConversionModuleName(), binding)//<<<<<<<<<<<<<conversion happens here
-        /*/\/\/\/\/\/\/\/\*/
         try {
+            Binding binding = new Binding()
+            HttpRequest httpRequest = new HttpRequest()
+            httpRequest.setUrl(outputQueue.getUrl())
+            binding.setVariable("outputMessage", outputMessage)
+            binding.setVariable("inputMessage", outputMessage.getInputMessage())
+            binding.setVariable("httpRequest", httpRequest)
+            /*\/\/\/\/\/\/\/\/*/
+            groovyScriptEngine.run(outputQueue.getConversionModuleName(), binding)//<<<<<<<<<<<<<conversion happens here
+            /*/\/\/\/\/\/\/\/\*/
             SenderAbstract senderAbstract = Class.forName(outputQueue.getSenderClassName()).newInstance(httpRequest) as SenderAbstract
             outputMessage.setStatus(MessageStatuses.SENDING.value())
             outputMessageRepository.save(outputMessage)
@@ -72,8 +74,11 @@ class SenderThread extends Thread {
             outputMessage.setStatus(httpRequest.getRequestStatus())
             outputMessage.setAttemptsCount(outputMessage.getAttemptsCount() + 1)
             outputMessageRepository.save(outputMessage)
-        } catch (Exception e) {
-            log.error(ExceptionUtils.getStackTrace(e))
+        } catch (Throwable t) {
+            outputMessage.setExceptionString(new TpnException(t).serialize())
+            outputMessage.setStatus(MessageStatuses.EXCEPTION.value())
+            outputMessageRepository.save(outputMessage)
+            throw t
         }
     }
 

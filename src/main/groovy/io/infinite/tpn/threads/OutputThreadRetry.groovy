@@ -6,12 +6,13 @@ import io.infinite.blackbox.BlackBoxLevel
 import io.infinite.tpn.other.MessageStatusSets
 import io.infinite.tpn.conf.OutputQueue
 import io.infinite.tpn.springdatarest.OutputMessage
+import org.springframework.context.ApplicationContext
 
 class OutputThreadRetry extends OutputThread {
 
     @BlackBox(blackBoxLevel = BlackBoxLevel.EXPRESSION)
-    OutputThreadRetry(OutputQueue outputQueue) {
-        super(outputQueue)
+    OutputThreadRetry(OutputQueue outputQueue, ApplicationContext applicationContext) {
+        super(outputQueue, applicationContext)
         setName(getName() + "-Retry")
         [1..outputQueue.retryThreadCount].each {
             SenderThread senderThread = new SenderThread(outputQueue)

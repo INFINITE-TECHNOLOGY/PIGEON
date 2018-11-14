@@ -27,6 +27,9 @@ class OutputMessage {
 
     Date lastSendTime
 
+    @Lob
+    String exceptionString
+
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "Output2httplog")
     Set<HttpLog> httpLogs = new HashSet<>()

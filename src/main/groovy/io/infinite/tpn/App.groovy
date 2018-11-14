@@ -45,12 +45,12 @@ class App implements CommandLineRunner {
             inputThread.start()
             inputQueue.outputQueues.each { outputQueue ->
                 OutputThread outputThreadNormal
-                outputThreadNormal = new OutputThreadNormal(outputQueue)
+                outputThreadNormal = new OutputThreadNormal(outputQueue, applicationContext)
                 applicationContext.getAutowireCapableBeanFactory().autowireBean(outputThreadNormal)
                 outputThreadNormal.start()
                 if (outputQueue.maxRetryCount > 0) {
                     OutputThread outputThreadRetry
-                    outputThreadRetry = new OutputThreadRetry(outputQueue)
+                    outputThreadRetry = new OutputThreadRetry(outputQueue, applicationContext)
                     applicationContext.getAutowireCapableBeanFactory().autowireBean(outputThreadRetry)
                     outputThreadRetry.start()
                 }

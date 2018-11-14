@@ -4,7 +4,6 @@ import groovy.util.logging.Slf4j
 import io.infinite.blackbox.BlackBox
 import io.infinite.blackbox.BlackBoxLevel
 
-@Slf4j
 abstract class SenderAbstract {
 
     HttpRequest httpRequest
