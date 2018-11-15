@@ -12,8 +12,6 @@ import io.infinite.tpn.springdatarest.HttpLog
 import io.infinite.tpn.springdatarest.InputMessageRepository
 import io.infinite.tpn.springdatarest.OutputMessage
 import io.infinite.tpn.springdatarest.OutputMessageRepository
-import org.apache.commons.lang3.exception.ExceptionUtils
-import org.codehaus.groovy.runtime.StackTraceUtils
 import org.springframework.beans.factory.annotation.Autowired
 
 import java.util.concurrent.LinkedBlockingQueue

@@ -3,6 +3,7 @@ package io.infinite.tpn.http
 import groovy.util.logging.Slf4j
 import io.infinite.blackbox.BlackBox
 import io.infinite.blackbox.BlackBoxLevel
+import io.infinite.blackbox.Wait
 import io.infinite.tpn.other.MessageStatuses
 import org.apache.commons.lang3.exception.ExceptionUtils
 import org.codehaus.groovy.runtime.StackTraceUtils
@@ -17,6 +18,7 @@ abstract class SenderDefault extends SenderAbstract {
     SenderDefault(HttpRequest httpRequest) {
         super(httpRequest)
         this.url = new URL(httpRequest.getUrl())
+        Wait
     }
 
     @Override
