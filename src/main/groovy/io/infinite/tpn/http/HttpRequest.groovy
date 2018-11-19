@@ -9,7 +9,7 @@ class HttpRequest extends HttpMessageAbstract {
     String url
     String requestStatus
     String exceptionString
-    Date sendDate
+    final Date sendDate = new Date()
     String awsServiceName
     String awsRegion
     String awsAccessKey

@@ -6,6 +6,6 @@ import groovy.transform.ToString
 class HttpResponse extends HttpMessageAbstract {
 
     Integer status
-    Date receiveDate
+    final Date receiveDate = new Date()
 
 }

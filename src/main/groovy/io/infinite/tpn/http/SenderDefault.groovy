@@ -3,7 +3,6 @@ package io.infinite.tpn.http
 import groovy.util.logging.Slf4j
 import io.infinite.blackbox.BlackBox
 import io.infinite.blackbox.BlackBoxLevel
-import io.infinite.blackbox.Wait
 import io.infinite.tpn.other.MessageStatuses
 import org.apache.commons.lang3.exception.ExceptionUtils
 import org.codehaus.groovy.runtime.StackTraceUtils
@@ -18,7 +17,6 @@ abstract class SenderDefault extends SenderAbstract {
     SenderDefault(HttpRequest httpRequest) {
         super(httpRequest)
         this.url = new URL(httpRequest.getUrl())
-        Wait
     }
 
     @Override
@@ -42,7 +40,6 @@ abstract class SenderDefault extends SenderAbstract {
         dataOutputStream.writeBytes(httpRequest.getBody())
         dataOutputStream.flush()
         dataOutputStream.close()
-        httpRequest.setSendDate(new Date())
         log.info("Successfully sent request data:")
         log.info(httpRequest.toString())
         httpResponse.setStatus(httpURLConnection.getResponseCode())
@@ -62,7 +59,6 @@ abstract class SenderDefault extends SenderAbstract {
         for (headerName in httpURLConnection.getHeaderFields().keySet()) {
             httpResponse.getHeaders().put(headerName, httpURLConnection.getHeaderField(headerName))
         }
-        httpResponse.setReceiveDate(new Date())
         httpRequest.setRequestStatus(MessageStatuses.DELIVERED.value())
         log.info("Received response data:")
         log.info(httpResponse.toString())

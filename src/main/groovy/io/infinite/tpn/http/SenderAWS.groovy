@@ -16,6 +16,7 @@ import io.infinite.blackbox.BlackBox
 import io.infinite.blackbox.BlackBoxLevel
 import io.infinite.tpn.other.AwsErrorResponseHandler
 import io.infinite.tpn.other.AwsResponseHandler
+import io.infinite.tpn.other.MessageStatuses
 
 @Slf4j
 class SenderAWS extends SenderAbstract {
@@ -64,6 +65,7 @@ class SenderAWS extends SenderAbstract {
             for (headerName in awsResponse.httpResponse.headers.keySet()) {
                 httpResponse.getHeaders().put(headerName, awsResponse.httpResponse.headers.get(headerName))
             }
+            httpRequest.setRequestStatus(MessageStatuses.DELIVERED.value())
             httpResponse.setStatus(awsResponse.httpResponse.statusCode)
         } catch (AmazonServiceException amazonServiceException) {
             httpResponse.setStatus(amazonServiceException.statusCode)
@@ -74,7 +76,6 @@ class SenderAWS extends SenderAbstract {
         } finally {
             log.info("Received response data:")
             log.info(httpResponse.toString())
-            httpResponse.setReceiveDate(new Date())
         }
     }
 

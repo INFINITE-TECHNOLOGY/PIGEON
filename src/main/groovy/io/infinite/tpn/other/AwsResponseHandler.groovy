@@ -6,6 +6,7 @@ import com.amazonaws.http.HttpResponseHandler
 import com.amazonaws.util.IOUtils
 import groovy.util.logging.Slf4j
 import io.infinite.blackbox.BlackBox
+import io.infinite.blackbox.BlackBoxEngine
 import io.infinite.blackbox.BlackBoxLevel
 
 @Slf4j
@@ -15,7 +16,6 @@ class AwsResponseHandler implements HttpResponseHandler<AmazonWebServiceResponse
     @Override
     AmazonWebServiceResponse<String> handle(HttpResponse response) throws IOException {
         AmazonWebServiceResponse<String> awsResponse = new AmazonWebServiceResponse<>()
-        //putting response string in the result, available outside the handler
         awsResponse.setResult((String) IOUtils.toString(response.getContent()))
         return awsResponse
     }
