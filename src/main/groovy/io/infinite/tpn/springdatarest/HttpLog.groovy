@@ -18,7 +18,9 @@ class HttpLog {
     Long id
 
     Date requestDate
+    @Lob
     String requestHeaders
+    @Lob
     String requestBody
     String method
     String url
@@ -26,7 +28,9 @@ class HttpLog {
     @Lob
     String requestExceptionString
     Date responseDate
+    @Lob
     String responseHeaders
+    @Lob
     String responseBody
     Integer responseStatus
 

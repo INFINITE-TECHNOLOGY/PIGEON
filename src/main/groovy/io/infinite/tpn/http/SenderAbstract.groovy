@@ -11,6 +11,7 @@ abstract class SenderAbstract {
     @BlackBox(blackBoxLevel = BlackBoxLevel.EXPRESSION)
     SenderAbstract(HttpRequest httpRequest) {
         this.httpRequest = httpRequest
+        this.httpResponse = new HttpResponse()
     }
 
     abstract void sendHttpMessage()

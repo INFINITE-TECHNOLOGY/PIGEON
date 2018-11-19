@@ -45,7 +45,6 @@ abstract class SenderDefault extends SenderAbstract {
         httpRequest.setSendDate(new Date())
         log.info("Successfully sent request data:")
         log.info(httpRequest.toString())
-        httpResponse = new HttpResponse()
         httpResponse.setStatus(httpURLConnection.getResponseCode())
         InputStream inputStream = getInputStream(httpURLConnection)
         if (inputStream != null) {

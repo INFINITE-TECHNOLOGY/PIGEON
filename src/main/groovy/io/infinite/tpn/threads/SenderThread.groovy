@@ -50,12 +50,22 @@ class SenderThread extends Thread {
         }
     }
 
+    static HttpRequest createHttpRequest(OutputQueue outputQueue) {
+        HttpRequest httpRequest = new HttpRequest()
+        httpRequest.url = outputQueue.url
+        httpRequest.awsServiceName = outputQueue.awsServiceName
+        httpRequest.awsRegion = outputQueue.awsRegion
+        httpRequest.awsAccessKey = outputQueue.awsAccessKey
+        httpRequest.awsSecretKey = outputQueue.awsSecretKey
+        httpRequest.awsResourceName = outputQueue.awsResourceName
+        return httpRequest
+    }
+
     @BlackBox(blackBoxLevel = BlackBoxLevel.EXPRESSION, suppressExceptions = true)
     void sendMessage(OutputMessage outputMessage) {
         try {
             Binding binding = new Binding()
-            HttpRequest httpRequest = new HttpRequest()
-            httpRequest.setUrl(outputQueue.getUrl())
+            HttpRequest httpRequest = createHttpRequest(outputQueue)
             binding.setVariable("outputMessage", outputMessage)
             binding.setVariable("inputMessage", outputMessage.getInputMessage())
             binding.setVariable("httpRequest", httpRequest)
