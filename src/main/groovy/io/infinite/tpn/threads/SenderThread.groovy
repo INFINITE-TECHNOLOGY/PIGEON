@@ -32,8 +32,8 @@ class SenderThread extends Thread {
     GroovyScriptEngine groovyScriptEngine = new GroovyScriptEngine("./")
 
     @BlackBox(blackBoxLevel = BlackBoxLevel.EXPRESSION)
-    SenderThread(OutputQueue outputQueue) {
-        setName(outputQueue.getUrl())
+    SenderThread(OutputQueue outputQueue, Integer id) {
+        setName("Sender_" + outputQueue.getName() + "_" + id)
         this.outputQueue = outputQueue
     }
 

@@ -13,9 +13,9 @@ class OutputThreadRetry extends OutputThread {
     @BlackBox(blackBoxLevel = BlackBoxLevel.EXPRESSION)
     OutputThreadRetry(OutputQueue outputQueue, ApplicationContext applicationContext) {
         super(outputQueue, applicationContext)
-        setName(getName() + "-Retry")
-        [1..outputQueue.retryThreadCount].each {
-            SenderThread senderThread = new SenderThread(outputQueue)
+        setName("Output_" + getName() + "_Retry")
+        (1..outputQueue.retryThreadCount).each {
+            SenderThread senderThread = new SenderThread(outputQueue, it)
             senderThreadRobin.add(senderThread)
             senderThread.start()
         }

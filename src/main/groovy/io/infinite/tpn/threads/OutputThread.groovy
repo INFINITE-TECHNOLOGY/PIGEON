@@ -28,10 +28,10 @@ abstract class OutputThread extends Thread {
 
     @BlackBox(blackBoxLevel = BlackBoxLevel.EXPRESSION)
     OutputThread(OutputQueue outputQueue, ApplicationContext applicationContext) {
-        setName(outputQueue.getName())
+        setName("Output_" + outputQueue.getName())
         this.outputQueue = outputQueue
-        [1..outputQueue.normalThreadCount].each {
-            SenderThread senderThread = new SenderThread(outputQueue)
+        (1..outputQueue.normalThreadCount).each {
+            SenderThread senderThread = new SenderThread(outputQueue, it)
             applicationContext.getAutowireCapableBeanFactory().autowireBean(senderThread)
             senderThreadRobin.add(senderThread)
             senderThread.start()

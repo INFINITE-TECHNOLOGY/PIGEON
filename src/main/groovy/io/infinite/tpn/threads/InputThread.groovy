@@ -26,7 +26,7 @@ class InputThread extends Thread {
 
     @BlackBox(blackBoxLevel = BlackBoxLevel.EXPRESSION)
     InputThread(InputQueue inputQueue) {
-        setName(inputQueue.getName())
+        setName("Input_" + inputQueue.getName())
         this.inputQueue = inputQueue
     }
 
