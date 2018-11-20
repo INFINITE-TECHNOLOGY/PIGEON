@@ -29,7 +29,7 @@ class SenderThread extends Thread {
 
     LinkedBlockingQueue<OutputMessage> sendingQueue = new LinkedBlockingQueue<>()
 
-    GroovyScriptEngine groovyScriptEngine = new GroovyScriptEngine("./")
+    GroovyScriptEngine groovyScriptEngine = new GroovyScriptEngine("./conf/conversion_modules/")
 
     @BlackBox(blackBoxLevel = BlackBoxLevel.EXPRESSION)
     SenderThread(OutputQueue outputQueue, Integer id) {
@@ -67,6 +67,7 @@ class SenderThread extends Thread {
             Binding binding = new Binding()
             HttpRequest httpRequest = createHttpRequest(outputQueue)
             binding.setVariable("outputMessage", outputMessage)
+            binding.setVariable("outputQueue", outputQueue)
             binding.setVariable("inputMessage", outputMessage.getInputMessage())
             binding.setVariable("httpRequest", httpRequest)
             /*\/\/\/\/\/\/\/\/*/
@@ -81,6 +82,7 @@ class SenderThread extends Thread {
             outputMessage.getHttpLogs().add(createHttpLog(senderAbstract))
             outputMessage.setStatus(httpRequest.getRequestStatus())
             outputMessage.setAttemptsCount(outputMessage.getAttemptsCount() + 1)
+            outputMessage.setLastSendTime(new Date())
             outputMessageRepository.save(outputMessage)
         } catch (Throwable t) {
             outputMessage.setExceptionString(new TpnException(t).serialize())

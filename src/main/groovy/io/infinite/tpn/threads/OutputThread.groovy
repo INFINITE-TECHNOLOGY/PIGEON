@@ -3,12 +3,12 @@ package io.infinite.tpn.threads
 import io.infinite.blackbox.BlackBox
 import io.infinite.blackbox.BlackBoxLevel
 import io.infinite.tpn.AppicationProperties
-import io.infinite.tpn.other.MessageStatuses
 import io.infinite.tpn.conf.OutputQueue
+import io.infinite.tpn.other.MessageStatuses
 import io.infinite.tpn.other.RoundRobin
+import io.infinite.tpn.springdatarest.InputMessageRepository
 import io.infinite.tpn.springdatarest.OutputMessage
 import io.infinite.tpn.springdatarest.OutputMessageRepository
-import io.infinite.tpn.springdatarest.InputMessageRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationContext
 
@@ -59,9 +59,8 @@ abstract class OutputThread extends Thread {
             Set<OutputMessage> outputMessages = masterQuery(outputQueue.getName())
             if (outputMessages.size() > 0) {
                 outputMessages.each { outputMessage ->
-                        workerEnqueue(outputMessage)
+                    workerEnqueue(outputMessage)
                 }
-                outputMessageRepository.save(outputMessages)
             }
             sleep(applicationProperties.outputThreadPollPeriodMilliseconds)
         }

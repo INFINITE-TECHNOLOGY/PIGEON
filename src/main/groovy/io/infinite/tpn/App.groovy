@@ -38,7 +38,7 @@ class App implements CommandLineRunner {
 
     @BlackBox(blackBoxLevel = BlackBoxLevel.EXPRESSION)
     void runWithLogging() {
-        Configuration configuration = new ObjectMapper().readValue(new File("./configuration.json").getText(), Configuration.class)
+        Configuration configuration = new ObjectMapper().readValue(new File("./conf/configuration.json").getText(), Configuration.class)
         configuration.inputQueues.each { inputQueue ->
             InputThread inputThread = new InputThread(inputQueue)
             applicationContext.getAutowireCapableBeanFactory().autowireBean(inputThread)
