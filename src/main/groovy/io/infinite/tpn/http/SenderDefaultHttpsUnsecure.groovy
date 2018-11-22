@@ -10,9 +10,9 @@ import javax.net.ssl.SSLContext
 import java.security.SecureRandom
 
 @Slf4j
+@BlackBox
 class SenderDefaultHttpsUnsecure extends SenderDefault {
 
-    @BlackBox(blackBoxLevel = BlackBoxLevel.EXPRESSION)
     SenderDefaultHttpsUnsecure(HttpRequest httpRequest) {
         super(httpRequest)
         SSLContext sslContext = SSLContext.getInstance("TLS")
@@ -23,7 +23,6 @@ class SenderDefaultHttpsUnsecure extends SenderDefault {
         httpURLConnection.setHostnameVerifier(new UnsecureHostNameVerifier())
     }
 
-    @BlackBox(blackBoxLevel = BlackBoxLevel.EXPRESSION)
     @Override
     void sendHttpMessage() {
         log.warn("UNSECURE TEST TLS MODE IS USED")

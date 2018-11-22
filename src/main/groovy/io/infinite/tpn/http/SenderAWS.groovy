@@ -19,14 +19,13 @@ import io.infinite.tpn.other.AwsResponseHandler
 import io.infinite.tpn.other.MessageStatuses
 
 @Slf4j
+@BlackBox
 class SenderAWS extends SenderAbstract {
 
-    @BlackBox(blackBoxLevel = BlackBoxLevel.EXPRESSION)
     SenderAWS(HttpRequest httpRequest) {
         super(httpRequest)
     }
 
-    @BlackBox(blackBoxLevel = BlackBoxLevel.EXPRESSION)
     @Override
     void sendHttpMessage() {
         if (httpRequest.awsAccessKey == null || httpRequest.awsSecretKey == null) {

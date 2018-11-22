@@ -10,9 +10,9 @@ import io.infinite.blackbox.BlackBoxEngine
 import io.infinite.blackbox.BlackBoxLevel
 
 @Slf4j
+@BlackBox
 class AwsResponseHandler implements HttpResponseHandler<AmazonWebServiceResponse<String>> {
 
-    @BlackBox(blackBoxLevel = BlackBoxLevel.EXPRESSION)
     @Override
     AmazonWebServiceResponse<String> handle(HttpResponse response) throws IOException {
         AmazonWebServiceResponse<String> awsResponse = new AmazonWebServiceResponse<>()
@@ -20,7 +20,6 @@ class AwsResponseHandler implements HttpResponseHandler<AmazonWebServiceResponse
         return awsResponse
     }
 
-    @BlackBox(blackBoxLevel = BlackBoxLevel.EXPRESSION)
     @Override
     boolean needsConnectionLeftOpen() {
         return false

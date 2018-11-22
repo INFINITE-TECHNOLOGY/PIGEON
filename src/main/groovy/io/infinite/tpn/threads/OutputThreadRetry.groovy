@@ -8,9 +8,9 @@ import io.infinite.tpn.conf.OutputQueue
 import io.infinite.tpn.springdatarest.OutputMessage
 import org.springframework.context.ApplicationContext
 
+@BlackBox
 class OutputThreadRetry extends OutputThread {
 
-    @BlackBox(blackBoxLevel = BlackBoxLevel.EXPRESSION)
     OutputThreadRetry(OutputQueue outputQueue, ApplicationContext applicationContext) {
         super(outputQueue, applicationContext)
         setName("Output_" + getName() + "_Retry")
@@ -21,7 +21,6 @@ class OutputThreadRetry extends OutputThread {
         }
     }
 
-    @BlackBox(blackBoxLevel = BlackBoxLevel.EXPRESSION)
     @Override
     LinkedHashSet<OutputMessage> masterQuery(String outputQueueName) {
         Date maxLastSendDate

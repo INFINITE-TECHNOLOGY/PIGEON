@@ -6,15 +6,14 @@ import io.infinite.blackbox.BlackBoxLevel
 import io.infinite.tpn.other.TpnException
 
 @Slf4j
+@BlackBox
 class SenderDefaultHttp extends SenderDefault {
 
-    @BlackBox(blackBoxLevel = BlackBoxLevel.EXPRESSION)
     SenderDefaultHttp(HttpRequest httpRequest) {
         super(httpRequest)
         httpURLConnection = (HttpURLConnection) url.openConnection()
     }
 
-    @BlackBox(blackBoxLevel = BlackBoxLevel.EXPRESSION)
     @Override
     void sendHttpMessage() {
         log.warn("UNSECURE TEST PLAINTEXT HTTP CONNECTION")

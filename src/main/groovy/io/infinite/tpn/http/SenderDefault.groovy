@@ -8,19 +8,18 @@ import org.apache.commons.lang3.exception.ExceptionUtils
 import org.codehaus.groovy.runtime.StackTraceUtils
 
 @Slf4j
+@BlackBox
 abstract class SenderDefault extends SenderAbstract {
 
     URL url
     HttpURLConnection httpURLConnection
 
-    @BlackBox(blackBoxLevel = BlackBoxLevel.EXPRESSION)
     SenderDefault(HttpRequest httpRequest) {
         super(httpRequest)
         this.url = new URL(httpRequest.getUrl())
     }
 
     @Override
-    @BlackBox(blackBoxLevel = BlackBoxLevel.EXPRESSION)
     void sendHttpMessage() {
         this.httpURLConnection.setRequestMethod(httpRequest.getMethod())
         for (headerName in httpRequest.getHeaders().keySet()) {
@@ -64,7 +63,6 @@ abstract class SenderDefault extends SenderAbstract {
         log.info(httpResponse.toString())
     }
 
-    @BlackBox(blackBoxLevel = BlackBoxLevel.EXPRESSION)
     static InputStream getInputStream(HttpURLConnection httpURLConnection) {
         InputStream inputStream = null
         if (httpURLConnection.getErrorStream() == null) {

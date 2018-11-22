@@ -6,9 +6,9 @@ import io.infinite.blackbox.BlackBoxLevel
 import javax.net.ssl.HttpsURLConnection
 import javax.net.ssl.SSLSocketFactory
 
+@BlackBox
 class SenderDefaultHttps extends SenderDefault {
 
-    @BlackBox(blackBoxLevel = BlackBoxLevel.EXPRESSION)
     SenderDefaultHttps(HttpRequest httpRequest) {
         super(httpRequest)
         HttpsURLConnection.setDefaultSSLSocketFactory(SSLSocketFactory.getDefault() as SSLSocketFactory)

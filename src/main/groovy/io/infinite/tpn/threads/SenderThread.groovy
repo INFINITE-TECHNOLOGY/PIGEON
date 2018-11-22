@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import java.util.concurrent.LinkedBlockingQueue
 
 @Slf4j
+@BlackBox
 class SenderThread extends Thread {
 
     @Autowired
@@ -31,13 +32,11 @@ class SenderThread extends Thread {
 
     GroovyScriptEngine groovyScriptEngine = new GroovyScriptEngine("./conf/conversion_modules/")
 
-    @BlackBox(blackBoxLevel = BlackBoxLevel.EXPRESSION)
     SenderThread(OutputQueue outputQueue, Integer id) {
         setName("Sender_" + outputQueue.getName() + "_" + id)
         this.outputQueue = outputQueue
     }
 
-    @BlackBox(blackBoxLevel = BlackBoxLevel.EXPRESSION)
     @Override
     void run() {
         while (true) {
@@ -61,7 +60,6 @@ class SenderThread extends Thread {
         return httpRequest
     }
 
-    @BlackBox(blackBoxLevel = BlackBoxLevel.EXPRESSION, suppressExceptions = true)
     void sendMessage(OutputMessage outputMessage) {
         try {
             Binding binding = new Binding()
@@ -92,7 +90,6 @@ class SenderThread extends Thread {
         }
     }
 
-    @BlackBox(blackBoxLevel = BlackBoxLevel.EXPRESSION)
     static HttpLog createHttpLog(SenderAbstract senderAbstract) {
         HttpLog httpLog = new HttpLog()
         httpLog.requestDate = senderAbstract.httpRequest.sendDate

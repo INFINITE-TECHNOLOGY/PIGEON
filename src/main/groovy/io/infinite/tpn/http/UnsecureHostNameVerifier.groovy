@@ -8,10 +8,10 @@ import javax.net.ssl.HostnameVerifier
 import javax.net.ssl.SSLSession
 
 @ToString(includeNames = true, includeFields = true)
+@BlackBox
 class UnsecureHostNameVerifier implements HostnameVerifier {
 
     @Override
-    @BlackBox(blackBoxLevel = BlackBoxLevel.EXPRESSION)
     boolean verify(String hostName, SSLSession sslSession) {
         return true
     }

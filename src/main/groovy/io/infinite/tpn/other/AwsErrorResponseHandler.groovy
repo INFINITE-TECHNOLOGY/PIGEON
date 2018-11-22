@@ -9,9 +9,9 @@ import com.amazonaws.util.IOUtils
 import io.infinite.blackbox.BlackBox
 import io.infinite.blackbox.BlackBoxLevel
 
+@BlackBox
 class AwsErrorResponseHandler implements HttpResponseHandler<AmazonServiceException> {
 
-    @BlackBox(blackBoxLevel = BlackBoxLevel.EXPRESSION)
     @Override
     AmazonServiceException handle(HttpResponse errorResponse) throws IOException {
         String requestId = errorResponse.getHeaders().get(Headers.REQUEST_ID)
@@ -26,7 +26,6 @@ class AwsErrorResponseHandler implements HttpResponseHandler<AmazonServiceExcept
         return ase
     }
 
-    @BlackBox(blackBoxLevel = BlackBoxLevel.EXPRESSION)
     @Override
     boolean needsConnectionLeftOpen() {
         return false
@@ -46,7 +45,6 @@ class AwsErrorResponseHandler implements HttpResponseHandler<AmazonServiceExcept
      *            The HTTP error response to use to determine the right error
      *            type to set.
      */
-    @BlackBox(blackBoxLevel = BlackBoxLevel.EXPRESSION)
     private void fillInErrorType(AmazonServiceException ase, HttpResponse errorResponse) {
         if (errorResponse.getStatusCode() >= 500) {
             ase.setErrorType(AmazonServiceException.ErrorType.Service)

@@ -13,6 +13,7 @@ import io.infinite.tpn.springdatarest.OutputMessageRepository
 import org.springframework.beans.factory.annotation.Autowired
 
 @Slf4j
+@BlackBox
 class InputThread extends Thread {
 
     InputQueue inputQueue
@@ -32,7 +33,6 @@ class InputThread extends Thread {
         this.inputQueue = inputQueue
     }
 
-    @BlackBox(blackBoxLevel = BlackBoxLevel.EXPRESSION)
     @Override
     void run() {
         while (true) {

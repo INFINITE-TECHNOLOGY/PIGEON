@@ -12,6 +12,7 @@ import io.infinite.tpn.springdatarest.OutputMessageRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationContext
 
+@BlackBox
 abstract class OutputThread extends Thread {
 
     OutputQueue outputQueue
@@ -26,7 +27,6 @@ abstract class OutputThread extends Thread {
     @Autowired
     AppicationProperties applicationProperties
 
-    @BlackBox(blackBoxLevel = BlackBoxLevel.EXPRESSION)
     OutputThread(OutputQueue outputQueue, ApplicationContext applicationContext) {
         setName("Output_" + outputQueue.getName())
         this.outputQueue = outputQueue
@@ -40,7 +40,6 @@ abstract class OutputThread extends Thread {
 
     abstract LinkedHashSet<OutputMessage> masterQuery(String subscriberName)
 
-    @BlackBox(blackBoxLevel = BlackBoxLevel.EXPRESSION)
     void workerEnqueue(OutputMessage outputMessage) {
         SenderThread senderThread = ++senderThreadRobin.iterator()
         outputMessage.setStatus(MessageStatuses.WAITING.value())
@@ -52,7 +51,6 @@ abstract class OutputThread extends Thread {
         }
     }
 
-    @BlackBox(blackBoxLevel = BlackBoxLevel.EXPRESSION)
     @Override
     void run() {
         while (true) {
