@@ -6,6 +6,7 @@ import io.infinite.blackbox.BlackBoxLevel
 import io.infinite.tpn.other.MessageStatuses
 import org.apache.commons.lang3.exception.ExceptionUtils
 import org.codehaus.groovy.runtime.StackTraceUtils
+import static java.net.HttpURLConnection.*
 
 @Slf4j
 @BlackBox
@@ -53,12 +54,17 @@ abstract class SenderDefault extends SenderAbstract {
             bufferedReader.close()
             httpResponse.setBody(stringBuffer.toString())
         } else {
-            log.warn("Null input stream")
+            log.info("Null input stream")
         }
         for (headerName in httpURLConnection.getHeaderFields().keySet()) {
             httpResponse.getHeaders().put(headerName, httpURLConnection.getHeaderField(headerName))
         }
-        httpRequest.setRequestStatus(MessageStatuses.DELIVERED.value())
+        if ([HTTP_OK, HTTP_CREATED].contains(httpResponse.getStatus())) {
+            httpRequest.setRequestStatus(MessageStatuses.DELIVERED.value())
+        } else {
+            log.warn("Failed response status: " + httpResponse.getStatus())
+            httpRequest.setRequestStatus(MessageStatuses.FAILED_RESPONSE.value())
+        }
         log.info("Received response data:")
         log.info(httpResponse.toString())
     }

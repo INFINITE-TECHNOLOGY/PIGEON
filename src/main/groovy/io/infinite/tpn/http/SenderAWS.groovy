@@ -67,6 +67,8 @@ class SenderAWS extends SenderAbstract {
             httpRequest.setRequestStatus(MessageStatuses.DELIVERED.value())
             httpResponse.setStatus(awsResponse.httpResponse.statusCode)
         } catch (AmazonServiceException amazonServiceException) {
+            log.warn("AmazonServiceException: " + amazonServiceException.statusCode)
+            httpRequest.setRequestStatus(MessageStatuses.FAILED_RESPONSE.value())
             httpResponse.setStatus(amazonServiceException.statusCode)
             for (l_header_name in amazonServiceException.httpHeaders.keySet()) {
                 httpResponse.getHeaders().put(l_header_name, amazonServiceException.httpHeaders.get(l_header_name))
