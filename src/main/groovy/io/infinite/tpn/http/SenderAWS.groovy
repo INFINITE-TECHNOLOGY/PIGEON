@@ -28,25 +28,25 @@ class SenderAWS extends SenderAbstract {
 
     @Override
     void sendHttpMessage() {
-        if (httpRequest.awsAccessKey == null || httpRequest.awsSecretKey == null) {
+        if (httpRequest.httpProperties.get("awsAccessKey") == null || httpRequest.httpProperties.get("awsSecretKey") == null) {
             log.warn("Configuration: One of the AWS keys is null")
         }
-        if (httpRequest.awsServiceName == null) {
+        if (httpRequest.httpProperties.get("awsServiceName") == null) {
             log.warn("Configuration: AWS service name is null")
         }
-        if (httpRequest.awsResourceName == null) {
+        if (httpRequest.httpProperties.get("wsResourceName") == null) {
             log.warn("Configuration: AWS resource name is null")
         }
-        Request<Void> awsRequest = new DefaultRequest<Void>(httpRequest.awsServiceName)
+        Request<Void> awsRequest = new DefaultRequest<Void>(httpRequest.httpProperties.get("awsServiceName"))
         awsRequest.setHttpMethod(HttpMethodName.valueOf(httpRequest.getMethod()))
         awsRequest.setEndpoint(URI.create(httpRequest.getUrl()))
         awsRequest.setContent(new com.amazonaws.util.StringInputStream(httpRequest.getBody()))
         awsRequest.setHeaders(httpRequest.getHeaders())
         AWS4Signer signer = new AWS4Signer()
-        signer.setRegionName(httpRequest.awsRegion)
+        signer.setRegionName(httpRequest.httpProperties.get("awsRegion"))
         signer.setServiceName(awsRequest.getServiceName())
-        awsRequest.setResourcePath(httpRequest.awsResourceName)
-        signer.sign(awsRequest, new BasicAWSCredentials(httpRequest.awsAccessKey, httpRequest.awsSecretKey))
+        awsRequest.setResourcePath(httpRequest.httpProperties.get("awsResourceName"))
+        signer.sign(awsRequest, new BasicAWSCredentials(httpRequest.httpProperties.get("awsAccessKey"), httpRequest.httpProperties.get("awsSecretKey")))
         Response<AmazonWebServiceResponse<String>> awsResponse
         try {
             log.info("Sending AWS Request")

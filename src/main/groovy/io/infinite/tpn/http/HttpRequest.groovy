@@ -10,10 +10,7 @@ class HttpRequest extends HttpMessageAbstract {
     String requestStatus
     String exceptionString
     final Date sendDate = new Date()
-    String awsServiceName
-    String awsRegion
-    String awsAccessKey
-    String awsSecretKey
-    String awsResourceName
+    Map<String, String> httpProperties = new HashMap<>()
+    Map<String, String> extensions = new HashMap<>()
 
 }

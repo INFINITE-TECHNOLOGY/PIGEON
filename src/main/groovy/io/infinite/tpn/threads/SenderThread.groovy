@@ -52,11 +52,8 @@ class SenderThread extends Thread {
     static HttpRequest createHttpRequest(OutputQueue outputQueue) {
         HttpRequest httpRequest = new HttpRequest()
         httpRequest.url = outputQueue.url
-        httpRequest.awsServiceName = outputQueue.awsServiceName
-        httpRequest.awsRegion = outputQueue.awsRegion
-        httpRequest.awsAccessKey = outputQueue.awsAccessKey
-        httpRequest.awsSecretKey = outputQueue.awsSecretKey
-        httpRequest.awsResourceName = outputQueue.awsResourceName
+        httpRequest.httpProperties = outputQueue.httpProperties
+        httpRequest.extensions = outputQueue.extensions
         return httpRequest
     }
 

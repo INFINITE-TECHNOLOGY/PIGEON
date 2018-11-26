@@ -7,18 +7,13 @@ class OutputQueue {
      */
     String name
     String url
-    String awsServiceName
-    String awsRegion
-    String awsAccessKey
-    String awsSecretKey
-    String awsResourceName
     Integer maxRetryCount = 0
     Integer resendIntervalSeconds = 86400
     Integer normalThreadCount = 4
     Integer retryThreadCount = 0
     String conversionModuleName
     String senderClassName
-    String username
-    String password
+    Map<String, String> httpProperties = new HashMap<>()
+    Map<String, String> extensions = new HashMap<>()
 
 }
