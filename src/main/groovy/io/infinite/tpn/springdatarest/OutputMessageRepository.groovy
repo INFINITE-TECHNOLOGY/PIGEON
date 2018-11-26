@@ -34,4 +34,6 @@ interface OutputMessageRepository extends JpaRepository<OutputMessage, Long> {
             @Param("maxRetryCount") Integer maxRetryCount,
             @Param("maxLastSendTime") Date maxLastSendTime)
 
+    Set<OutputMessage> findByStatus(String status)
+
 }

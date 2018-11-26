@@ -4,6 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import io.infinite.blackbox.BlackBox
 import io.infinite.blackbox.BlackBoxLevel
 import io.infinite.tpn.conf.Configuration
+import io.infinite.tpn.other.MessageStatuses
+import io.infinite.tpn.springdatarest.OutputMessage
+import io.infinite.tpn.springdatarest.OutputMessageRepository
 import io.infinite.tpn.threads.InputThread
 import io.infinite.tpn.threads.OutputThread
 import io.infinite.tpn.threads.OutputThreadNormal
@@ -25,6 +28,9 @@ class App implements CommandLineRunner {
     @Autowired
     ApplicationContext applicationContext
 
+    @Autowired
+    OutputMessageRepository outputMessageRepository
+
     static void main(String[] args) {
         SpringApplication.run(App.class, args)
     }
@@ -39,6 +45,11 @@ class App implements CommandLineRunner {
     @BlackBox(blackBoxLevel = BlackBoxLevel.EXPRESSION)
     void runWithLogging() {
         Configuration configuration = new ObjectMapper().readValue(new File("./conf/configuration.json").getText(), Configuration.class)
+        Set<OutputMessage> waitingMessages = outputMessageRepository.findByStatus(MessageStatuses.WAITING.value())
+        waitingMessages.each {
+            it.status = MessageStatuses.RENEWED.value()
+        }
+        outputMessageRepository.save(waitingMessages)
         configuration.inputQueues.each { inputQueue ->
             InputThread inputThread = new InputThread(inputQueue)
             applicationContext.getAutowireCapableBeanFactory().autowireBean(inputThread)
