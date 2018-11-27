@@ -1,5 +1,6 @@
 package io.infinite.tpn.threads
 
+
 import io.infinite.blackbox.BlackBox
 import io.infinite.blackbox.BlackBoxLevel
 import io.infinite.tpn.conf.OutputQueue
@@ -8,7 +9,6 @@ import io.infinite.tpn.other.RoundRobin
 import io.infinite.tpn.springdatarest.InputMessageRepository
 import io.infinite.tpn.springdatarest.OutputMessage
 import io.infinite.tpn.springdatarest.OutputMessageRepository
-import org.slf4j.MDC
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationContext
 
@@ -37,6 +37,7 @@ abstract class OutputThread extends Thread {
 
     abstract LinkedHashSet<OutputMessage> masterQuery(String subscriberName)
 
+    @BlackBox(blackBoxLevel = BlackBoxLevel.METHOD_ERROR)
     void workerEnqueue(OutputMessage outputMessage) {
         SenderThread senderThread = ++senderThreadRobin.iterator()
         outputMessage.setStatus(MessageStatuses.WAITING.value())
@@ -49,6 +50,7 @@ abstract class OutputThread extends Thread {
     }
 
     @Override
+    @BlackBox(blackBoxLevel = BlackBoxLevel.METHOD)
     void run() {
         while (true) {
             Set<OutputMessage> outputMessages = masterQuery(outputQueue.getName())
@@ -59,6 +61,11 @@ abstract class OutputThread extends Thread {
             }
             sleep(outputQueue.pollPeriodMilliseconds)
         }
+    }
+
+    @Override
+    String toString() {
+        "Class: " + getClass().getCanonicalName() + "; Thread: " + getName() + "; OutputQueue: " + outputQueue.toString()
     }
 
 }

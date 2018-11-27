@@ -1,8 +1,8 @@
 package io.infinite.tpn.threads
 
+
 import groovy.util.logging.Slf4j
 import io.infinite.blackbox.BlackBox
-import io.infinite.blackbox.BlackBoxLevel
 import io.infinite.tpn.conf.OutputQueue
 import io.infinite.tpn.http.HttpRequest
 import io.infinite.tpn.http.SenderAbstract
@@ -12,7 +12,6 @@ import io.infinite.tpn.springdatarest.HttpLog
 import io.infinite.tpn.springdatarest.InputMessageRepository
 import io.infinite.tpn.springdatarest.OutputMessage
 import io.infinite.tpn.springdatarest.OutputMessageRepository
-import org.slf4j.MDC
 import org.springframework.beans.factory.annotation.Autowired
 
 import java.util.concurrent.LinkedBlockingQueue
@@ -103,4 +102,11 @@ class SenderThread extends Thread {
         httpLog.responseStatus = senderAbstract.httpResponse.status
         return httpLog
     }
+
+
+    @Override
+    String toString() {
+        "Class: " + getClass().getCanonicalName() + "; Thread: " + getName() + "; OutputQueue: " + outputQueue.toString() + "; sendingQueue: " + sendingQueue.toString()
+    }
+
 }

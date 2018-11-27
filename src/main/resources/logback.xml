@@ -1,24 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
     <appender name="SiftingAppender" class="ch.qos.logback.classic.sift.SiftingAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>DEBUG</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
         <discriminator>
             <key>automaticThreadName</key>
             <defaultValue>Unnamed Thread</defaultValue>
         </discriminator>
         <sift>
             <appender name="${automaticThreadName}" class="ch.qos.logback.core.rolling.RollingFileAppender">
-                <file>./LOGS/${automaticThreadName}.log</file>
+                <append>false</append><!--ENABLE ON PROD !!!!-->
+                <file>./LOGS/${automaticThreadName}_TODAY.log</file>
                 <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
                     <Pattern>%d{yyyy-MM-dd HH:mm:ss} %mdc [%thread] %level %logger{35} - %msg%n</Pattern>
                 </encoder>
-                <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
-                    <FileNamePattern>./LOGS/${automaticThreadName}.%i.log.zip</FileNamePattern>
-                    <MinIndex>1</MinIndex>
-                    <MaxIndex>10</MaxIndex>
+                <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                    <FileNamePattern>./LOGS/ARCHIVE/%d{yyyyMMdd}/${automaticThreadName}_%d{yyyyMMdd}.log.zip</FileNamePattern>
                 </rollingPolicy>
-                <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
-                    <MaxFileSize>10MB</MaxFileSize>
-                </triggeringPolicy>
             </appender>
         </sift>
     </appender>
@@ -27,7 +28,7 @@
             <Pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</Pattern>
         </encoder>
     </appender>
-    <logger name="io.infinite" level="debug" additivity="false"> <!--ENABLE ADDITIVITY ON PROD!!!-->
+    <logger name="io.infinite" level="debug" additivity="false">
         <appender-ref ref="SiftingAppender"/>
     </logger>
     <root level="info">

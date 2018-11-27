@@ -1,5 +1,7 @@
 package io.infinite.tpn.springdatarest
 
+import groovy.transform.ToString
+
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
@@ -10,6 +12,7 @@ import javax.persistence.Table
 
 @Entity
 @Table
+@ToString(includeNames = true, includeFields = true)
 class HttpLog {
 
     @Id

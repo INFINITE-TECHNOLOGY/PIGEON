@@ -1,5 +1,6 @@
 package io.infinite.tpn.http
 
+import groovy.transform.ToString
 import groovy.util.logging.Slf4j
 import io.infinite.blackbox.BlackBox
 import io.infinite.blackbox.BlackBoxLevel
@@ -10,6 +11,7 @@ import static java.net.HttpURLConnection.*
 
 @Slf4j
 @BlackBox
+@ToString(includeNames = true, includeFields = true, includeSuper = true)
 abstract class SenderDefault extends SenderAbstract {
 
     URL url

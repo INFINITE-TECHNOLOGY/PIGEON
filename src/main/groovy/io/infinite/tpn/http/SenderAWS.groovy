@@ -11,6 +11,7 @@ import com.amazonaws.auth.BasicAWSCredentials
 import com.amazonaws.http.AmazonHttpClient
 import com.amazonaws.http.ExecutionContext
 import com.amazonaws.http.HttpMethodName
+import groovy.transform.ToString
 import groovy.util.logging.Slf4j
 import io.infinite.blackbox.BlackBox
 import io.infinite.blackbox.BlackBoxLevel
@@ -20,6 +21,7 @@ import io.infinite.tpn.other.MessageStatuses
 
 @Slf4j
 @BlackBox
+@ToString(includeNames = true, includeFields = true, includeSuper = true)
 class SenderAWS extends SenderAbstract {
 
     SenderAWS(HttpRequest httpRequest) {

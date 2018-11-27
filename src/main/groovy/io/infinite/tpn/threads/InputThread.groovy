@@ -1,5 +1,6 @@
 package io.infinite.tpn.threads
 
+
 import groovy.util.logging.Slf4j
 import io.infinite.blackbox.BlackBox
 import io.infinite.blackbox.BlackBoxLevel
@@ -9,7 +10,6 @@ import io.infinite.tpn.springdatarest.InputMessage
 import io.infinite.tpn.springdatarest.InputMessageRepository
 import io.infinite.tpn.springdatarest.OutputMessage
 import io.infinite.tpn.springdatarest.OutputMessageRepository
-import org.slf4j.MDC
 import org.springframework.beans.factory.annotation.Autowired
 
 @Slf4j
@@ -31,6 +31,7 @@ class InputThread extends Thread {
     }
 
     @Override
+    @BlackBox(blackBoxLevel = BlackBoxLevel.METHOD)
     void run() {
         while (true) {
             Set<InputMessage> inputMessages = inputMessageRepository.findByInputQueueNameAndStatus(inputQueue.getName(), MessageStatuses.NEW.value())
@@ -58,6 +59,11 @@ class InputThread extends Thread {
             }
             sleep(inputQueue.pollPeriodMilliseconds)
         }
+    }
+
+    @Override
+    String toString() {
+        "Class: " + getClass().getCanonicalName() + "; Thread: " + getName() + "; InputQueue: " + inputQueue.toString()
     }
 
 }

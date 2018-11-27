@@ -1,9 +1,12 @@
 package io.infinite.tpn.springdatarest
 
+import groovy.transform.ToString
+
 import javax.persistence.*
 
 @Entity
 @Table(name = "messages")
+@ToString(includeNames = true, includeFields = true, excludes = "outputMessages")
 class InputMessage {
 
     @Id
