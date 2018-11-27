@@ -11,6 +11,7 @@ import io.infinite.tpn.threads.InputThread
 import io.infinite.tpn.threads.OutputThread
 import io.infinite.tpn.threads.OutputThreadNormal
 import io.infinite.tpn.threads.OutputThreadRetry
+import org.slf4j.MDC
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.SpringApplication
@@ -21,9 +22,6 @@ import org.springframework.hateoas.config.EnableHypermediaSupport
 @EnableHypermediaSupport(type = EnableHypermediaSupport.HypermediaType.HAL)
 @SpringBootApplication
 class App implements CommandLineRunner {
-
-    @Autowired
-    AppicationProperties appicationProperties
 
     @Autowired
     ApplicationContext applicationContext
@@ -37,7 +35,7 @@ class App implements CommandLineRunner {
 
     @Override
     void run(String... args) throws Exception {
-        System.setProperty("blackbox.mode", appicationProperties.blackboxMode)
+        MDC.put("threadName", "Main")
         Thread.currentThread().setName("App")
         runWithLogging()
     }

@@ -3,13 +3,13 @@ package io.infinite.tpn.threads
 import groovy.util.logging.Slf4j
 import io.infinite.blackbox.BlackBox
 import io.infinite.blackbox.BlackBoxLevel
-import io.infinite.tpn.AppicationProperties
 import io.infinite.tpn.conf.InputQueue
 import io.infinite.tpn.other.MessageStatuses
 import io.infinite.tpn.springdatarest.InputMessage
 import io.infinite.tpn.springdatarest.InputMessageRepository
 import io.infinite.tpn.springdatarest.OutputMessage
 import io.infinite.tpn.springdatarest.OutputMessageRepository
+import org.slf4j.MDC
 import org.springframework.beans.factory.annotation.Autowired
 
 @Slf4j
@@ -23,9 +23,6 @@ class InputThread extends Thread {
 
     @Autowired
     OutputMessageRepository outputMessageRepository
-
-    @Autowired
-    AppicationProperties applicationProperties
 
     @BlackBox(blackBoxLevel = BlackBoxLevel.EXPRESSION)
     InputThread(InputQueue inputQueue) {
@@ -59,7 +56,7 @@ class InputThread extends Thread {
                     inputMessageRepository.save(inputMessage)
                 }
             }
-            sleep(applicationProperties.inputThreadPollPeriodMilliseconds)
+            sleep(inputQueue.pollPeriodMilliseconds)
         }
     }
 

@@ -2,13 +2,13 @@ package io.infinite.tpn.threads
 
 import io.infinite.blackbox.BlackBox
 import io.infinite.blackbox.BlackBoxLevel
-import io.infinite.tpn.AppicationProperties
 import io.infinite.tpn.conf.OutputQueue
 import io.infinite.tpn.other.MessageStatuses
 import io.infinite.tpn.other.RoundRobin
 import io.infinite.tpn.springdatarest.InputMessageRepository
 import io.infinite.tpn.springdatarest.OutputMessage
 import io.infinite.tpn.springdatarest.OutputMessageRepository
+import org.slf4j.MDC
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationContext
 
@@ -23,9 +23,6 @@ abstract class OutputThread extends Thread {
 
     @Autowired
     InputMessageRepository inputMessageRepository
-
-    @Autowired
-    AppicationProperties applicationProperties
 
     OutputThread(OutputQueue outputQueue, ApplicationContext applicationContext) {
         setName("Output_" + outputQueue.getName())
@@ -60,7 +57,7 @@ abstract class OutputThread extends Thread {
                     workerEnqueue(outputMessage)
                 }
             }
-            sleep(applicationProperties.outputThreadPollPeriodMilliseconds)
+            sleep(outputQueue.pollPeriodMilliseconds)
         }
     }
 

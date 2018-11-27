@@ -5,6 +5,7 @@ import io.infinite.blackbox.BlackBoxLevel
 import io.infinite.tpn.other.MessageStatusSets
 import io.infinite.tpn.conf.OutputQueue
 import io.infinite.tpn.springdatarest.OutputMessage
+import org.slf4j.MDC
 import org.springframework.context.ApplicationContext
 
 @BlackBox

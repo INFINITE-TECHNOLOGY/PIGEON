@@ -12,6 +12,7 @@ import io.infinite.tpn.springdatarest.HttpLog
 import io.infinite.tpn.springdatarest.InputMessageRepository
 import io.infinite.tpn.springdatarest.OutputMessage
 import io.infinite.tpn.springdatarest.OutputMessageRepository
+import org.slf4j.MDC
 import org.springframework.beans.factory.annotation.Autowired
 
 import java.util.concurrent.LinkedBlockingQueue

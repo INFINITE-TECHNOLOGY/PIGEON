@@ -13,6 +13,7 @@ class OutputQueue {
     Integer retryThreadCount = 0
     String conversionModuleName
     String senderClassName
+    Long pollPeriodMilliseconds = 500
     Map<String, String> httpProperties = new HashMap<>()
     Map<String, String> extensions = new HashMap<>()
 
