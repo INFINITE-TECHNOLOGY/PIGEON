@@ -3,6 +3,7 @@ package io.infinite.tpn.threads
 
 import groovy.util.logging.Slf4j
 import io.infinite.blackbox.BlackBox
+import io.infinite.tpn.conf.InputQueue
 import io.infinite.tpn.conf.OutputQueue
 import io.infinite.tpn.http.HttpRequest
 import io.infinite.tpn.http.SenderAbstract
@@ -12,6 +13,7 @@ import io.infinite.tpn.springdatarest.HttpLog
 import io.infinite.tpn.springdatarest.InputMessageRepository
 import io.infinite.tpn.springdatarest.OutputMessage
 import io.infinite.tpn.springdatarest.OutputMessageRepository
+import org.slf4j.MDC
 import org.springframework.beans.factory.annotation.Autowired
 
 import java.util.concurrent.LinkedBlockingQueue
@@ -26,19 +28,20 @@ class SenderThread extends Thread {
     @Autowired
     OutputMessageRepository outputMessageRepository
 
-    OutputQueue outputQueue
+    OutputThread outputThread
 
     LinkedBlockingQueue<OutputMessage> sendingQueue = new LinkedBlockingQueue<>()
 
     GroovyScriptEngine groovyScriptEngine = new GroovyScriptEngine("./conf/conversion_modules/", this.getClass().getClassLoader())
 
-    SenderThread(OutputQueue outputQueue, Integer id) {
-        setName("Sender_" + outputQueue.getName() + "_" + id)
-        this.outputQueue = outputQueue
+    SenderThread(OutputThread outputThread, Integer id) {
+        setName(outputThread.getName() + "_SENDER_" + id)
+        this.outputThread = outputThread
     }
 
     @Override
     void run() {
+        MDC.put("inputQueueName", outputThread.inputThread.inputQueue.getName())
         while (true) {
             while (!sendingQueue.isEmpty()) {
                 sendMessage(sendingQueue.poll())
@@ -60,15 +63,15 @@ class SenderThread extends Thread {
     void sendMessage(OutputMessage outputMessage) {
         try {
             Binding binding = new Binding()
-            HttpRequest httpRequest = createHttpRequest(outputQueue)
+            HttpRequest httpRequest = createHttpRequest(outputThread.outputQueue)
             binding.setVariable("outputMessage", outputMessage)
-            binding.setVariable("outputQueue", outputQueue)
+            binding.setVariable("outputQueue", outputThread.outputQueue)
             binding.setVariable("inputMessage", outputMessage.getInputMessage())
             binding.setVariable("httpRequest", httpRequest)
             /*\/\/\/\/\/\/\/\/*/
-            groovyScriptEngine.run(outputQueue.getConversionModuleName(), binding)//<<<<<<<<<<<<<conversion happens here
+            groovyScriptEngine.run(outputThread.outputQueue.getConversionModuleName(), binding)//<<<<<<<<<<<<<conversion happens here
             /*/\/\/\/\/\/\/\/\*/
-            SenderAbstract senderAbstract = Class.forName(outputQueue.getSenderClassName()).newInstance(httpRequest) as SenderAbstract
+            SenderAbstract senderAbstract = Class.forName(outputThread.outputQueue.getSenderClassName()).newInstance(httpRequest) as SenderAbstract
             outputMessage.setStatus(MessageStatuses.SENDING.value())
             outputMessageRepository.save(outputMessage)
             /*\/\/\/\/\/\/\/\/*/
@@ -106,7 +109,7 @@ class SenderThread extends Thread {
 
     @Override
     String toString() {
-        "Class: " + getClass().getCanonicalName() + "; Thread: " + getName() + "; OutputQueue: " + outputQueue.toString() + "; sendingQueue: " + sendingQueue.toString()
+        return "Thread: " + getName() + "; OutputQueue: " + outputThread.outputQueue.toString() + "; sendingQueue: " + sendingQueue.toString()
     }
 
 }

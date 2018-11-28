@@ -11,11 +11,11 @@ import org.springframework.context.ApplicationContext
 @BlackBox
 class OutputThreadRetry extends OutputThread {
 
-    OutputThreadRetry(OutputQueue outputQueue, ApplicationContext applicationContext) {
-        super(outputQueue, applicationContext)
-        setName("Output_" + getName() + "_Retry")
+    OutputThreadRetry(OutputQueue outputQueue, InputThread inputThread, ApplicationContext applicationContext) {
+        super(outputQueue, inputThread, applicationContext)
+        setName(getName() + "_RETRY")
         (1..outputQueue.retryThreadCount).each {
-            SenderThread senderThread = new SenderThread(outputQueue, it)
+            SenderThread senderThread = new SenderThread(this, it)
             senderThreadRobin.add(senderThread)
             senderThread.start()
         }
@@ -29,6 +29,11 @@ class OutputThreadRetry extends OutputThread {
             maxLastSendDate = (new Date() - outputQueue.resendIntervalSeconds.seconds)
         }
         return outputMessageRepository.masterQueryRetry(outputQueueName, MessageStatusSets.RETRY_MESSAGE_STATUSES.value(), outputQueue.maxRetryCount, maxLastSendDate)
+    }
+
+    @Override
+    void run() {
+        super.run()
     }
 
 }

@@ -3,18 +3,21 @@ package io.infinite.tpn.threads
 
 import io.infinite.blackbox.BlackBox
 import io.infinite.blackbox.BlackBoxLevel
+import io.infinite.tpn.conf.InputQueue
 import io.infinite.tpn.conf.OutputQueue
 import io.infinite.tpn.other.MessageStatuses
 import io.infinite.tpn.other.RoundRobin
 import io.infinite.tpn.springdatarest.InputMessageRepository
 import io.infinite.tpn.springdatarest.OutputMessage
 import io.infinite.tpn.springdatarest.OutputMessageRepository
+import org.slf4j.MDC
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationContext
 
 @BlackBox
 abstract class OutputThread extends Thread {
 
+    InputThread inputThread
     OutputQueue outputQueue
     RoundRobin<SenderThread> senderThreadRobin = new RoundRobin<>()
 
@@ -24,11 +27,12 @@ abstract class OutputThread extends Thread {
     @Autowired
     InputMessageRepository inputMessageRepository
 
-    OutputThread(OutputQueue outputQueue, ApplicationContext applicationContext) {
-        setName("Output_" + outputQueue.getName())
+    OutputThread(OutputQueue outputQueue, InputThread inputThread, ApplicationContext applicationContext) {
+        setName(outputQueue.getName() + "_OUTPUT")
         this.outputQueue = outputQueue
+        this.inputThread = inputThread
         (1..outputQueue.normalThreadCount).each {
-            SenderThread senderThread = new SenderThread(outputQueue, it)
+            SenderThread senderThread = new SenderThread(this, it)
             applicationContext.getAutowireCapableBeanFactory().autowireBean(senderThread)
             senderThreadRobin.add(senderThread)
             senderThread.start()
@@ -52,6 +56,7 @@ abstract class OutputThread extends Thread {
     @Override
     @BlackBox(blackBoxLevel = BlackBoxLevel.METHOD)
     void run() {
+        MDC.put("inputQueueName", inputThread.inputQueue.getName())
         while (true) {
             Set<OutputMessage> outputMessages = masterQuery(outputQueue.getName())
             if (outputMessages.size() > 0) {
@@ -65,7 +70,7 @@ abstract class OutputThread extends Thread {
 
     @Override
     String toString() {
-        "Class: " + getClass().getCanonicalName() + "; Thread: " + getName() + "; OutputQueue: " + outputQueue.toString()
+        return "Thread: " + getName() + "; OutputQueue: " + outputQueue.toString()
     }
 
 }

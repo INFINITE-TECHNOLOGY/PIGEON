@@ -35,7 +35,6 @@ class App implements CommandLineRunner {
 
     @Override
     void run(String... args) throws Exception {
-        MDC.put("threadName", "Main")
         Thread.currentThread().setName("App")
         runWithLogging()
     }
@@ -54,12 +53,12 @@ class App implements CommandLineRunner {
             inputThread.start()
             inputQueue.outputQueues.each { outputQueue ->
                 OutputThread outputThreadNormal
-                outputThreadNormal = new OutputThreadNormal(outputQueue, applicationContext)
+                outputThreadNormal = new OutputThreadNormal(outputQueue, inputThread, applicationContext)
                 applicationContext.getAutowireCapableBeanFactory().autowireBean(outputThreadNormal)
                 outputThreadNormal.start()
                 if (outputQueue.maxRetryCount > 0) {
                     OutputThread outputThreadRetry
-                    outputThreadRetry = new OutputThreadRetry(outputQueue, applicationContext)
+                    outputThreadRetry = new OutputThreadRetry(outputQueue, inputThread, applicationContext)
                     applicationContext.getAutowireCapableBeanFactory().autowireBean(outputThreadRetry)
                     outputThreadRetry.start()
                 }

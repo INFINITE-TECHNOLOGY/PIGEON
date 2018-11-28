@@ -1,6 +1,5 @@
 package io.infinite.tpn.threads
 
-
 import io.infinite.blackbox.BlackBox
 import io.infinite.blackbox.BlackBoxLevel
 import io.infinite.tpn.conf.OutputQueue
@@ -13,8 +12,8 @@ class OutputThreadNormal extends OutputThread {
 
     Long lastId
 
-    OutputThreadNormal(OutputQueue outputQueue, ApplicationContext applicationContext) {
-        super(outputQueue, applicationContext)
+    OutputThreadNormal(OutputQueue outputQueue, InputThread inputThread, ApplicationContext applicationContext) {
+        super(outputQueue, inputThread, applicationContext)
     }
 
     @Override

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-    <appender name="SiftingAppender" class="ch.qos.logback.classic.sift.SiftingAppender">
+    <appender name="InfiniteDebug" class="ch.qos.logback.classic.sift.SiftingAppender">
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>DEBUG</level>
             <onMatch>ACCEPT</onMatch>
@@ -12,24 +12,92 @@
         </discriminator>
         <sift>
             <appender name="${automaticThreadName}" class="ch.qos.logback.core.rolling.RollingFileAppender">
-                <append>false</append><!--ENABLE ON PROD !!!!-->
-                <file>./LOGS/${automaticThreadName}_TODAY.log</file>
+                <file>./LOGS/${automaticThreadName}/DEBUG/${automaticThreadName}_DEBUG_TODAY.log</file>
                 <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-                    <Pattern>%d{yyyy-MM-dd HH:mm:ss} %mdc [%thread] %level %logger{35} - %msg%n</Pattern>
+                    <Pattern>%d{yyyy-MM-dd HH:mm:ss}:%level:%thread:%logger:%msg%n</Pattern>
                 </encoder>
                 <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-                    <FileNamePattern>./LOGS/ARCHIVE/%d{yyyyMMdd}/${automaticThreadName}_%d{yyyyMMdd}.log.zip</FileNamePattern>
+                    <FileNamePattern>./LOGS/${automaticThreadName}/DEBUG/ARCHIVE/%d{yyyyMMdd, aux}/${automaticThreadName}_%d{yyyyMMdd}_DEBUG.zip</FileNamePattern>
+                </rollingPolicy>
+            </appender>
+        </sift>
+    </appender>
+    <appender name="InfiniteInfo" class="ch.qos.logback.classic.sift.SiftingAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <discriminator>
+            <key>automaticThreadName</key>
+            <defaultValue>Unnamed Thread</defaultValue>
+        </discriminator>
+        <sift>
+            <appender name="${automaticThreadName}" class="ch.qos.logback.core.rolling.RollingFileAppender">
+                <file>./LOGS/${automaticThreadName}/INFO/${automaticThreadName}_INFO_TODAY.log</file>
+                <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+                    <Pattern>%d{yyyy-MM-dd HH:mm:ss}:%level:%thread:%logger:%msg%n</Pattern>
+                </encoder>
+                <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                    <FileNamePattern>./LOGS/${automaticThreadName}/INFO/ARCHIVE/%d{yyyyMMdd, aux}/${automaticThreadName}_%d{yyyyMMdd}_INFO.zip</FileNamePattern>
+                </rollingPolicy>
+            </appender>
+        </sift>
+    </appender>
+    <appender name="InfiniteWarn" class="ch.qos.logback.classic.sift.SiftingAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>WARN</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <discriminator>
+            <key>automaticThreadName</key>
+            <defaultValue>Unnamed Thread</defaultValue>
+        </discriminator>
+        <sift>
+            <appender name="${automaticThreadName}" class="ch.qos.logback.core.rolling.RollingFileAppender">
+                <file>./LOGS/${automaticThreadName}/WARN/${automaticThreadName}_WARN_TODAY.log</file>
+                <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+                    <Pattern>%d{yyyy-MM-dd HH:mm:ss}:%level:%thread:%logger:%msg%n</Pattern>
+                </encoder>
+                <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                    <FileNamePattern>./LOGS/${automaticThreadName}/WARN/ARCHIVE/%d{yyyyMMdd, aux}/${automaticThreadName}_%d{yyyyMMdd}_WARN.zip</FileNamePattern>
+                </rollingPolicy>
+            </appender>
+        </sift>
+    </appender>
+    <appender name="InfiniteError" class="ch.qos.logback.classic.sift.SiftingAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <discriminator>
+            <key>automaticThreadName</key>
+            <defaultValue>Unnamed Thread</defaultValue>
+        </discriminator>
+        <sift>
+            <appender name="DEBUG_${automaticThreadName}" class="ch.qos.logback.core.rolling.RollingFileAppender">
+                <file>./LOGS/${automaticThreadName}/ERROR/${automaticThreadName}_ERROR_TODAY.log</file>
+                <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+                    <Pattern>%d{yyyy-MM-dd HH:mm:ss}:%level:%thread:%logger:%msg%n</Pattern>
+                </encoder>
+                <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                    <FileNamePattern>./LOGS/${automaticThreadName}/ERROR/ARCHIVE/%d{yyyyMMdd, aux}/${automaticThreadName}_%d{yyyyMMdd}_ERROR.zip</FileNamePattern>
                 </rollingPolicy>
             </appender>
         </sift>
     </appender>
     <appender name="System.out" class="ch.qos.logback.core.ConsoleAppender">
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <Pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</Pattern>
+            <Pattern>%d{yyyy-MM-dd HH:mm:ss}:%level:%thread:%logger:%msg%n</Pattern>
         </encoder>
     </appender>
     <logger name="io.infinite" level="debug" additivity="false">
-        <appender-ref ref="SiftingAppender"/>
+        <appender-ref ref="InfiniteDebug"/>
+        <appender-ref ref="InfiniteInfo"/>
+        <appender-ref ref="InfiniteWarn"/>
+        <appender-ref ref="InfiniteError"/>
     </logger>
     <root level="info">
         <appender-ref ref="System.out"/>

@@ -10,6 +10,7 @@ import io.infinite.tpn.springdatarest.InputMessage
 import io.infinite.tpn.springdatarest.InputMessageRepository
 import io.infinite.tpn.springdatarest.OutputMessage
 import io.infinite.tpn.springdatarest.OutputMessageRepository
+import org.slf4j.MDC
 import org.springframework.beans.factory.annotation.Autowired
 
 @Slf4j
@@ -26,13 +27,14 @@ class InputThread extends Thread {
 
     @BlackBox(blackBoxLevel = BlackBoxLevel.EXPRESSION)
     InputThread(InputQueue inputQueue) {
-        setName("Input_" + inputQueue.getName())
+        setName(inputQueue.getName() + "_INPUT")
         this.inputQueue = inputQueue
     }
 
     @Override
     @BlackBox(blackBoxLevel = BlackBoxLevel.METHOD)
     void run() {
+        MDC.put("inputQueueName", inputQueue.getName())
         while (true) {
             Set<InputMessage> inputMessages = inputMessageRepository.findByInputQueueNameAndStatus(inputQueue.getName(), MessageStatuses.NEW.value())
             if (inputMessages.size() > 0) {
@@ -63,7 +65,7 @@ class InputThread extends Thread {
 
     @Override
     String toString() {
-        "Class: " + getClass().getCanonicalName() + "; Thread: " + getName() + "; InputQueue: " + inputQueue.toString()
+        return "Thread: " + getName() + "; InputQueue: " + inputQueue.toString()
     }
 
 }
