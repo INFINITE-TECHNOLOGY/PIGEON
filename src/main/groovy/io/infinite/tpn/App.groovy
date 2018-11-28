@@ -11,7 +11,6 @@ import io.infinite.tpn.threads.InputThread
 import io.infinite.tpn.threads.OutputThread
 import io.infinite.tpn.threads.OutputThreadNormal
 import io.infinite.tpn.threads.OutputThreadRetry
-import org.slf4j.MDC
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.SpringApplication

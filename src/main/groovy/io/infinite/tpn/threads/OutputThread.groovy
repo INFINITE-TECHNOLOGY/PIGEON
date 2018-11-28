@@ -1,9 +1,7 @@
 package io.infinite.tpn.threads
 
-
 import io.infinite.blackbox.BlackBox
 import io.infinite.blackbox.BlackBoxLevel
-import io.infinite.tpn.conf.InputQueue
 import io.infinite.tpn.conf.OutputQueue
 import io.infinite.tpn.other.MessageStatuses
 import io.infinite.tpn.other.RoundRobin

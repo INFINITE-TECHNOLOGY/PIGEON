@@ -1,9 +1,8 @@
 package io.infinite.tpn.threads
 
-
 import groovy.util.logging.Slf4j
 import io.infinite.blackbox.BlackBox
-import io.infinite.tpn.conf.InputQueue
+import io.infinite.blackbox.BlackBoxLevel
 import io.infinite.tpn.conf.OutputQueue
 import io.infinite.tpn.http.HttpRequest
 import io.infinite.tpn.http.SenderAbstract
@@ -60,6 +59,7 @@ class SenderThread extends Thread {
         return httpRequest
     }
 
+    @BlackBox(blackBoxLevel = BlackBoxLevel.EXPRESSION, suppressExceptions = true)
     void sendMessage(OutputMessage outputMessage) {
         try {
             Binding binding = new Binding()
@@ -69,7 +69,8 @@ class SenderThread extends Thread {
             binding.setVariable("inputMessage", outputMessage.getInputMessage())
             binding.setVariable("httpRequest", httpRequest)
             /*\/\/\/\/\/\/\/\/*/
-            groovyScriptEngine.run(outputThread.outputQueue.getConversionModuleName(), binding)//<<<<<<<<<<<<<conversion happens here
+            groovyScriptEngine.run(outputThread.outputQueue.getConversionModuleName(), binding)
+//<<<<<<<<<<<<<conversion happens here
             /*/\/\/\/\/\/\/\/\*/
             SenderAbstract senderAbstract = Class.forName(outputThread.outputQueue.getSenderClassName()).newInstance(httpRequest) as SenderAbstract
             outputMessage.setStatus(MessageStatuses.SENDING.value())
