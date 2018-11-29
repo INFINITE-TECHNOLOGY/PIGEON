@@ -35,13 +35,14 @@ dependencies {
     /*\/\/\/\/boot*/
     compile 'org.springframework.boot:spring-boot-starter-data-rest'
     compile 'org.springframework.boot:spring-boot-starter-data-jpa'
-    compile 'org.springframework.boot:spring-boot-starter-jersey'
+    //compile 'org.springframework.boot:spring-boot-starter-jersey'
     //compile 'org.springframework.boot:spring-boot-devtools'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
     /*/\/\/\boot*/
     compile 'io.infinite:blackbox:2.0.0'
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.9.7' //for configuration serialization
-    compile group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: '2.0' //for Enqueue web service
+    //compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-xml', version: '2.9.7' //for supporting XML content type in REST services
+    //compile group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: '2.0' //for Enqueue web service
     /*DB either h2 or MySQL:*/
     compile group: 'com.h2database', name: 'h2'
     //compile 'mysql:mysql-connector-java'

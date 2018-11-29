@@ -69,8 +69,7 @@ class SenderThread extends Thread {
             binding.setVariable("inputMessage", outputMessage.getInputMessage())
             binding.setVariable("httpRequest", httpRequest)
             /*\/\/\/\/\/\/\/\/*/
-            groovyScriptEngine.run(outputThread.outputQueue.getConversionModuleName(), binding)
-//<<<<<<<<<<<<<conversion happens here
+            groovyScriptEngine.run(outputThread.outputQueue.getConversionModuleName(), binding)//<<<<<<<<<<<<<conversion happens here
             /*/\/\/\/\/\/\/\/\*/
             SenderAbstract senderAbstract = Class.forName(outputThread.outputQueue.getSenderClassName()).newInstance(httpRequest) as SenderAbstract
             outputMessage.setStatus(MessageStatuses.SENDING.value())
@@ -83,11 +82,11 @@ class SenderThread extends Thread {
             outputMessage.setAttemptsCount(outputMessage.getAttemptsCount() + 1)
             outputMessage.setLastSendTime(new Date())
             outputMessageRepository.save(outputMessage)
-        } catch (Throwable t) {
-            outputMessage.setExceptionString(new TpnException(t).serialize())
+        } catch (Exception e) {
+            outputMessage.setExceptionString(new TpnException(e).serialize())
             outputMessage.setStatus(MessageStatuses.EXCEPTION.value())
             outputMessageRepository.save(outputMessage)
-            throw t
+            throw e
         }
     }
 
