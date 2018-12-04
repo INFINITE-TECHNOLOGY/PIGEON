@@ -1,14 +1,14 @@
 buildscript {
     repositories {
         mavenCentral()
-        mavenLocal()
         jcenter()
         maven {
             url 'https://plugins.gradle.org/m2/'
         }
-        flatDir {
-            dirs 'libs'
-        }
+        /*maven {
+            url 'https://i-t.io/m2'
+        }*/
+        mavenLocal()
     }
     dependencies {
         classpath('org.springframework.boot:spring-boot-gradle-plugin:1.5.8.RELEASE')
@@ -17,11 +17,14 @@ buildscript {
 
 repositories {
     mavenCentral()
-    mavenLocal()
     jcenter()
     maven {
         url "https://plugins.gradle.org/m2/"
     }
+    /*maven {
+        url 'https://i-t.io/m2'
+    }*/
+    mavenLocal()
 }
 
 apply plugin: 'groovy'
@@ -29,30 +32,25 @@ apply plugin: 'java'
 apply plugin: 'application'
 apply plugin: 'idea'
 apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+ext['groovy.version'] = '2.5.4'
 
 dependencies {
-    //compile 'org.codehaus.groovy:groovy-all:2.5.2'
-    /*\/\/\/\/boot*/
+    compile 'org.codehaus.groovy:groovy-all:2.5.4'
     compile 'org.springframework.boot:spring-boot-starter-data-rest'
     compile 'org.springframework.boot:spring-boot-starter-data-jpa'
-    //compile 'org.springframework.boot:spring-boot-starter-jersey'
-    //compile 'org.springframework.boot:spring-boot-devtools'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
-    /*/\/\/\boot*/
     compile 'io.infinite:blackbox:2.0.0'
-    compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.9.7' //for configuration serialization
-    //compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-xml', version: '2.9.7' //for supporting XML content type in REST services
-    //compile group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: '2.0' //for Enqueue web service
-    /*DB either h2 or MySQL:*/
-    compile group: 'com.h2database', name: 'h2'
-    //compile 'mysql:mysql-connector-java'
+    compile 'io.infinite:bobbin:1.0.0'
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.9.7'
     compile 'com.h2database:h2:1.4.197'
-    testCompile 'org.spockframework:spock-core:1.0-groovy-2.4'
-    testCompile 'org.springframework.boot:spring-boot-starter-test'
-    //others
     compile group: 'org.apache.commons', name: 'commons-lang3'
-    // https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-s3
     compile group: 'com.amazonaws', name: 'aws-java-sdk-s3', version: '1.11.449'
+}
+
+configurations {
+    providedRuntime
+    compile.exclude(group: 'ch.qos.logback')
 }
 
 mainClassName = 'App'
