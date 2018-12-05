@@ -46,6 +46,7 @@ dependencies {
     compile 'com.h2database:h2:1.4.197'
     compile group: 'org.apache.commons', name: 'commons-lang3'
     compile group: 'com.amazonaws', name: 'aws-java-sdk-s3', version: '1.11.449'
+    compile group: 'com.neovisionaries', name: 'nv-i18n', version: '1.23'
 }
 
 configurations {

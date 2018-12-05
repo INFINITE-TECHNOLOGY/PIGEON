@@ -34,7 +34,6 @@ class App implements CommandLineRunner {
 
     @Override
     void run(String... args) throws Exception {
-        Thread.currentThread().setName("App")
         runWithLogging()
     }
 
