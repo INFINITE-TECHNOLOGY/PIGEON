@@ -12,14 +12,13 @@ import javax.xml.bind.annotation.XmlRootElement
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Component
-@XmlRootElement(name = "Envelope", namespace = "http://www.w3.org/2003/05/soap-envelope")
 @XmlAccessorType(XmlAccessType.NONE)
 @RestController
-class TestMessage {
+class TestJSON {
 
-    @PostMapping("/testMessages")
-    TestMessage post(HttpEntity<TestMessage> httpEntity) {
-        TestMessage testMessage = httpEntity.getBody()
+    @PostMapping("/testJSON")
+    TestJSON post(HttpEntity<TestJSON> httpEntity) {
+        TestJSON testMessage = httpEntity.getBody()
         return testMessage
     }
 
