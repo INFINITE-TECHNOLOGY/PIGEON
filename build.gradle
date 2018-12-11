@@ -5,9 +5,9 @@ buildscript {
         maven {
             url 'https://plugins.gradle.org/m2/'
         }
-        /*maven {
-            url 'https://i-t.io/m2'
-        }*/
+        maven {
+            url 'https://dl.bintray.com/infinite-technology/m2'
+        }
         mavenLocal()
     }
     dependencies {
@@ -21,9 +21,9 @@ repositories {
     maven {
         url "https://plugins.gradle.org/m2/"
     }
-    /*maven {
-        url 'https://i-t.io/m2'
-    }*/
+    maven {
+        url 'https://dl.bintray.com/infinite-technology/m2'
+    }
     mavenLocal()
 }
 

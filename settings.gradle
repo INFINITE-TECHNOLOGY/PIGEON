@@ -15,4 +15,4 @@ include 'api'
 include 'services:webservice'
 */
 
-rootProject.name = 'TPN_NEW'
+rootProject.name = 'pigeon'
