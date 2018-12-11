@@ -1,2 +1,2 @@
-# TPN
-Transaction Push Notification
+# Pigeon
+HTTP Message Broker
