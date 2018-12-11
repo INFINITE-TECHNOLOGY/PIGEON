@@ -34,7 +34,6 @@ class InputThread extends Thread {
     @Override
     @BlackBox(blackBoxLevel = BlackBoxLevel.METHOD)
     void run() {
-        MDC.put("inputQueueName", inputQueue.getName())
         while (true) {
             Set<InputMessage> inputMessages = inputMessageRepository.findByInputQueueNameAndStatus(inputQueue.getName(), MessageStatuses.NEW.value())
             if (inputMessages.size() > 0) {

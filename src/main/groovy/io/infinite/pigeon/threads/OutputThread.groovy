@@ -54,7 +54,6 @@ abstract class OutputThread extends Thread {
     @Override
     @BlackBox(blackBoxLevel = BlackBoxLevel.METHOD)
     void run() {
-        MDC.put("inputQueueName", inputThread.inputQueue.getName())
         while (true) {
             Set<OutputMessage> outputMessages = masterQuery(outputQueue.getName())
             if (outputMessages.size() > 0) {

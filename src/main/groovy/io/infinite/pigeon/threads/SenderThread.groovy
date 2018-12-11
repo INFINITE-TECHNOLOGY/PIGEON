@@ -41,7 +41,6 @@ class SenderThread extends Thread {
 
     @Override
     void run() {
-        MDC.put("inputQueueName", outputThread.inputThread.inputQueue.getName())
         while (true) {
             while (!sendingQueue.isEmpty()) {
                 sendMessage(sendingQueue.poll())
@@ -106,7 +105,6 @@ class SenderThread extends Thread {
         httpLog.responseStatus = senderAbstract.httpResponse.status
         return httpLog
     }
-
 
     @Override
     String toString() {

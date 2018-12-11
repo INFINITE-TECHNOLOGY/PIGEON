@@ -6,6 +6,8 @@ import io.infinite.blackbox.BlackBox
 import io.infinite.pigeon.other.MessageStatuses
 import org.apache.commons.lang3.exception.ExceptionUtils
 import org.codehaus.groovy.runtime.StackTraceUtils
+
+
 import static java.net.HttpURLConnection.*
 
 @Slf4j
@@ -46,14 +48,7 @@ abstract class SenderDefault extends SenderAbstract {
         httpResponse.setStatus(httpURLConnection.getResponseCode())
         InputStream inputStream = getInputStream(httpURLConnection)
         if (inputStream != null) {
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream))
-            String line
-            StringBuffer stringBuffer = new StringBuffer()
-            while ((line = bufferedReader.readLine()) != null) {
-                stringBuffer.append(line)
-            }
-            bufferedReader.close()
-            httpResponse.setBody(stringBuffer.toString())
+            httpResponse.setBody(inputStream.getText())
         } else {
             log.info("Null input stream")
         }
@@ -73,7 +68,7 @@ abstract class SenderDefault extends SenderAbstract {
     static InputStream getInputStream(HttpURLConnection httpURLConnection) {
         InputStream inputStream = null
         if (httpURLConnection.getErrorStream() == null) {
-            if (httpURLConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+            if (httpURLConnection.getResponseCode() == HTTP_OK) {
                 inputStream = httpURLConnection.getInputStream()
             }
         } else {
