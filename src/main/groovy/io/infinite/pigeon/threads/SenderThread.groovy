@@ -32,7 +32,7 @@ class SenderThread extends Thread {
 
     LinkedBlockingQueue<OutputMessage> sendingQueue = new LinkedBlockingQueue<>()
 
-    GroovyScriptEngine groovyScriptEngine = new GroovyScriptEngine("${System.getProperty("confDir", ".")}/plugins/", this.getClass().getClassLoader())
+    GroovyScriptEngine groovyScriptEngine = new GroovyScriptEngine("${System.getProperty("confDir", ".")}/plugins/output/", this.getClass().getClassLoader())
 
     SenderThread(OutputThread outputThread, Integer id) {
         setName(outputThread.getName() + "_SENDER_" + id)

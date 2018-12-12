@@ -2,7 +2,6 @@ package io.infinite.pigeon.springdatarest
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import io.infinite.blackbox.BlackBox
-import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Component
@@ -18,20 +17,18 @@ import javax.xml.bind.annotation.XmlAccessorType
 @XmlAccessorType(XmlAccessType.NONE)
 @RestController
 @BlackBox
-class CustomResponseController {
+class CustomResourceController {
 
-    static GroovyScriptEngine groovyScriptEngine = new GroovyScriptEngine("${System.getProperty("confDir", ".")}/plugins/", ClassLoader.getSystemClassLoader())
+    static GroovyScriptEngine groovyScriptEngine = new GroovyScriptEngine("${System.getProperty("confDir", ".")}/plugins/input/", ClassLoader.getSystemClassLoader())
 
-    @PostMapping(value = "/customResponse/*", produces = [MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE])
+    @PostMapping(value = "/custom/*", produces = [MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE])
     ResponseEntity<CustomResponse> post(HttpServletRequest httpServletRequest) {
         String path = httpServletRequest.getRequestURI()
         String pluginName = path.substring(path.lastIndexOf('/') + 1)
-        CustomResponse customResponse = new CustomResponse()
         Binding binding = new Binding()
         binding.setVariable("httpServletRequest", httpServletRequest)
-        binding.setVariable("customResponse", customResponse)
         groovyScriptEngine.run(pluginName + ".groovy", binding)
-        return new ResponseEntity(customResponse, HttpStatus.valueOf(customResponse.getStatus())) //todo - move to script
+        return binding.getVariable("responseEntity") as ResponseEntity<CustomResponse>
     }
 
 }
