@@ -1,56 +1,131 @@
-buildscript {
-    repositories {
-        jcenter()
-        maven {
-            url 'https://plugins.gradle.org/m2/'
-        }
-        maven {
-            url 'https://dl.bintray.com/infinite-technology/m2'
-        }
-        mavenLocal()
-    }
-    dependencies {
-        classpath('org.springframework.boot:spring-boot-gradle-plugin:1.5.8.RELEASE')
-    }
+/*
+File
+https://github.com/virtualdogbert/GroovyConfigWriter/blob/master/build.gradle
+has been used as basis for this file.
+ */
+plugins {
+    id "groovy"
+    id "maven-publish"
+    id "com.jfrog.bintray" version "1.8.4"
+    id "com.jfrog.artifactory" version "4.8.1"
+    id "idea"
+    id "jacoco"
+    id 'application'
+    id "org.springframework.boot" version "2.1.1.RELEASE"
+    id "io.spring.dependency-management" version "1.0.6.RELEASE"
+}
+ext['groovy.version'] = '2.5.4'
+sourceCompatibility = 1.7
+group = "io.infinite"
+version = "1.0.0"
+description = "HTTP Message Broker"
+wrapper {
+    gradleVersion = "5.0"
 }
 repositories {
     jcenter()
     maven {
-        url "https://plugins.gradle.org/m2/"
+        url "https://oss.jfrog.org/artifactory/oss-snapshot-local"
     }
     maven {
-        url 'https://dl.bintray.com/infinite-technology/m2'
+        url  "https://dl.bintray.com/infinite-technology/m2"
     }
-    mavenLocal()
 }
-
-apply plugin: 'groovy'
-apply plugin: 'java'
-apply plugin: 'application'
-apply plugin: 'idea'
-apply plugin: 'org.springframework.boot'
-apply plugin: 'io.spring.dependency-management'
-ext['groovy.version'] = '2.5.4'
-
+sourceSets {
+    main.groovy.srcDirs = ["src/main/groovy"]
+    test.groovy.srcDirs = ["src/test/groovy"]
+}
 dependencies {
     compile 'org.codehaus.groovy:groovy-all:2.5.4'
     compile 'org.springframework.boot:spring-boot-starter-data-rest'
     compile 'org.springframework.boot:spring-boot-starter-data-jpa'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
-    compile 'io.infinite:blackbox:2.0.0'
-    compile 'io.infinite:bobbin:1.0.0'
+    compile 'io.infinite:bobbin:2.0.0-SNAPSHOT'
+    compile 'io.infinite:blackbox:1.0.0'
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.9.7'
     compile 'com.h2database:h2:1.4.197'
     compile group: 'org.apache.commons', name: 'commons-lang3'
-    //compile group: 'commons-io', name: 'commons-io', version: '2.6'
     compile group: 'com.amazonaws', name: 'aws-java-sdk-s3', version: '1.11.449'
     compile group: 'com.neovisionaries', name: 'nv-i18n', version: '1.23'
 }
-
+task sourceJar(type: Jar) {
+    from sourceSets.main.allSource
+    classifier "sources"
+}
+ext {
+    theTitle = "HTTP Message Broker"
+    titleForDocumentation = archivesBaseName + " " + version
+    packageTitle = group
+    description = "HTTP Message Broker"
+}
+publishing {
+    publications {
+        groovyMaven(MavenPublication) {
+            from components.java
+            artifact(sourceJar) {
+                classifier "sources"
+            }
+        }
+    }
+}
+task jarSrc(type: Jar, dependsOn: classes) {
+    classifier = "sources"
+    from sourceSets.main.allSource
+}
+artifacts {
+    archives(jarSrc)
+}
+bintray {
+    user = System.getProperty("bintrayuser")
+    key = System.getProperty("bintraypassword")
+    publications = ["groovyMaven"]
+    def projectName = project.name
+    def projectDescription = project.description
+    pkg {
+        userOrg = "infinite-technology"
+        repo = "m2"
+        name = "pigeon"
+        desc = "HTTP Message Broker"
+        issueTrackerUrl = "https://github.com/INFINITE-TECHNOLOGY/PIGEON/issues"
+        vcsUrl = "https://github.com/INFINITE-TECHNOLOGY/PIGEON.git"
+        websiteUrl = "https://i-t.io/Pigeon/"
+        licenses = ["Apache-2.0"]
+    }
+}
+artifactory {
+    contextUrl = 'http://oss.jfrog.org'
+    publish {
+        repository {
+            repoKey = 'oss-snapshot-local'
+            username = System.getProperty("bintrayuser")
+            password = System.getProperty("bintraypassword")
+        }
+        defaults {
+            publications('groovyMaven')
+            publishArtifacts = true
+            publishPom = true
+        }
+    }
+    resolve {
+        repoKey = 'jcenter'
+    }
+    clientConfig.info.setBuildNumber(System.currentTimeMillis().toString())
+}
+test {
+    testLogging {
+        events "passed", "skipped", "failed"
+        exceptionFormat "full"
+    }
+}
+jacocoTestReport {
+    reports {
+        xml.enabled true
+        html.enabled false
+    }
+}
+check.dependsOn jacocoTestReport
 configurations {
     providedRuntime
     compile.exclude(group: 'ch.qos.logback')
 }
-
 mainClassName = 'App'
-
