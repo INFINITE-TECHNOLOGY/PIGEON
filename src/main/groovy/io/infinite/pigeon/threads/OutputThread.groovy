@@ -1,7 +1,7 @@
 package io.infinite.pigeon.threads
 
 import io.infinite.blackbox.BlackBox
-import io.infinite.blackbox.BlackBoxLevel
+import io.infinite.carburetor.CarburetorLevel
 import io.infinite.pigeon.conf.OutputQueue
 import io.infinite.pigeon.other.MessageStatuses
 import io.infinite.pigeon.other.RoundRobin
@@ -30,7 +30,7 @@ abstract class OutputThread extends Thread {
         this.outputQueue = outputQueue
         this.inputThread = inputThread
         (1..outputQueue.normalThreadCount).each {
-            SenderThread senderThread = new SenderThread(this, it)
+            SenderThread senderThread = new SenderThread(this, it, applicationContext.getEnvironment().getProperty("pigeonOutPluginsDir"))
             applicationContext.getAutowireCapableBeanFactory().autowireBean(senderThread)
             senderThreadRobin.add(senderThread)
             senderThread.start()
@@ -39,7 +39,7 @@ abstract class OutputThread extends Thread {
 
     abstract LinkedHashSet<OutputMessage> masterQuery(String subscriberName)
 
-    @BlackBox(blackBoxLevel = BlackBoxLevel.METHOD_ERROR)
+    @BlackBox(level = CarburetorLevel.ERROR)
     void workerEnqueue(OutputMessage outputMessage) {
         SenderThread senderThread = ++senderThreadRobin.iterator()
         outputMessage.setStatus(MessageStatuses.WAITING.value())
@@ -52,7 +52,7 @@ abstract class OutputThread extends Thread {
     }
 
     @Override
-    @BlackBox(blackBoxLevel = BlackBoxLevel.METHOD)
+    @BlackBox(level = CarburetorLevel.METHOD)
     void run() {
         while (true) {
             Set<OutputMessage> outputMessages = masterQuery(outputQueue.getName())

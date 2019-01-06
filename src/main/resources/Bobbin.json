@@ -2,6 +2,17 @@
   "levels": "['debug', 'info', 'warn', 'error'].contains(level)",
   "classes": "all",
   "destinations": [
+    {//todo: plugins separately by classname
+      "name": "io.infinite.bobbin.destinations.FileDestination",
+      "properties": {
+        "fileKey": "threadName + level + className",
+        "fileName": "\"./LOGS/${threadName}/${level}/${className}/${threadName}_${level}_${date}.log\"",
+        "zipFileName": "\"./LOGS/${threadName}/${level}/${className}/ARCHIVE/${threadName}_${level}_${date}.zip\"",
+        "cleanupZipFileName": "\"${origFileName}_${System.currentTimeMillis().toString()}.zip\""
+      },
+      "format": "\"${dateTime}|${level}|${threadName}|${className}|${event.message}\\n\"",
+      "classes": "className.contains('io.infinite.')"
+    },
     {
       "name": "io.infinite.bobbin.destinations.FileDestination",
       "properties": {

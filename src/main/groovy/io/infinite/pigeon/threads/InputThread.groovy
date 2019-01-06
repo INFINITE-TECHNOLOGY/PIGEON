@@ -3,7 +3,7 @@ package io.infinite.pigeon.threads
 
 import groovy.util.logging.Slf4j
 import io.infinite.blackbox.BlackBox
-import io.infinite.blackbox.BlackBoxLevel
+import io.infinite.carburetor.CarburetorLevel
 import io.infinite.pigeon.conf.InputQueue
 import io.infinite.pigeon.other.MessageStatuses
 import io.infinite.pigeon.springdatarest.InputMessage
@@ -25,14 +25,14 @@ class InputThread extends Thread {
     @Autowired
     OutputMessageRepository outputMessageRepository
 
-    @BlackBox(blackBoxLevel = BlackBoxLevel.EXPRESSION)
+    @BlackBox(level = CarburetorLevel.EXPRESSION)
     InputThread(InputQueue inputQueue) {
         setName(inputQueue.getName() + "_INPUT")
         this.inputQueue = inputQueue
     }
 
     @Override
-    @BlackBox(blackBoxLevel = BlackBoxLevel.METHOD)
+    @BlackBox(level = CarburetorLevel.METHOD)
     void run() {
         while (true) {
             Set<InputMessage> inputMessages = inputMessageRepository.findByInputQueueNameAndStatus(inputQueue.getName(), MessageStatuses.NEW.value())

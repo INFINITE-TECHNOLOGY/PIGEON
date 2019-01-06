@@ -2,7 +2,7 @@ package io.infinite.pigeon.threads
 
 import groovy.time.TimeCategory
 import io.infinite.blackbox.BlackBox
-import io.infinite.blackbox.BlackBoxLevel
+import io.infinite.carburetor.CarburetorLevel
 import io.infinite.pigeon.conf.OutputQueue
 import io.infinite.pigeon.other.MessageStatusSets
 import io.infinite.pigeon.springdatarest.OutputMessage
@@ -15,14 +15,14 @@ class OutputThreadRetry extends OutputThread {
         super(outputQueue, inputThread, applicationContext)
         setName(getName() + "_RETRY")
         (1..outputQueue.retryThreadCount).each {
-            SenderThread senderThread = new SenderThread(this, it)
+            SenderThread senderThread = new SenderThread(this, it, applicationContext.getEnvironment().getProperty("pigeonOutPluginsDir"))
             senderThreadRobin.add(senderThread)
             senderThread.start()
         }
     }
 
     @Override
-    @BlackBox(blackBoxLevel = BlackBoxLevel.METHOD)
+    @BlackBox(level = CarburetorLevel.METHOD)
     LinkedHashSet<OutputMessage> masterQuery(String outputQueueName) {
         Date maxLastSendDate
         use(TimeCategory) {

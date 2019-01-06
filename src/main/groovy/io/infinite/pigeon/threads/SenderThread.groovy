@@ -3,7 +3,7 @@ package io.infinite.pigeon.threads
 
 import groovy.util.logging.Slf4j
 import io.infinite.blackbox.BlackBox
-import io.infinite.blackbox.BlackBoxLevel
+import io.infinite.carburetor.CarburetorLevel
 import io.infinite.pigeon.conf.OutputQueue
 import io.infinite.pigeon.http.HttpRequest
 import io.infinite.pigeon.http.SenderAbstract
@@ -15,6 +15,9 @@ import io.infinite.pigeon.springdatarest.OutputMessage
 import io.infinite.pigeon.springdatarest.OutputMessageRepository
 import org.slf4j.MDC
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
+import org.springframework.core.io.FileSystemResource
+import org.springframework.core.io.Resource
 
 import java.util.concurrent.LinkedBlockingQueue
 
@@ -32,11 +35,14 @@ class SenderThread extends Thread {
 
     LinkedBlockingQueue<OutputMessage> sendingQueue = new LinkedBlockingQueue<>()
 
-    GroovyScriptEngine groovyScriptEngine = new GroovyScriptEngine("${System.getProperty("confDir", ".")}/plugins/output/", this.getClass().getClassLoader())
 
-    SenderThread(OutputThread outputThread, Integer id) {
+
+    GroovyScriptEngine groovyScriptEngine
+
+    SenderThread(OutputThread outputThread, Integer id, String pigeonOutPluginsDir) {
         setName(outputThread.getName() + "_SENDER_" + id)
         this.outputThread = outputThread
+        this.groovyScriptEngine = new GroovyScriptEngine(pigeonOutPluginsDir, this.getClass().getClassLoader())
     }
 
     @Override
@@ -59,7 +65,7 @@ class SenderThread extends Thread {
         return httpRequest
     }
 
-    @BlackBox(blackBoxLevel = BlackBoxLevel.EXPRESSION, suppressExceptions = true)
+    @BlackBox(level = CarburetorLevel.EXPRESSION, suppressExceptions = true)
     void sendMessage(OutputMessage outputMessage) {
         try {
             Binding binding = new Binding()

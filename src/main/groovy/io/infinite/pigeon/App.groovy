@@ -2,7 +2,7 @@ package io.infinite.pigeon
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.infinite.blackbox.BlackBox
-import io.infinite.blackbox.BlackBoxLevel
+import io.infinite.carburetor.CarburetorLevel
 import io.infinite.pigeon.conf.Configuration
 import io.infinite.pigeon.other.MessageStatuses
 import io.infinite.pigeon.springdatarest.OutputMessage
@@ -12,10 +12,14 @@ import io.infinite.pigeon.threads.OutputThread
 import io.infinite.pigeon.threads.OutputThreadNormal
 import io.infinite.pigeon.threads.OutputThreadRetry
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.context.ApplicationContext
+import org.springframework.core.io.ClassPathResource
+import org.springframework.core.io.FileSystemResource
+import org.springframework.core.io.Resource
 import org.springframework.hateoas.config.EnableHypermediaSupport
 
 @EnableHypermediaSupport(type = EnableHypermediaSupport.HypermediaType.HAL)
@@ -28,6 +32,9 @@ class App implements CommandLineRunner {
     @Autowired
     OutputMessageRepository outputMessageRepository
 
+    @Value('${pigeonConfFile}')
+    FileSystemResource pigeonConfigResource
+
     static void main(String[] args) {
         SpringApplication.run(App.class, args)
     }
@@ -37,14 +44,14 @@ class App implements CommandLineRunner {
         runWithLogging()
     }
 
-    @BlackBox(blackBoxLevel = BlackBoxLevel.EXPRESSION)
+    @BlackBox(level = CarburetorLevel.EXPRESSION)
     void runWithLogging() {
-        Configuration configuration = new ObjectMapper().readValue(new File("${System.getProperty("confDir", ".")}/Pigeon.json").getText(), Configuration.class)
+        Configuration configuration = new ObjectMapper().readValue(pigeonConfigResource.getFile().getText(), Configuration.class)
         Set<OutputMessage> waitingMessages = outputMessageRepository.findByStatus(MessageStatuses.WAITING.value())
         waitingMessages.each {
             it.status = MessageStatuses.RENEWED.value()
         }
-        outputMessageRepository.save(waitingMessages)
+        outputMessageRepository.saveAll(waitingMessages)
         configuration.inputQueues.each { inputQueue ->
             InputThread inputThread = new InputThread(inputQueue)
             applicationContext.getAutowireCapableBeanFactory().autowireBean(inputThread)
