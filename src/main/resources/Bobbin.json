@@ -2,33 +2,33 @@
   "levels": "['debug', 'info', 'warn', 'error'].contains(level)",
   "classes": "all",
   "destinations": [
-    {//todo: plugins separately by classname
+    {
       "name": "io.infinite.bobbin.destinations.FileDestination",
       "properties": {
         "fileKey": "threadName + level + className",
-        "fileName": "\"./LOGS/${threadName}/${level}/${className}/${threadName}_${level}_${date}.log\"",
-        "zipFileName": "\"./LOGS/${threadName}/${level}/${className}/ARCHIVE/${threadName}_${level}_${date}.zip\"",
+        "fileName": "\"./LOGS/PLUGINS/${className}/${level}/${threadName}/${threadName}_${level}_${date}.log\"",
+        "zipFileName": "\"./LOGS/PLUGINS/${className}/${level}/${threadName}/ARCHIVE/${threadName}_${level}_${date}.zip\"",
         "cleanupZipFileName": "\"${origFileName}_${System.currentTimeMillis().toString()}.zip\""
       },
       "format": "\"${dateTime}|${level}|${threadName}|${className}|${event.message}\\n\"",
-      "classes": "className.contains('io.infinite.')"
+      "classes": "className.contains('conf.plugins.input')"
     },
     {
       "name": "io.infinite.bobbin.destinations.FileDestination",
       "properties": {
         "fileKey": "threadName + level",
-        "fileName": "\"./LOGS/${threadName}/${level}/${threadName}_${level}_${date}.log\"",
-        "zipFileName": "\"./LOGS/${threadName}/${level}/ARCHIVE/${threadName}_${level}_${date}.zip\"",
+        "fileName": "\"./LOGS/THREADS/${threadName}/${level}/${threadName}_${level}_${date}.log\"",
+        "zipFileName": "\"./LOGS/THREADS/${threadName}/${level}/ARCHIVE/${threadName}_${level}_${date}.zip\"",
         "cleanupZipFileName": "\"${origFileName}_${System.currentTimeMillis().toString()}.zip\""
       },
       "format": "\"${dateTime}|${level}|${threadName}|${className}|${event.message}\\n\"",
       "classes": "className.contains('io.infinite.')"
     },
     {
-      "name": "io.infinite.bobbin.destinations.FileDestination",
+      "name": "io.infinite.bobbin.destinations.SharedFileDestination",
       "properties": {
-        "fileName": "\"./LOGS/WARNINGS_AND_ERRORS_${date}.log\"",
-        "zipFileName": "\"./LOGS/WARNINGS_AND_ERRORS_${date}.zip\"",
+        "fileName": "\"./LOGS/ALL/WARNINGS_AND_ERRORS_${date}.log\"",
+        "zipFileName": "\"./LOGS/ALL/WARNINGS_AND_ERRORS_${date}.zip\"",
         "cleanupZipFileName": "\"${origFileName}_${System.currentTimeMillis().toString()}.zip\""
       },
       "format": "\"${dateTime}|${level}|${threadName}|${className}|${event.message}\\n\"",

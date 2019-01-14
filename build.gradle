@@ -17,7 +17,7 @@ plugins {
 ext['groovy.version'] = '2.5.4'
 sourceCompatibility = 1.7
 group = "io.infinite"
-version = "1.0.0"
+version = "1.0.0-SNAPSHOT"
 description = "HTTP Message Broker"
 wrapper {
     gradleVersion = "5.0"

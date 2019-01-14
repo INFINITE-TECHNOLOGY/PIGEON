@@ -35,8 +35,6 @@ class SenderThread extends Thread {
 
     LinkedBlockingQueue<OutputMessage> sendingQueue = new LinkedBlockingQueue<>()
 
-
-
     GroovyScriptEngine groovyScriptEngine
 
     SenderThread(OutputThread outputThread, Integer id, String pigeonOutPluginsDir) {
