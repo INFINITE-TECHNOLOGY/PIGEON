@@ -35,9 +35,9 @@ dependencies {
     compile 'org.springframework.boot:spring-boot-starter-data-rest'
     compile 'org.springframework.boot:spring-boot-starter-data-jpa'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
-    compile "io.infinite:bobbin:2.0.0-20190113.152508-13"
-    compile 'io.infinite:supplies:1.0.1-20190113.124345-4'
-    compile 'io.infinite:blackbox:1.0.5'
+    compile "io.infinite:bobbin:2.0.0-20190114.154724-14"
+    compile "io.infinite:supplies:1.0.1-20190114.154218-9"
+    compile 'io.infinite:blackbox:1.0.6-SNAPSHOT'
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.9.7'
     compile 'com.h2database:h2:1.4.197'
     compile group: 'org.apache.commons', name: 'commons-lang3'
