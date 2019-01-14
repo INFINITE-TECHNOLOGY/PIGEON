@@ -1,0 +1,36 @@
+plugins {
+    id "groovy"
+    id "idea"
+    id "jacoco"
+    //id 'application'
+    id "org.springframework.boot" version "2.1.1.RELEASE"
+    id "io.spring.dependency-management" version "1.0.6.RELEASE"
+}
+bootJar {
+    baseName = 'pigeon'
+    version = '1.0.0-SNAPSHOT'
+}
+ext['groovy.version'] = '2.5.4'
+sourceCompatibility = 1.7
+group = "io.infinite"
+version = "1.0.0-SNAPSHOT"
+description = "HTTP Message Broker"
+repositories {
+    jcenter()
+    maven {
+        url "https://oss.jfrog.org/artifactory/oss-snapshot-local"
+    }
+    mavenLocal()
+}
+dependencies {
+    compile project(':pigeon-app')
+    compile 'org.codehaus.groovy:groovy-all:2.5.4'
+    compile 'org.springframework.boot:spring-boot-starter-data-rest'
+    compile 'org.springframework.boot:spring-boot-starter-data-jpa'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
+}
+configurations {
+    providedRuntime
+    compile.exclude(group: 'ch.qos.logback')
+}
+//mainClassName = 'App'

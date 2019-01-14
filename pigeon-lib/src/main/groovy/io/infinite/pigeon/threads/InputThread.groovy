@@ -10,7 +10,6 @@ import io.infinite.pigeon.springdatarest.InputMessage
 import io.infinite.pigeon.springdatarest.InputMessageRepository
 import io.infinite.pigeon.springdatarest.OutputMessage
 import io.infinite.pigeon.springdatarest.OutputMessageRepository
-import org.slf4j.MDC
 import org.springframework.beans.factory.annotation.Autowired
 
 @Slf4j

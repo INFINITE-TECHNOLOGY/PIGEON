@@ -17,9 +17,7 @@ import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.context.ApplicationContext
-import org.springframework.core.io.ClassPathResource
 import org.springframework.core.io.FileSystemResource
-import org.springframework.core.io.Resource
 import org.springframework.hateoas.config.EnableHypermediaSupport
 
 @EnableHypermediaSupport(type = EnableHypermediaSupport.HypermediaType.HAL)

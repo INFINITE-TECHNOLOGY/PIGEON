@@ -13,11 +13,7 @@ import io.infinite.pigeon.springdatarest.HttpLog
 import io.infinite.pigeon.springdatarest.InputMessageRepository
 import io.infinite.pigeon.springdatarest.OutputMessage
 import io.infinite.pigeon.springdatarest.OutputMessageRepository
-import org.slf4j.MDC
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Value
-import org.springframework.core.io.FileSystemResource
-import org.springframework.core.io.Resource
 
 import java.util.concurrent.LinkedBlockingQueue
 

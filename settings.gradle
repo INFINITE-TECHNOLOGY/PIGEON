@@ -17,5 +17,5 @@ include 'services:webservice'
 
 rootProject.name = 'pigeon'
 
-include 'library'
-include 'application'
+include 'pigeon-lib'
+include 'pigeon-app'

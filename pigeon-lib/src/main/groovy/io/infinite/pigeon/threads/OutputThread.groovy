@@ -8,7 +8,6 @@ import io.infinite.pigeon.other.RoundRobin
 import io.infinite.pigeon.springdatarest.InputMessageRepository
 import io.infinite.pigeon.springdatarest.OutputMessage
 import io.infinite.pigeon.springdatarest.OutputMessageRepository
-import org.slf4j.MDC
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationContext
 
