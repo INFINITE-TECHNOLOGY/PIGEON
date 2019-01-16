@@ -20,7 +20,7 @@ class SenderDefaultHttp extends SenderDefault {
         log.warn("UNSECURE TEST PLAINTEXT HTTP CONNECTION")
         log.warn("DO NOT USE ON PRODUCTION")
         if (url.getProtocol().contains("https")) {
-            throw new PigeonException("Invalid protocol \"https\" for SenderDefaultHttp in ${httpRequest.url}. Use \"http\" protocol.")
+            throw new PigeonException("Invalid protocol 'https' for SenderDefaultHttp in ${httpRequest.url}. Use 'http' protocol.")
         }
         super.sendHttpMessage()
     }

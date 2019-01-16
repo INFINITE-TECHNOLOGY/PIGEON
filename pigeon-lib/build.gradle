@@ -24,7 +24,6 @@ repositories {
     maven {
         url "https://oss.jfrog.org/artifactory/oss-snapshot-local"
     }
-    mavenLocal()
 }
 sourceSets {
     main.groovy.srcDirs = ["src/main/groovy"]
@@ -35,9 +34,9 @@ dependencies {
     compile 'org.springframework.boot:spring-boot-starter-data-rest'
     compile 'org.springframework.boot:spring-boot-starter-data-jpa'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
-    compile "io.infinite:bobbin:2.0.0-20190114.154724-14"
+    compile "io.infinite:bobbin:2.0.0-20190115.135206-15"
     compile "io.infinite:supplies:1.0.1-20190114.154218-9"
-    compile 'io.infinite:blackbox:1.0.6-SNAPSHOT'
+    compile 'io.infinite:blackbox:1.0.6-20190116.110607-4'
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.9.7'
     compile 'com.h2database:h2:1.4.197'
     compile group: 'org.apache.commons', name: 'commons-lang3'
@@ -93,8 +92,8 @@ artifactory {
     publish {
         repository {
             repoKey = 'oss-snapshot-local'
-            username = System.getProperty("bintrayuser")
-            password = System.getProperty("bintraypassword")
+            username = System.getProperty("bintray.user")
+            password = System.getProperty("bintray.key")
         }
         defaults {
             publications('groovyMaven')

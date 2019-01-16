@@ -1,4 +1,4 @@
-package io.infinite.blackbox
+package io.infinite.pigeon
 
 
 class MethodLevelTest extends GroovyTestCase {
