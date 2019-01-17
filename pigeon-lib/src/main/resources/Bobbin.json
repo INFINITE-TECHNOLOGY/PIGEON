@@ -1,6 +1,5 @@
 {
   "levels": "['debug', 'info', 'warn', 'error'].contains(level)",
-  "classes": "all",
   "destinations": [
     {
       "name": "io.infinite.bobbin.destinations.FileDestination",
@@ -10,8 +9,7 @@
         "zipFileName": "\"./LOGS/PLUGINS/${className}/${level}/${threadName}/ARCHIVE/${threadName}_${level}_${date}.zip\"",
         "cleanupZipFileName": "\"${origFileName}_${System.currentTimeMillis().toString()}.zip\""
       },
-      "format": "\"${dateTime}|${level}|${threadName}|${className}|${event.message}\\n\"",
-      "classes": "className.contains('conf.plugins.input')"
+      "classes": "className.contains('conf.plugins.')"
     },
     {
       "name": "io.infinite.bobbin.destinations.FileDestination",
@@ -21,7 +19,6 @@
         "zipFileName": "\"./LOGS/THREADS/${threadName}/${level}/ARCHIVE/${threadName}_${level}_${date}.zip\"",
         "cleanupZipFileName": "\"${origFileName}_${System.currentTimeMillis().toString()}.zip\""
       },
-      "format": "\"${dateTime}|${level}|${threadName}|${className}|${event.message}\\n\"",
       "classes": "className.contains('io.infinite.')"
     },
     {
@@ -31,12 +28,10 @@
         "zipFileName": "\"./LOGS/ALL/WARNINGS_AND_ERRORS_${date}.zip\"",
         "cleanupZipFileName": "\"${origFileName}_${System.currentTimeMillis().toString()}.zip\""
       },
-      "format": "\"${dateTime}|${level}|${threadName}|${className}|${event.message}\\n\"",
       "levels": "['warn', 'error'].contains(level)"
     },
     {
       "name": "io.infinite.bobbin.destinations.ConsoleDestination",
-      "format": "\"${dateTime}|${level}|${threadName}|${className}|${event.message}\\n\"",
       "levels": "['warn', 'error'].contains(level)"
     }
   ]

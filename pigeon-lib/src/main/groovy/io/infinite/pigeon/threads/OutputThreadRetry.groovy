@@ -22,7 +22,7 @@ class OutputThreadRetry extends OutputThread {
     }
 
     @Override
-    @BlackBox(level = CarburetorLevel.METHOD)
+    @BlackBox(level = CarburetorLevel.ERROR)
     LinkedHashSet<OutputMessage> masterQuery(String outputQueueName) {
         Date maxLastSendDate
         use(TimeCategory) {
