@@ -5,11 +5,21 @@
       "name": "io.infinite.bobbin.destinations.FileDestination",
       "properties": {
         "fileKey": "MDC.messageTimestamp + level + className",
-        "fileName": "\"./LOGS/PLUGINS/${className}/${level}/${className}_${level}_${MDC.messageTimestamp}.log\"",
-        "zipFileName": "\"./LOGS/PLUGINS/${className}/${level}/ARCHIVE/${className}_${level}_${MDC.messageTimestamp}.zip\"",
+        "fileName": "\"./LOGS/PLUGINS/INPUT/${className}/${level}/${className}_${level}_${MDC.messageTimestamp}.log\"",
+        "zipFileName": "\"./LOGS/PLUGINS/INPUT/${className}/${level}/ARCHIVE/${className}_${level}_${MDC.messageTimestamp}.zip\"",
         "cleanupZipFileName": "\"${origFileName}_${System.currentTimeMillis().toString()}.zip\""
       },
-      "classes": "className.contains('conf.plugins.')"
+      "classes": "className.contains('conf.plugins.input')"
+    },
+    {
+      "name": "io.infinite.bobbin.destinations.FileDestination",
+      "properties": {
+        "fileKey": "threadName + level + className",
+        "fileName": "\"./LOGS/PLUGINS/OUTPUT/${className}/${level}/${threadName}/${threadName}_${level}_${date}.log\"",
+        "zipFileName": "\"./LOGS/PLUGINS/OUTPUT/${className}/${level}/${threadName}/ARCHIVE/${threadName}_${level}_${date}.zip\"",
+        "cleanupZipFileName": "\"${origFileName}_${System.currentTimeMillis().toString()}.zip\""
+      },
+      "classes": "className.contains('conf.plugins.output')"
     },
     {
       "name": "io.infinite.bobbin.destinations.FileDestination",
