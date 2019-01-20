@@ -26,7 +26,7 @@ class InputThread extends Thread {
 
     @BlackBox(level = CarburetorLevel.EXPRESSION)
     InputThread(InputQueue inputQueue) {
-        setName(inputQueue.getName() + "_INPUT")
+        super(new ThreadGroup("INPUT"), inputQueue.getName() + "_INPUT")
         this.inputQueue = inputQueue
     }
 

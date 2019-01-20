@@ -34,7 +34,7 @@ class SenderThread extends Thread {
     GroovyScriptEngine groovyScriptEngine
 
     SenderThread(OutputThread outputThread, Integer id, String pigeonOutPluginsDir) {
-        setName(outputThread.getName() + "_SENDER_" + id)
+        super(new ThreadGroup("SENDER"), outputThread.getName() + "_SENDER_" + id)
         this.outputThread = outputThread
         this.groovyScriptEngine = new GroovyScriptEngine(pigeonOutPluginsDir, this.getClass().getClassLoader())
     }

@@ -25,7 +25,7 @@ abstract class OutputThread extends Thread {
     InputMessageRepository inputMessageRepository
 
     OutputThread(OutputQueue outputQueue, InputThread inputThread, ApplicationContext applicationContext) {
-        setName(outputQueue.getName() + "_OUTPUT")
+        super(new ThreadGroup("OUTPUT"), outputQueue.getName() + "_OUTPUT")
         this.outputQueue = outputQueue
         this.inputThread = inputThread
         (1..outputQueue.normalThreadCount).each {
