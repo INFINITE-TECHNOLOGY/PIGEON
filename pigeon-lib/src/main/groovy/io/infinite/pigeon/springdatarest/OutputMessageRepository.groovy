@@ -36,4 +36,10 @@ interface OutputMessageRepository extends JpaRepository<OutputMessage, Long> {
 
     Set<OutputMessage> findByStatus(String status)
 
+    @Query("""select o from OutputMessage o join o.inputMessage i where
+        i.externalId = :externalId and i.sourceName = :sourceName""")
+    LinkedHashSet<OutputMessage> searchByInputExternalIdAndSourceName(
+            @Param("externalId") String externalId,
+            @Param("sourceName") String sourceName)
+
 }

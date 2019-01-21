@@ -11,6 +11,11 @@ interface InputMessageRepository extends JpaRepository<InputMessage, Long> {
 
     Set<InputMessage> findByInputQueueNameAndStatus(String inputQueueName, String status)
 
+    Set<InputMessage> findByExternalIdAndSourceName(
+            @Param("externalId") String externalId,
+            @Param("sourceName") String sourceName
+    )
+
     @Query("select count(i.id) from InputMessage i where sourceName = :sourceName and inputQueueName = :inputQueueName and externalId = :externalId and id <> :id and status = :status")
     Integer findDuplicates(
             @Param("sourceName") String sourceName,

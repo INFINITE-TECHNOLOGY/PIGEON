@@ -15,8 +15,8 @@
       "name": "io.infinite.bobbin.destinations.FileDestination",
       "properties": {
         "fileKey": "threadName + level + className",
-        "fileName": "\"./LOGS/PLUGINS/OUTPUT/${className}/${level}/${threadName}/${threadName}_${level}_${date}.log\"",
-        "zipFileName": "\"./LOGS/PLUGINS/OUTPUT/${className}/${level}/${threadName}/ARCHIVE/${threadName}_${level}_${date}.zip\"",
+        "fileName": "\"./LOGS/PLUGINS/OUTPUT/${className}/${level}/${threadName}_${level}_${date}.log\"",
+        "zipFileName": "\"./LOGS/PLUGINS/OUTPUT/${className}/${level}/ARCHIVE/${threadName}_${level}_${date}.zip\"",
         "cleanupZipFileName": "\"${origFileName}_${System.currentTimeMillis().toString()}.zip\""
       },
       "classes": "className.contains('conf.plugins.output')"

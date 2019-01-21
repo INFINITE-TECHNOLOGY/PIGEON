@@ -19,5 +19,6 @@ class OutputQueue {
     Long pollPeriodMilliseconds = 500
     Map<String, String> httpProperties = new HashMap<>()
     Map<String, String> extensions = new HashMap<>()
+    Boolean enabled = true
 
 }

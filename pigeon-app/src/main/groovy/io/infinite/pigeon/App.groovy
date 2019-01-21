@@ -51,19 +51,23 @@ class App implements CommandLineRunner {
         }
         outputMessageRepository.saveAll(waitingMessages)
         configuration.inputQueues.each { inputQueue ->
-            InputThread inputThread = new InputThread(inputQueue)
-            applicationContext.getAutowireCapableBeanFactory().autowireBean(inputThread)
-            inputThread.start()
-            inputQueue.outputQueues.each { outputQueue ->
-                OutputThread outputThreadNormal
-                outputThreadNormal = new OutputThreadNormal(outputQueue, inputThread, applicationContext)
-                applicationContext.getAutowireCapableBeanFactory().autowireBean(outputThreadNormal)
-                outputThreadNormal.start()
-                if (outputQueue.maxRetryCount > 0) {
-                    OutputThread outputThreadRetry
-                    outputThreadRetry = new OutputThreadRetry(outputQueue, inputThread, applicationContext)
-                    applicationContext.getAutowireCapableBeanFactory().autowireBean(outputThreadRetry)
-                    outputThreadRetry.start()
+            if (inputQueue.enabled) {
+                InputThread inputThread = new InputThread(inputQueue)
+                applicationContext.getAutowireCapableBeanFactory().autowireBean(inputThread)
+                inputThread.start()
+                inputQueue.outputQueues.each { outputQueue ->
+                    if (outputQueue.enabled) {
+                        OutputThread outputThreadNormal
+                        outputThreadNormal = new OutputThreadNormal(outputQueue, inputThread, applicationContext)
+                        applicationContext.getAutowireCapableBeanFactory().autowireBean(outputThreadNormal)
+                        outputThreadNormal.start()
+                        if (outputQueue.maxRetryCount > 0) {
+                            OutputThread outputThreadRetry
+                            outputThreadRetry = new OutputThreadRetry(outputQueue, inputThread, applicationContext)
+                            applicationContext.getAutowireCapableBeanFactory().autowireBean(outputThreadRetry)
+                            outputThreadRetry.start()
+                        }
+                    }
                 }
             }
         }

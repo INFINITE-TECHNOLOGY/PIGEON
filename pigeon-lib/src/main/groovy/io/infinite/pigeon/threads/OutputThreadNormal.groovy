@@ -23,8 +23,8 @@ class OutputThreadNormal extends OutputThread {
     }
 
     @Override
-    void workerEnqueue(OutputMessage outputMessage) {
-        super.workerEnqueue(outputMessage)
+    void senderEnqueue(OutputMessage outputMessage) {
+        super.senderEnqueue(outputMessage)
         lastId = outputMessage.id
     }
 

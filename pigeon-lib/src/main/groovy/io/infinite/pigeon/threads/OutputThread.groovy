@@ -39,7 +39,7 @@ abstract class OutputThread extends Thread {
     abstract LinkedHashSet<OutputMessage> masterQuery(String subscriberName)
 
     @BlackBox(level = CarburetorLevel.ERROR)
-    void workerEnqueue(OutputMessage outputMessage) {
+    void senderEnqueue(OutputMessage outputMessage) {
         SenderThread senderThread = ++senderThreadRobin.iterator()
         outputMessage.setStatus(MessageStatuses.WAITING.value())
         outputMessage.setThreadName(senderThread.getName())
@@ -57,7 +57,7 @@ abstract class OutputThread extends Thread {
             Set<OutputMessage> outputMessages = masterQuery(outputQueue.getName())
             if (outputMessages.size() > 0) {
                 outputMessages.each { outputMessage ->
-                    workerEnqueue(outputMessage)
+                    senderEnqueue(outputMessage)
                 }
             }
             sleep(outputQueue.pollPeriodMilliseconds)
