@@ -21,15 +21,15 @@ import javax.xml.bind.annotation.XmlAccessorType
 @XmlAccessorType(XmlAccessType.NONE)
 @RestController
 @BlackBox
-class PluginController {
+class PluginRestController {
 
-    @Value('${pigeonInputPluginsDir}')
-    String pigeonInputPluginsDir
+    @Value('${pigeonInputPluginsRestDir}')
+    String pigeonInputPluginsRestDir
 
     @Autowired
     InputMessageRepository inputMessageRepository
 
-    @PostMapping(value = "/pigeon/plugins/input/*", produces = [MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE])
+    @PostMapping(value = "/pigeon/plugins/input/rest/*")
     ResponseEntity<CustomResponse> post(HttpServletRequest httpServletRequest) {
         String path = httpServletRequest.getRequestURI()
         String pluginName = path.substring(path.lastIndexOf('/') + 1)
@@ -39,7 +39,7 @@ class PluginController {
         return groovyScriptEngine.run(pluginName + ".groovy", binding) as ResponseEntity<CustomResponse>
     }
 
-    @GetMapping(value = "/pigeon/plugins/input/*", produces = [MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE])
+    @GetMapping(value = "/pigeon/plugins/input/rest/*")
     ResponseEntity<CustomResponse> get(HttpServletRequest httpServletRequest) {
         String path = httpServletRequest.getRequestURI()
         String pluginName = path.substring(path.lastIndexOf('/') + 1)
@@ -51,7 +51,7 @@ class PluginController {
 
     @Memoized
     GroovyScriptEngine getGroovyScriptEngine() {
-        return new GroovyScriptEngine(pigeonInputPluginsDir, ClassLoader.getSystemClassLoader())
+        return new GroovyScriptEngine(pigeonInputPluginsRestDir, ClassLoader.getSystemClassLoader())
     }
 
 }
