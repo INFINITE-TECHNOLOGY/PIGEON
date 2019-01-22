@@ -13,6 +13,7 @@ import io.infinite.pigeon.springdatarest.HttpLog
 import io.infinite.pigeon.springdatarest.InputMessageRepository
 import io.infinite.pigeon.springdatarest.OutputMessage
 import io.infinite.pigeon.springdatarest.OutputMessageRepository
+import io.infinite.supplies.ast.exceptions.ExceptionUtils
 import org.springframework.beans.factory.annotation.Autowired
 
 import java.util.concurrent.LinkedBlockingQueue
@@ -68,8 +69,16 @@ class SenderThread extends Thread {
             binding.setVariable("outputQueue", outputThread.outputQueue)
             binding.setVariable("inputMessage", outputMessage.getInputMessage())
             binding.setVariable("httpRequest", httpRequest)
-            /*\/\/\/\/\/\/\/\/*/
-            groovyScriptEngine.run(outputThread.outputQueue.getConversionModuleName(), binding)//<<<<<<<<<<<<<conversion happens here
+            /*\/\/\/\/\/\/\/\/*///<<<<conversion happens here
+            try {
+                groovyScriptEngine.run(outputThread.outputQueue.getConversionModuleName(), binding)
+            } catch (Exception e) {
+                log.warn("Output plugin exception (Output Message ${outputMessage.id})")
+                outputMessage.setExceptionString(new ExceptionUtils().stacktrace(e))
+                outputMessage.setStatus(MessageStatuses.EXCEPTION.value())
+                outputMessageRepository.save(outputMessage)
+                return
+            }
             /*/\/\/\/\/\/\/\/\*/
             SenderAbstract senderAbstract = Class.forName(outputThread.outputQueue.getSenderClassName()).newInstance(httpRequest) as SenderAbstract
             outputMessage.setStatus(MessageStatuses.SENDING.value())
@@ -83,7 +92,7 @@ class SenderThread extends Thread {
             outputMessage.setLastSendTime(new Date())
             outputMessageRepository.save(outputMessage)
         } catch (Exception e) {
-            outputMessage.setExceptionString(new PigeonException(e).serialize())
+            outputMessage.setExceptionString(new ExceptionUtils().stacktrace(e))
             outputMessage.setStatus(MessageStatuses.EXCEPTION.value())
             outputMessageRepository.save(outputMessage)
             throw e

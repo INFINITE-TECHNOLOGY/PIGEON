@@ -40,7 +40,9 @@ abstract class SenderDefault extends SenderAbstract {
             httpRequest.setRequestStatus(MessageStatuses.FAILED_NO_CONNECTION.value())
             return
         }
-        dataOutputStream.writeBytes(httpRequest.getBody())
+        if (httpRequest.getBody() != null) {
+            dataOutputStream.writeBytes(httpRequest.getBody())
+        }
         dataOutputStream.flush()
         dataOutputStream.close()
         log.info("Successfully sent request data:")
