@@ -12,7 +12,7 @@ class SenderDefaultHttp extends SenderDefault {
 
     SenderDefaultHttp(HttpRequest httpRequest) {
         super(httpRequest)
-        httpURLConnection = (HttpURLConnection) url.openConnection()
+        httpURLConnection = (HttpURLConnection) openConnection()
     }
 
     @Override

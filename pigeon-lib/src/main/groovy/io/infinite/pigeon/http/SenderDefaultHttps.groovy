@@ -15,7 +15,7 @@ class SenderDefaultHttps extends SenderDefault {
     SenderDefaultHttps(HttpRequest httpRequest) {
         super(httpRequest)
         HttpsURLConnection.setDefaultSSLSocketFactory(SSLSocketFactory.getDefault() as SSLSocketFactory)
-        httpURLConnection = (HttpsURLConnection) url.openConnection()
+        httpURLConnection = (HttpsURLConnection) openConnection()
     }
 
 }

@@ -22,6 +22,15 @@ abstract class SenderDefault extends SenderAbstract {
         this.url = new URL(httpRequest.getUrl())
     }
 
+    URLConnection openConnection() {
+        if (httpRequest.httpProperties?.get("proxyHost") != null && httpRequest.httpProperties?.get("proxyPort") != null) {
+            Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(httpRequest.httpProperties.get("proxyHost"), httpRequest.httpProperties.get("proxyPort") as Integer))
+            return url.openConnection(proxy)
+        } else {
+            return url.openConnection()
+        }
+    }
+
     @Override
     void sendHttpMessage() {
         this.httpURLConnection.setRequestMethod(httpRequest.getMethod())

@@ -20,7 +20,7 @@ class SenderDefaultHttpsUnsecure extends SenderDefault {
         UnsecureTrustManager[] unsecureTrustManagers = new UnsecureTrustManager()
         sslContext.init(null as KeyManager[], unsecureTrustManagers, null as SecureRandom)
         HttpsURLConnection.setDefaultSSLSocketFactory(sslContext.getSocketFactory())
-        httpURLConnection = (HttpsURLConnection) url.openConnection()
+        httpURLConnection = (HttpsURLConnection) openConnection()
         httpURLConnection.setHostnameVerifier(new UnsecureHostNameVerifier())
     }
 

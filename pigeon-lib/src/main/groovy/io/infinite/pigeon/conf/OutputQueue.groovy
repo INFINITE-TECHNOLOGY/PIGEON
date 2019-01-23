@@ -17,8 +17,8 @@ class OutputQueue {
     String conversionModuleName
     String senderClassName
     Long pollPeriodMilliseconds = 500
-    Map<String, String> httpProperties = new HashMap<>()
-    Map<String, String> extensions = new HashMap<>()
+    Map<String, Object> httpProperties = new HashMap<>()
+    Map<String, Object> extensions = new HashMap<>()
     Boolean enabled = true
 
 }
