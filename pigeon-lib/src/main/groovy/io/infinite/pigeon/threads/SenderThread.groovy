@@ -84,34 +84,37 @@ class SenderThread extends Thread {
             outputMessage.setStatus(MessageStatuses.SENDING.value())
             outputMessageRepository.save(outputMessage)
             /*\/\/\/\/\/\/\/\/*/
-            senderAbstract.sendHttpMessage()//<<<<<<<<<<<sending message
+            try {
+                senderAbstract.sendHttpMessage()//<<<<<<<<<<<sending message
+            } finally {
+                outputMessage.getHttpLogs().add(createHttpLog(senderAbstract))
+            }
             /*/\/\/\/\/\/\/\/\*/
-            outputMessage.getHttpLogs().add(createHttpLog(senderAbstract))
             outputMessage.setStatus(httpRequest.getRequestStatus())
             outputMessage.setAttemptsCount(outputMessage.getAttemptsCount() + 1)
             outputMessage.setLastSendTime(new Date())
-            outputMessageRepository.save(outputMessage)
         } catch (Exception e) {
             outputMessage.setExceptionString(new ExceptionUtils().stacktrace(e))
             outputMessage.setStatus(MessageStatuses.EXCEPTION.value())
-            outputMessageRepository.save(outputMessage)
             throw e
+        } finally {
+            outputMessageRepository.save(outputMessage)
         }
     }
 
     static HttpLog createHttpLog(SenderAbstract senderAbstract) {
         HttpLog httpLog = new HttpLog()
-        httpLog.requestDate = senderAbstract.httpRequest.sendDate
-        httpLog.requestHeaders = senderAbstract.httpRequest.headers.toString()
-        httpLog.requestBody = senderAbstract.httpRequest.body
-        httpLog.method = senderAbstract.httpRequest.method
-        httpLog.url = senderAbstract.httpRequest.url
-        httpLog.requestStatus = senderAbstract.httpRequest.requestStatus
-        httpLog.requestExceptionString = senderAbstract.httpRequest.exceptionString
-        httpLog.responseDate = senderAbstract.httpResponse.receiveDate
-        httpLog.responseHeaders = senderAbstract.httpResponse.headers.toString()
-        httpLog.responseBody = senderAbstract.httpResponse.body
-        httpLog.responseStatus = senderAbstract.httpResponse.status
+        httpLog.requestDate = senderAbstract.httpRequest?.sendDate
+        httpLog.requestHeaders = senderAbstract.httpRequest?.headers?.toString()
+        httpLog.requestBody = senderAbstract.httpRequest?.body
+        httpLog.method = senderAbstract.httpRequest?.method
+        httpLog.url = senderAbstract.httpRequest?.url
+        httpLog.requestStatus = senderAbstract.httpRequest?.requestStatus
+        httpLog.requestExceptionString = senderAbstract.httpRequest?.exceptionString
+        httpLog.responseDate = senderAbstract.httpResponse?.receiveDate
+        httpLog.responseHeaders = senderAbstract.httpResponse?.headers?.toString()
+        httpLog.responseBody = senderAbstract.httpResponse?.body
+        httpLog.responseStatus = senderAbstract.httpResponse?.status
         return httpLog
     }
 

@@ -4,11 +4,10 @@ import groovy.transform.ToString
 import groovy.util.logging.Slf4j
 import io.infinite.blackbox.BlackBox
 import io.infinite.pigeon.other.MessageStatuses
-import org.apache.commons.lang3.exception.ExceptionUtils
-import org.codehaus.groovy.runtime.StackTraceUtils
+import io.infinite.supplies.ast.exceptions.ExceptionUtils
 
-
-import static java.net.HttpURLConnection.*
+import static java.net.HttpURLConnection.HTTP_CREATED
+import static java.net.HttpURLConnection.HTTP_OK
 
 @Slf4j
 @BlackBox
@@ -34,7 +33,7 @@ abstract class SenderDefault extends SenderAbstract {
         try {
             dataOutputStream = new DataOutputStream(httpURLConnection.getOutputStream())
         } catch (ConnectException connectException) {
-            httpRequest.setExceptionString(ExceptionUtils.getStackTrace(new StackTraceUtils().sanitizeRootCause(connectException)))
+            httpRequest.setExceptionString(new ExceptionUtils().stacktrace(connectException))
             log.warn("Exception during connection:")
             log.warn(httpRequest.getExceptionString())
             httpRequest.setRequestStatus(MessageStatuses.FAILED_NO_CONNECTION.value())
