@@ -10,7 +10,7 @@ class HttpRequest extends HttpMessageAbstract {
     String requestStatus
     String exceptionString
     final Date sendDate = new Date()
-    Map<String, String> httpProperties = new HashMap<>()
-    Map<String, String> extensions = new HashMap<>()
+    Map<String, Object> httpProperties = new HashMap<>()
+    Map<String, Object> extensions = new HashMap<>()
 
 }

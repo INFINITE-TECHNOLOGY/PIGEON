@@ -6,6 +6,8 @@ import io.infinite.blackbox.BlackBox
 import io.infinite.pigeon.other.MessageStatuses
 import io.infinite.supplies.ast.exceptions.ExceptionUtils
 
+import java.nio.charset.StandardCharsets
+
 import static java.net.HttpURLConnection.HTTP_CREATED
 import static java.net.HttpURLConnection.HTTP_OK
 
@@ -23,12 +25,25 @@ abstract class SenderDefault extends SenderAbstract {
     }
 
     URLConnection openConnection() {
+        URLConnection urlConnection
         if (httpRequest.httpProperties?.get("proxyHost") != null && httpRequest.httpProperties?.get("proxyPort") != null) {
-            Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(httpRequest.httpProperties.get("proxyHost"), httpRequest.httpProperties.get("proxyPort") as Integer))
-            return url.openConnection(proxy)
+            Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(httpRequest.httpProperties.get("proxyHost") as String, httpRequest.httpProperties.get("proxyPort") as Integer))
+            urlConnection = url.openConnection(proxy)
         } else {
-            return url.openConnection()
+            urlConnection = url.openConnection()
         }
+        if (httpRequest.httpProperties?.get("basicAuthEnabled") != null && httpRequest.httpProperties?.get("basicAuthEnabled") == true) {
+            String username = httpRequest.httpProperties?.get("username")
+            String password = httpRequest.httpProperties?.get("password")
+            if (username != null && username != "" && password != null && password != "") {
+                String encoded = Base64.getEncoder().encodeToString((username + ":" + password).getBytes(StandardCharsets.UTF_8))
+                httpRequest.headers.put("Authorization", "Basic " + encoded)
+                //urlConnection.setRequestProperty("Authorization", "Basic " + encoded)
+            } else {
+                log.warn("Basic authentication is enabled but username and password are not defined")
+            }
+        }
+        return urlConnection
     }
 
     @Override
