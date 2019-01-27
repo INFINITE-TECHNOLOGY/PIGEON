@@ -51,7 +51,7 @@ class PluginRestController {
 
     @Memoized
     GroovyScriptEngine getGroovyScriptEngine() {
-        return new GroovyScriptEngine(pigeonInputPluginsRestDir, ClassLoader.getSystemClassLoader())
+        return new GroovyScriptEngine(pigeonInputPluginsRestDir, this.getClass().getClassLoader())
     }
 
 }

@@ -46,7 +46,7 @@ class PluginHttpController {
 
     @Memoized
     GroovyScriptEngine getGroovyScriptEngine() {
-        return new GroovyScriptEngine(pigeonInputPluginsHttpDir, ClassLoader.getSystemClassLoader())
+        return new GroovyScriptEngine(pigeonInputPluginsHttpDir, this.getClass().getClassLoader())
     }
 
 }
