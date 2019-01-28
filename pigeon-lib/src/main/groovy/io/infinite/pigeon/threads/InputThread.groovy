@@ -25,7 +25,7 @@ class InputThread extends Thread {
     @Autowired
     OutputMessageRepository outputMessageRepository
 
-    @BlackBox(level = CarburetorLevel.EXPRESSION)
+    @BlackBox
     InputThread(InputQueue inputQueue) {
         super(new ThreadGroup("INPUT"), inputQueue.getName() + "_INPUT")
         this.inputQueue = inputQueue
@@ -37,8 +37,8 @@ class InputThread extends Thread {
         while (true) {
             Set<InputMessage> inputMessages = inputMessageRepository.findByInputQueueNameAndStatus(inputQueue.getName(), MessageStatusSets.NEW_MESSAGE_STATUSES.value())
             if (inputMessages.size() > 0) {
-                Set<OutputMessage> outputMessages = new HashSet<>()
                 inputMessages.each { inputMessage ->
+                    Set<OutputMessage> outputMessages = new HashSet<>()
                     if (inputMessageRepository.findDuplicates(inputMessage.sourceName, inputMessage.inputQueueName, inputMessage.externalId, inputMessage.id, MessageStatuses.SPLIT.value()) == 0) {
                         inputQueue.outputQueues.each { outputQueue ->
                             OutputMessage outputMessage = new OutputMessage(inputMessage)

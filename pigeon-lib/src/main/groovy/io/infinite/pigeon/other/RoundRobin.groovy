@@ -7,7 +7,7 @@ class RoundRobin<Type> extends ArrayList<Type> {
 
     private Integer index = 0
 
-    @BlackBox(level = CarburetorLevel.EXPRESSION)
+    @BlackBox
     @Override
     Iterator<Type> iterator() {
         return new Iterator<Type>() {

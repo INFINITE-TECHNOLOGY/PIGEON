@@ -60,7 +60,7 @@ class SenderThread extends Thread {
         return httpRequest
     }
 
-    @BlackBox(level = CarburetorLevel.EXPRESSION, suppressExceptions = true)
+    @BlackBox(suppressExceptions = true)
     void sendMessage(OutputMessage outputMessage) {
         try {
             Binding binding = new Binding()
