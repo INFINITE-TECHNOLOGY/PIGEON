@@ -3,6 +3,7 @@ package io.infinite.pigeon.other
 enum MessageStatuses {
 
     NEW("new"),
+    NEW2("NEW"),
     DELIVERED("delivered"),
     FAILED_NO_CONNECTION("no_connection"),
     FAILED_INVALID_RESPONSE("invalid_response"),

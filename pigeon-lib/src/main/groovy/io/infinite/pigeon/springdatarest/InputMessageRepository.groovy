@@ -9,7 +9,13 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource
 @RepositoryRestResource
 interface InputMessageRepository extends JpaRepository<InputMessage, Long> {
 
-    Set<InputMessage> findByInputQueueNameAndStatus(String inputQueueName, String status)
+    @Query("""select i from InputMessage i where
+        inputQueueName = :inputQueueName and
+        status in :messageStatusList""")
+    Set<InputMessage> findByInputQueueNameAndStatus(
+            @Param("inputQueueName") String inputQueueName,
+            @Param("messageStatusList") List<String> messageStatusList
+    )
 
     Set<InputMessage> findByExternalIdAndSourceName(
             @Param("externalId") String externalId,

@@ -5,6 +5,7 @@ import groovy.util.logging.Slf4j
 import io.infinite.blackbox.BlackBox
 import io.infinite.carburetor.CarburetorLevel
 import io.infinite.pigeon.conf.InputQueue
+import io.infinite.pigeon.other.MessageStatusSets
 import io.infinite.pigeon.other.MessageStatuses
 import io.infinite.pigeon.springdatarest.InputMessage
 import io.infinite.pigeon.springdatarest.InputMessageRepository
@@ -34,7 +35,7 @@ class InputThread extends Thread {
     @BlackBox(level = CarburetorLevel.METHOD)
     void run() {
         while (true) {
-            Set<InputMessage> inputMessages = inputMessageRepository.findByInputQueueNameAndStatus(inputQueue.getName(), MessageStatuses.NEW.value())
+            Set<InputMessage> inputMessages = inputMessageRepository.findByInputQueueNameAndStatus(inputQueue.getName(), MessageStatusSets.NEW_MESSAGE_STATUSES.value())
             if (inputMessages.size() > 0) {
                 Set<OutputMessage> outputMessages = new HashSet<>()
                 inputMessages.each { inputMessage ->
