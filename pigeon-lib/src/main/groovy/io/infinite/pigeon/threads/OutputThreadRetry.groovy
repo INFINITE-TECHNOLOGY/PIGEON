@@ -28,7 +28,7 @@ class OutputThreadRetry extends OutputThread {
         use(TimeCategory) {
             maxLastSendDate = (new Date() - outputQueue.resendIntervalSeconds.seconds)
         }
-        return outputMessageRepository.masterQueryRetry(outputQueueName, MessageStatusSets.RETRY_MESSAGE_STATUSES.value(), outputQueue.maxRetryCount, maxLastSendDate)
+        return outputMessageRepository.masterQueryRetry(outputQueueName, MessageStatusSets.OUTPUT_RETRY_MESSAGE_STATUSES.value(), outputQueue.maxRetryCount, maxLastSendDate)
     }
 
     @Override

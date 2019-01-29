@@ -60,7 +60,7 @@ class SenderThread extends Thread {
         return httpRequest
     }
 
-    @BlackBox(suppressExceptions = true)
+    @BlackBox
     void sendMessage(OutputMessage outputMessage) {
         try {
             Binding binding = new Binding()
@@ -96,7 +96,7 @@ class SenderThread extends Thread {
         } catch (Exception e) {
             outputMessage.setExceptionString(new ExceptionUtils().stacktrace(e))
             outputMessage.setStatus(MessageStatuses.EXCEPTION.value())
-            throw e
+            log.warn("Sending exception (Output Message ${outputMessage.id})")
         } finally {
             outputMessageRepository.save(outputMessage)
         }

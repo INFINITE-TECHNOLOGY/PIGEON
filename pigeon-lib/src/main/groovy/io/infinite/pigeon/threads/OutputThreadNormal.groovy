@@ -19,7 +19,7 @@ class OutputThreadNormal extends OutputThread {
     @Override
     @BlackBox(level = CarburetorLevel.ERROR)
     LinkedHashSet<OutputMessage> masterQuery(String outputQueueName) {
-        return outputMessageRepository.masterQueryNormal(outputQueueName, MessageStatusSets.NO_RETRY_MESSAGE_STATUSES.value(), lastId)
+        return outputMessageRepository.masterQueryNormal(outputQueueName, MessageStatusSets.OUTPUT_NORMAL_MESSAGE_STATUSES.value(), lastId)
     }
 
     @Override

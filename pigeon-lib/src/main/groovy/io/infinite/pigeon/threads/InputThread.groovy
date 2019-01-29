@@ -35,7 +35,7 @@ class InputThread extends Thread {
     @BlackBox(level = CarburetorLevel.METHOD)
     void run() {
         while (true) {
-            Set<InputMessage> inputMessages = inputMessageRepository.findByInputQueueNameAndStatus(inputQueue.getName(), MessageStatusSets.NEW_MESSAGE_STATUSES.value())
+            Set<InputMessage> inputMessages = inputMessageRepository.findByInputQueueNameAndStatus(inputQueue.getName(), MessageStatusSets.INPUT_NEW_MESSAGE_STATUSES.value())
             if (inputMessages.size() > 0) {
                 inputMessages.each { inputMessage ->
                     Set<OutputMessage> outputMessages = new HashSet<>()
