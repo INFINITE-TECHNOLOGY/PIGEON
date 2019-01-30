@@ -1,4 +1,4 @@
-# Infinite Technology ∞ Pigeon 🕊
+# Infinite Technology ♾ Pigeon 🕊
 
 **HTTP Message Broker.**
 
