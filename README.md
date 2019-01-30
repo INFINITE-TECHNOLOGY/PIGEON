@@ -1,7 +1,8 @@
 # Pigeon
-> Post pigeons have been (and sometimes still are) extensively used for quick delivery of paper-based messages (such as text, drawings, maps) - thus the project name.
 
-**Pigeon app is an HTTP Message Broker.**
+**HTTP Message Broker.**
+
+> Post pigeons have been (and sometimes still are) extensively used for quick delivery of paper-based messages (such as text, drawings, maps) - thus the project name.
 
 It is capable to:
 1) Enqueue a textual message from external source
