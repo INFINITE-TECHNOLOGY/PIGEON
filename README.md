@@ -19,7 +19,7 @@ Release info:
 |----------------------|------|------|
 |Version|1.0.0-SNAPSHOT|N/A|
 |Branch|[master](https://github.com/INFINITE-TECHNOLOGY/PIGEON)|N/A|
-|CI Build status|[![Build Status](https://travis-ci.com/INFINITE-TECHNOLOGY/BOBBIN.svg?branch=master)](https://travis-ci.com/INFINITE-TECHNOLOGY/BOBBIN)|N/A|
+|CI Build status|[![Build Status](https://travis-ci.com/INFINITE-TECHNOLOGY/PIGEON.svg?branch=master)](https://travis-ci.com/INFINITE-TECHNOLOGY/PIGEON)|N/A|
 |Test coverage|[![codecov](https://codecov.io/gh/INFINITE-TECHNOLOGY/PIGEON/branch/master/graphs/badge.svg)](https://codecov.io/gh/INFINITE-TECHNOLOGY/PIGEON/branch/master/graphs)|N/A|
 |Application distributive|[Download](https://github.com/INFINITE-TECHNOLOGY/PIGEON/releases/download/1.0.0-SNAPSHOT/pigeon-1.0.0-SNAPSHOT.jar)|N/A|
 |Library (Maven)|[oss.jfrog.org snapshot](https://oss.jfrog.org/artifactory/webapp/#/artifacts/browse/tree/General/oss-snapshot-local/io/infinite/pigeon-lib/1.0.0-SNAPSHOT)|N/A|
