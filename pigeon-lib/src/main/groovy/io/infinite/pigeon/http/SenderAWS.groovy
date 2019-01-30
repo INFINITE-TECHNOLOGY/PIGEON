@@ -35,7 +35,7 @@ class SenderAWS extends SenderAbstract {
         if (httpRequest.httpProperties.get("awsServiceName") == null) {
             log.warn("Configuration: AWS service name is null")
         }
-        if (httpRequest.httpProperties.get("wsResourceName") == null) {
+        if (httpRequest.httpProperties.get("awsResourceName") == null) {
             log.warn("Configuration: AWS resource name is null")
         }
         Request<Void> awsRequest = new DefaultRequest<Void>(httpRequest.httpProperties.get("awsServiceName"))
