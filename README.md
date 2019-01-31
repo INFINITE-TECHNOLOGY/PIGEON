@@ -27,6 +27,8 @@ Release info:
 Technical details:
 * Spring Boot
 * Groovy
+* SQL DB (via JPA and Spring Data)
+* HATEOAS (via Spring Data Rest repositories)
 * Functionality extensible using Plugins (Groovy scripts)
 * Scalable (multithreaded app with configurable outbound thread pool sizes for load balancing and scalability)
 
