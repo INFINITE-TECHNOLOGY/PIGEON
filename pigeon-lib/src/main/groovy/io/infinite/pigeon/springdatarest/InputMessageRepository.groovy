@@ -31,4 +31,7 @@ interface InputMessageRepository extends JpaRepository<InputMessage, Long> {
             @Param("status") String status
     )
 
+    @Query("""select i from InputMessage i where status in :messageStatusList""")
+    Set<InputMessage> findByMessageStatusList(@Param("messageStatusList") List<String> messageStatusList)
+
 }

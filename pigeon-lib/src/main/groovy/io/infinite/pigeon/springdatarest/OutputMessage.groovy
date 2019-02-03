@@ -27,6 +27,8 @@ class OutputMessage {
 
     String threadName
 
+    Date insertTime = new Date()
+
     Date lastSendTime
 
     @Lob

@@ -35,13 +35,9 @@
       "name": "io.infinite.bobbin.destinations.SharedFileDestination",
       "properties": {
         "fileName": "\"./LOGS/ALL/WARNINGS_AND_ERRORS_${date}.log\"",
-        "zipFileName": "\"./LOGS/ALL/WARNINGS_AND_ERRORS_${date}.zip\"",
+        "zipFileName": "\"./LOGS/ALL/ARCHIVE/WARNINGS_AND_ERRORS_${date}.zip\"",
         "cleanupZipFileName": "\"${origFileName}_${System.currentTimeMillis().toString()}.zip\""
       },
-      "levels": "['warn', 'error'].contains(level)"
-    },
-    {
-      "name": "io.infinite.bobbin.destinations.ConsoleDestination",
       "levels": "['warn', 'error'].contains(level)"
     }
   ]

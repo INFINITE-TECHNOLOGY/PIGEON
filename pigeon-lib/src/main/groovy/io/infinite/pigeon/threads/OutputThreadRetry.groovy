@@ -21,7 +21,6 @@ class OutputThreadRetry extends OutputThread {
         }
     }
 
-    @Override
     @BlackBox(level = CarburetorLevel.ERROR)
     LinkedHashSet<OutputMessage> masterQuery(String outputQueueName) {
         Date maxLastSendDate
@@ -33,7 +32,15 @@ class OutputThreadRetry extends OutputThread {
 
     @Override
     void run() {
-        super.run()
+        while (true) {
+            Set<OutputMessage> outputMessages = masterQuery(outputQueue.getName())
+            if (outputMessages.size() > 0) {
+                outputMessages.each { outputMessage ->
+                    senderEnqueue(outputMessage)
+                }
+            }
+            sleep(outputQueue.pollPeriodMillisecondsRetry)
+        }
     }
 
 }

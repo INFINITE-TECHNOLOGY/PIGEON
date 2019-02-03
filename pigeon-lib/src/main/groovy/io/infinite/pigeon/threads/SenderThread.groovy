@@ -1,14 +1,11 @@
 package io.infinite.pigeon.threads
 
-
 import groovy.util.logging.Slf4j
 import io.infinite.blackbox.BlackBox
-import io.infinite.carburetor.CarburetorLevel
 import io.infinite.pigeon.conf.OutputQueue
 import io.infinite.pigeon.http.HttpRequest
 import io.infinite.pigeon.http.SenderAbstract
 import io.infinite.pigeon.other.MessageStatuses
-import io.infinite.pigeon.other.PigeonException
 import io.infinite.pigeon.springdatarest.HttpLog
 import io.infinite.pigeon.springdatarest.InputMessageRepository
 import io.infinite.pigeon.springdatarest.OutputMessage
@@ -52,7 +49,7 @@ class SenderThread extends Thread {
         }
     }
 
-    static HttpRequest createHttpRequest(OutputQueue outputQueue) {
+    HttpRequest createHttpRequest(OutputQueue outputQueue) {
         HttpRequest httpRequest = new HttpRequest()
         httpRequest.url = outputQueue.url
         httpRequest.httpProperties = outputQueue.httpProperties
@@ -102,7 +99,7 @@ class SenderThread extends Thread {
         }
     }
 
-    static HttpLog createHttpLog(SenderAbstract senderAbstract) {
+    HttpLog createHttpLog(SenderAbstract senderAbstract) {
         HttpLog httpLog = new HttpLog()
         httpLog.requestDate = senderAbstract.httpRequest?.sendDate
         httpLog.requestHeaders = senderAbstract.httpRequest?.headers?.toString()
@@ -120,7 +117,7 @@ class SenderThread extends Thread {
 
     @Override
     String toString() {
-        return "Thread: " + getName() + "; OutputQueue: " + outputThread.outputQueue.toString() + "; sendingQueue: " + sendingQueue.toString()
+        return "Thread: " + getName() + "; OutputQueue: " + outputThread.outputQueue.toString() + "; messages: " + sendingQueue.toString()
     }
 
 }

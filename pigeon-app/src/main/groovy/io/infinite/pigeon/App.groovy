@@ -2,9 +2,11 @@ package io.infinite.pigeon
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.infinite.blackbox.BlackBox
-import io.infinite.carburetor.CarburetorLevel
 import io.infinite.pigeon.conf.Configuration
+import io.infinite.pigeon.other.MessageStatusSets
 import io.infinite.pigeon.other.MessageStatuses
+import io.infinite.pigeon.springdatarest.InputMessage
+import io.infinite.pigeon.springdatarest.InputMessageRepository
 import io.infinite.pigeon.springdatarest.OutputMessage
 import io.infinite.pigeon.springdatarest.OutputMessageRepository
 import io.infinite.pigeon.threads.InputThread
@@ -30,6 +32,9 @@ class App implements CommandLineRunner {
     @Autowired
     OutputMessageRepository outputMessageRepository
 
+    @Autowired
+    InputMessageRepository inputMessageRepository
+
     @Value('${pigeonConfFile}')
     FileSystemResource pigeonConfigResource
 
@@ -42,25 +47,30 @@ class App implements CommandLineRunner {
         runWithLogging()
     }
 
-    @BlackBox(level = CarburetorLevel.EXPRESSION)
+    @BlackBox
     void runWithLogging() {
         Configuration configuration = new ObjectMapper().readValue(pigeonConfigResource.getFile().getText(), Configuration.class)
-        Set<OutputMessage> waitingMessages = outputMessageRepository.findByStatus(MessageStatuses.WAITING.value())
-        waitingMessages.each {
+        Set<InputMessage> delayedMessages = inputMessageRepository.findByMessageStatusList(MessageStatusSets.INPUT_RENEW_MESSAGE_STATUSES.value())
+        delayedMessages.each {
             it.status = MessageStatuses.RENEWED.value()
         }
-        outputMessageRepository.saveAll(waitingMessages)
+        inputMessageRepository.saveAll(delayedMessages)
+        Set<OutputMessage> renewedMessages = outputMessageRepository.findByMessageStatusList(MessageStatusSets.OUTPUT_RENEW_MESSAGE_STATUSES.value())
+        renewedMessages.each {
+            it.status = MessageStatuses.RENEWED.value()
+        }
+        outputMessageRepository.saveAll(renewedMessages)
         configuration.inputQueues.each { inputQueue ->
             if (inputQueue.enabled) {
                 InputThread inputThread = new InputThread(inputQueue)
                 applicationContext.getAutowireCapableBeanFactory().autowireBean(inputThread)
-                inputThread.start()
                 inputQueue.outputQueues.each { outputQueue ->
                     if (outputQueue.enabled) {
                         OutputThread outputThreadNormal
                         outputThreadNormal = new OutputThreadNormal(outputQueue, inputThread, applicationContext)
                         applicationContext.getAutowireCapableBeanFactory().autowireBean(outputThreadNormal)
                         outputThreadNormal.start()
+                        inputThread.outputThreadsNormal.add(outputThreadNormal)
                         if (outputQueue.maxRetryCount > 0) {
                             OutputThread outputThreadRetry
                             outputThreadRetry = new OutputThreadRetry(outputQueue, inputThread, applicationContext)
@@ -69,6 +79,7 @@ class App implements CommandLineRunner {
                         }
                     }
                 }
+                inputThread.start()
             }
         }
     }

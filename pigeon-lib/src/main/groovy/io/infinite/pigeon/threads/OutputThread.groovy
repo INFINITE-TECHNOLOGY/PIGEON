@@ -36,31 +36,15 @@ abstract class OutputThread extends Thread {
         }
     }
 
-    abstract LinkedHashSet<OutputMessage> masterQuery(String subscriberName)
-
     @BlackBox(level = CarburetorLevel.ERROR)
     void senderEnqueue(OutputMessage outputMessage) {
         SenderThread senderThread = ++senderThreadRobin.iterator()
         outputMessage.setStatus(MessageStatuses.WAITING.value())
         outputMessage.setThreadName(senderThread.getName())
         outputMessageRepository.save(outputMessage)
-        senderThread.getSendingQueue().put(outputMessage)
+        senderThread.sendingQueue.put(outputMessage)
         synchronized (senderThread) {
             senderThread.notify()
-        }
-    }
-
-    @Override
-    @BlackBox(level = CarburetorLevel.METHOD)
-    void run() {
-        while (true) {
-            Set<OutputMessage> outputMessages = masterQuery(outputQueue.getName())
-            if (outputMessages.size() > 0) {
-                outputMessages.each { outputMessage ->
-                    senderEnqueue(outputMessage)
-                }
-            }
-            sleep(outputQueue.pollPeriodMilliseconds)
         }
     }
 

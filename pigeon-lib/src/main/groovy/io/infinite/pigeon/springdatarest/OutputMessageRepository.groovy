@@ -15,16 +15,6 @@ interface OutputMessageRepository extends JpaRepository<OutputMessage, Long> {
     @Query("""select o from OutputMessage o where
         outputQueueName = :outputQueueName and
         status in :messageStatusList and
-        id > :minId
-        order by id asc""")
-    LinkedHashSet<OutputMessage> masterQueryNormal(
-            @Param("outputQueueName") String outputQueueName,
-            @Param("messageStatusList") List<String> messageStatusList,
-            @Param("minId") Long minId)
-
-    @Query("""select o from OutputMessage o where
-        outputQueueName = :outputQueueName and
-        status in :messageStatusList and
         attemptsCount <= :maxRetryCount and
         lastSendTime < :maxLastSendTime
         order by id asc""")
@@ -34,7 +24,9 @@ interface OutputMessageRepository extends JpaRepository<OutputMessage, Long> {
             @Param("maxRetryCount") Integer maxRetryCount,
             @Param("maxLastSendTime") Date maxLastSendTime)
 
-    Set<OutputMessage> findByStatus(@Param("status") String status)
+    @Query("""select o from OutputMessage o where
+        status in :messageStatusList""")
+    Set<OutputMessage> findByMessageStatusList(@Param("messageStatusList") List<String> messageStatusList)
 
     @Query("""select o from OutputMessage o join o.inputMessage i where
         i.externalId = :externalId and i.sourceName = :sourceName""")

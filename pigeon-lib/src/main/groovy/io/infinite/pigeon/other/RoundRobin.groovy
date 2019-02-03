@@ -1,13 +1,9 @@
 package io.infinite.pigeon.other
 
-import io.infinite.blackbox.BlackBox
-import io.infinite.carburetor.CarburetorLevel
-
 class RoundRobin<Type> extends ArrayList<Type> {
 
     private Integer index = 0
 
-    @BlackBox
     @Override
     Iterator<Type> iterator() {
         return new Iterator<Type>() {

@@ -19,6 +19,8 @@ class InputThread extends Thread {
 
     InputQueue inputQueue
 
+    List<OutputThreadNormal> outputThreadsNormal = []
+
     @Autowired
     InputMessageRepository inputMessageRepository
 
@@ -40,14 +42,24 @@ class InputThread extends Thread {
                 inputMessages.each { inputMessage ->
                     Set<OutputMessage> outputMessages = new HashSet<>()
                     if (inputMessageRepository.findDuplicates(inputMessage.sourceName, inputMessage.inputQueueName, inputMessage.externalId, inputMessage.id, MessageStatuses.SPLIT.value()) == 0) {
-                        inputQueue.outputQueues.each { outputQueue ->
+                        outputThreadsNormal.each { outputThreadNormal ->
                             OutputMessage outputMessage = new OutputMessage(inputMessage)
-                            outputMessage.setOutputQueueName(outputQueue.getName())
-                            outputMessage.setAttemptsCount(outputQueue.getMaxRetryCount())
-                            outputMessage.setUrl(outputQueue.getUrl())
-                            outputMessage.setStatus(MessageStatuses.NEW.value())
+                            outputMessage.setOutputQueueName(outputThreadNormal.getName())
+                            outputMessage.setAttemptsCount(outputThreadNormal.getOutputQueue().getMaxRetryCount())
+                            outputMessage.setUrl(outputThreadNormal.getOutputQueue().getUrl())
                             outputMessage.setInputMessage(inputMessage)
                             outputMessages.add(outputMessage)
+                            if (inputMessage.status != MessageStatuses.RENEWED.value()) {
+                                outputMessage.setStatus(MessageStatuses.NEW.value())
+                                outputMessageRepository.save(outputMessage)
+                                outputThreadNormal.messages.put(outputMessage)
+                                synchronized (outputThreadNormal) {
+                                    outputThreadNormal.notify()
+                                }
+                            } else {
+                                outputMessage.setStatus(MessageStatuses.RENEWED.value())
+                                outputMessageRepository.save(outputMessage)
+                            }
                         }
                         inputMessage.getOutputMessages().addAll(outputMessages)
                         inputMessage.setStatus(MessageStatuses.SPLIT.value())
