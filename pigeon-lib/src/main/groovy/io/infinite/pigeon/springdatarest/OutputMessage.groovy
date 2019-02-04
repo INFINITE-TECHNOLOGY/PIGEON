@@ -6,7 +6,7 @@ import javax.persistence.*
 
 @Entity
 @Table(name = "OutputMessages")
-@ToString(includeNames = true, includeFields = true)
+@ToString(includeNames = true, includeFields = true, excludes = "httpLogs")
 class OutputMessage {
 
     @Id

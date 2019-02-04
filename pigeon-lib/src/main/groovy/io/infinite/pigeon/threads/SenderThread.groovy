@@ -84,7 +84,7 @@ class SenderThread extends Thread {
             try {
                 senderAbstract.sendHttpMessage()//<<<<<<<<<<<sending message
             } finally {
-                outputMessage.getHttpLogs().add(createHttpLog(senderAbstract))
+                outputMessage.getHttpLogs().add(createHttpLog(senderAbstract, outputMessage))
             }
             /*/\/\/\/\/\/\/\/\*/
             outputMessage.setStatus(httpRequest.getRequestStatus())
@@ -99,7 +99,7 @@ class SenderThread extends Thread {
         }
     }
 
-    HttpLog createHttpLog(SenderAbstract senderAbstract) {
+    HttpLog createHttpLog(SenderAbstract senderAbstract, OutputMessage outputMessage) {
         HttpLog httpLog = new HttpLog()
         httpLog.requestDate = senderAbstract.httpRequest?.sendDate
         httpLog.requestHeaders = senderAbstract.httpRequest?.headers?.toString()
@@ -112,6 +112,7 @@ class SenderThread extends Thread {
         httpLog.responseHeaders = senderAbstract.httpResponse?.headers?.toString()
         httpLog.responseBody = senderAbstract.httpResponse?.body
         httpLog.responseStatus = senderAbstract.httpResponse?.status
+        httpLog.outputMessage = outputMessage
         return httpLog
     }
 

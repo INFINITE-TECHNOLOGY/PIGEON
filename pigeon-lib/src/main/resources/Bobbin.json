@@ -39,6 +39,10 @@
         "cleanupZipFileName": "\"${origFileName}_${System.currentTimeMillis().toString()}.zip\""
       },
       "levels": "['warn', 'error'].contains(level)"
+    },
+    {
+      "name": "io.infinite.bobbin.destinations.SharedConsoleDestination",
+      "levels": "['warn', 'error'].contains(level)"
     }
   ]
 }
