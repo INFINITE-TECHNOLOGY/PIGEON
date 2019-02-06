@@ -11,11 +11,14 @@ import io.infinite.pigeon.springdatarest.InputMessage
 import io.infinite.pigeon.springdatarest.InputMessageRepository
 import io.infinite.pigeon.springdatarest.OutputMessage
 import io.infinite.pigeon.springdatarest.OutputMessageRepository
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 
-@Slf4j
 @BlackBox
 class InputThread extends Thread {
+
+    private final transient Logger log = LoggerFactory.getLogger(this.getClass().getCanonicalName())
 
     InputQueue inputQueue
 

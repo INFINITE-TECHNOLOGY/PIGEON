@@ -17,11 +17,14 @@ import io.infinite.blackbox.BlackBox
 import io.infinite.pigeon.other.AwsErrorResponseHandler
 import io.infinite.pigeon.other.AwsResponseHandler
 import io.infinite.pigeon.other.MessageStatuses
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
-@Slf4j
 @BlackBox
 @ToString(includeNames = true, includeFields = true, includeSuper = true)
 class SenderAWS extends SenderAbstract {
+
+    private final transient Logger log = LoggerFactory.getLogger(this.getClass().getCanonicalName())
 
     SenderAWS(HttpRequest httpRequest) {
         super(httpRequest)

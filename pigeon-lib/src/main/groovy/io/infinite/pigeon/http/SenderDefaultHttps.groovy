@@ -3,14 +3,17 @@ package io.infinite.pigeon.http
 import groovy.transform.ToString
 import groovy.util.logging.Slf4j
 import io.infinite.blackbox.BlackBox
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 import javax.net.ssl.HttpsURLConnection
 import javax.net.ssl.SSLSocketFactory
 
-@Slf4j
 @BlackBox
 @ToString(includeNames = true, includeFields = true, includeSuper = true)
 class SenderDefaultHttps extends SenderDefault {
+
+    private final transient Logger log = LoggerFactory.getLogger(this.getClass().getCanonicalName())
 
     SenderDefaultHttps(HttpRequest httpRequest) {
         super(httpRequest)
