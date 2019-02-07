@@ -6,9 +6,11 @@ import com.amazonaws.http.HttpResponseHandler
 import com.amazonaws.services.s3.Headers
 import com.amazonaws.services.s3.model.AmazonS3Exception
 import com.amazonaws.util.IOUtils
+import groovy.transform.CompileStatic
 import io.infinite.blackbox.BlackBox
 
 @BlackBox
+@CompileStatic
 class AwsErrorResponseHandler implements HttpResponseHandler<AmazonServiceException> {
 
     @Override

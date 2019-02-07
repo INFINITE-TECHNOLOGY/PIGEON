@@ -4,9 +4,9 @@
     {
       "name": "io.infinite.bobbin.destinations.FileDestination",
       "properties": {
-        "fileKey": "MDC.messageTimestamp + level + className",
-        "fileName": "\"./LOGS/PLUGINS/INPUT/${className}/${level}/${className}_${level}_${MDC.messageTimestamp}.log\"",
-        "zipFileName": "\"./LOGS/PLUGINS/INPUT/${className}/${level}/ARCHIVE/${className}_${level}_${MDC.messageTimestamp}.zip\"",
+        "fileKey": "level + className",
+        "fileName": "\"./LOGS/PLUGINS/INPUT/${className}/${level}/${className}_${level}.log\"",
+        "zipFileName": "\"./LOGS/PLUGINS/INPUT/${className}/${level}/ARCHIVE/${className}_${level}.zip\"",
         "cleanupZipFileName": "\"${origFileName}_${System.currentTimeMillis().toString()}.zip\""
       },
       "classes": "className.contains('conf.plugins.input')"

@@ -11,6 +11,7 @@ import com.amazonaws.auth.BasicAWSCredentials
 import com.amazonaws.http.AmazonHttpClient
 import com.amazonaws.http.ExecutionContext
 import com.amazonaws.http.HttpMethodName
+import groovy.transform.CompileStatic
 import groovy.transform.ToString
 import groovy.util.logging.Slf4j
 import io.infinite.blackbox.BlackBox
@@ -22,6 +23,7 @@ import org.slf4j.LoggerFactory
 
 @BlackBox
 @ToString(includeNames = true, includeFields = true, includeSuper = true)
+@CompileStatic
 class SenderAWS extends SenderAbstract {
 
     private final transient Logger log = LoggerFactory.getLogger(this.getClass().getCanonicalName())
@@ -41,16 +43,16 @@ class SenderAWS extends SenderAbstract {
         if (httpRequest.httpProperties.get("awsResourceName") == null) {
             log.warn("Configuration: AWS resource name is null")
         }
-        Request<Void> awsRequest = new DefaultRequest<Void>(httpRequest.httpProperties.get("awsServiceName"))
+        Request<Void> awsRequest = new DefaultRequest<Void>(httpRequest.httpProperties.get("awsServiceName") as String)
         awsRequest.setHttpMethod(HttpMethodName.valueOf(httpRequest.getMethod()))
         awsRequest.setEndpoint(URI.create(httpRequest.getUrl()))
         awsRequest.setContent(new com.amazonaws.util.StringInputStream(httpRequest.getBody()))
         awsRequest.setHeaders(httpRequest.getHeaders())
         AWS4Signer signer = new AWS4Signer()
-        signer.setRegionName(httpRequest.httpProperties.get("awsRegion"))
+        signer.setRegionName(httpRequest.httpProperties.get("awsRegion") as String)
         signer.setServiceName(awsRequest.getServiceName())
-        awsRequest.setResourcePath(httpRequest.httpProperties.get("awsResourceName"))
-        signer.sign(awsRequest, new BasicAWSCredentials(httpRequest.httpProperties.get("awsAccessKey"), httpRequest.httpProperties.get("awsSecretKey")))
+        awsRequest.setResourcePath(httpRequest.httpProperties.get("awsResourceName") as String)
+        signer.sign(awsRequest, new BasicAWSCredentials(httpRequest.httpProperties.get("awsAccessKey") as String, httpRequest.httpProperties.get("awsSecretKey") as String))
         Response<AmazonWebServiceResponse<String>> awsResponse
         try {
             log.info("Sending AWS Request")

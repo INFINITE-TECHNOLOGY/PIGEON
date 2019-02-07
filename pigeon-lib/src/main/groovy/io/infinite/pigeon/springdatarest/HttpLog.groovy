@@ -1,5 +1,6 @@
 package io.infinite.pigeon.springdatarest
 
+import groovy.transform.CompileStatic
 import groovy.transform.ToString
 
 import javax.persistence.Column
@@ -15,6 +16,7 @@ import javax.persistence.Table
 @Entity
 @Table
 @ToString(includeNames = true, includeFields = true)
+@CompileStatic
 class HttpLog {
 
     @Id

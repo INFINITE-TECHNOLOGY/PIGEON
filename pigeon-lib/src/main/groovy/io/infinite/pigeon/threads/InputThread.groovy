@@ -1,6 +1,6 @@
 package io.infinite.pigeon.threads
 
-
+import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 import io.infinite.blackbox.BlackBox
 import io.infinite.carburetor.CarburetorLevel
@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 
 @BlackBox
+@CompileStatic
 class InputThread extends Thread {
 
     private final transient Logger log = LoggerFactory.getLogger(this.getClass().getCanonicalName())

@@ -1,6 +1,8 @@
 package io.infinite.pigeon.threads
 
 import groovy.time.TimeCategory
+import groovy.transform.CompileDynamic
+import groovy.transform.CompileStatic
 import io.infinite.blackbox.BlackBox
 import io.infinite.carburetor.CarburetorLevel
 import io.infinite.pigeon.conf.OutputQueue
@@ -9,6 +11,7 @@ import io.infinite.pigeon.springdatarest.OutputMessage
 import org.springframework.context.ApplicationContext
 
 @BlackBox
+@CompileStatic
 class OutputThreadRetry extends OutputThread {
 
     OutputThreadRetry(OutputQueue outputQueue, InputThread inputThread, ApplicationContext applicationContext) {
@@ -22,6 +25,7 @@ class OutputThreadRetry extends OutputThread {
     }
 
     @BlackBox(level = CarburetorLevel.ERROR)
+    @CompileDynamic
     LinkedHashSet<OutputMessage> masterQuery(String outputQueueName) {
         Date maxLastSendDate
         use(TimeCategory) {

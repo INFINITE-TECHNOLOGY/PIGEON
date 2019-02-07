@@ -1,5 +1,8 @@
 package io.infinite.pigeon.other
 
+import groovy.transform.CompileStatic
+
+@CompileStatic
 class RoundRobin<Type> extends ArrayList<Type> {
 
     private Integer index = 0
@@ -15,7 +18,7 @@ class RoundRobin<Type> extends ArrayList<Type> {
 
             @Override
             Type next() {
-                Type result = get(index)
+                Type result = RoundRobin.this.get(index) as Type
                 index = ((index + 1) % RoundRobin.this.size())
                 return result
             }

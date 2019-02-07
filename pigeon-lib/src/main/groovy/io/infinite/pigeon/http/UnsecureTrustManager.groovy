@@ -1,5 +1,6 @@
 package io.infinite.pigeon.http
 
+import groovy.transform.CompileStatic
 import groovy.transform.ToString
 import io.infinite.blackbox.BlackBox
 
@@ -8,6 +9,7 @@ import java.security.cert.X509Certificate
 
 @ToString(includeNames = true, includeFields = true)
 @BlackBox
+@CompileStatic
 class UnsecureTrustManager implements X509TrustManager {
 
     @Override
