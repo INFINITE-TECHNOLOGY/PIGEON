@@ -4,44 +4,33 @@
     {
       "name": "io.infinite.bobbin.destinations.FileDestination",
       "properties": {
-        "fileKey": "level + className",
-        "fileName": "\"./LOGS/PLUGINS/INPUT/${className}/${level}/${className}_${level}.log\"",
-        "zipFileName": "\"./LOGS/PLUGINS/INPUT/${className}/${level}/ARCHIVE/${className}_${level}.zip\"",
-        "cleanupZipFileName": "\"${origFileName}_${System.currentTimeMillis().toString()}.zip\""
+        "fileName": "\"./LOGS/PLUGINS/INPUT/${className}/${level}/${className}_${level}.log\""
       },
       "classes": "className.contains('conf.plugins.input')"
     },
     {
       "name": "io.infinite.bobbin.destinations.FileDestination",
       "properties": {
-        "fileKey": "threadName + level + className",
-        "fileName": "\"./LOGS/PLUGINS/OUTPUT/${className}/${level}/${threadName}_${level}_${date}.log\"",
-        "zipFileName": "\"./LOGS/PLUGINS/OUTPUT/${className}/${level}/ARCHIVE/${threadName}_${level}_${date}.zip\"",
-        "cleanupZipFileName": "\"${origFileName}_${System.currentTimeMillis().toString()}.zip\""
+        "fileName": "\"./LOGS/PLUGINS/OUTPUT/${className}/${level}/${threadName}_${level}_${date}.log\""
       },
       "classes": "className.contains('conf.plugins.output')"
     },
     {
       "name": "io.infinite.bobbin.destinations.FileDestination",
       "properties": {
-        "fileKey": "threadGroupName + threadName + level",
-        "fileName": "\"./LOGS/THREADS/${threadGroupName}/${threadName}/${level}/${threadName}_${level}_${date}.log\"",
-        "zipFileName": "\"./LOGS/THREADS/${threadGroupName}/${threadName}/${level}/ARCHIVE/${threadName}_${level}_${date}.zip\"",
-        "cleanupZipFileName": "\"${origFileName}_${System.currentTimeMillis().toString()}.zip\""
+        "fileName": "\"./LOGS/THREADS/${threadGroupName}/${threadName}/${level}/${threadName}_${level}_${date}.log\""
       },
       "classes": "className.contains('io.infinite.')"
     },
     {
-      "name": "io.infinite.bobbin.destinations.SharedFileDestination",
+      "name": "io.infinite.bobbin.destinations.FileDestination",
       "properties": {
-        "fileName": "\"./LOGS/ALL/WARNINGS_AND_ERRORS_${date}.log\"",
-        "zipFileName": "\"./LOGS/ALL/ARCHIVE/WARNINGS_AND_ERRORS_${date}.zip\"",
-        "cleanupZipFileName": "\"${origFileName}_${System.currentTimeMillis().toString()}.zip\""
+        "fileName": "\"./LOGS/ALL/WARNINGS_AND_ERRORS_${date}.log\""
       },
       "levels": "['warn', 'error'].contains(level)"
     },
     {
-      "name": "io.infinite.bobbin.destinations.SharedConsoleDestination",
+      "name": "io.infinite.bobbin.destinations.ConsoleDestination",
       "levels": "['warn', 'error'].contains(level)"
     }
   ]
