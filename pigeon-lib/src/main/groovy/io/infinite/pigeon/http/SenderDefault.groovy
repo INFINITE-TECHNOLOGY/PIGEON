@@ -2,11 +2,10 @@ package io.infinite.pigeon.http
 
 import groovy.transform.CompileStatic
 import groovy.transform.ToString
+import groovy.util.logging.Slf4j
 import io.infinite.blackbox.BlackBox
 import io.infinite.pigeon.other.MessageStatuses
 import io.infinite.supplies.ast.exceptions.ExceptionUtils
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 
 import java.nio.charset.StandardCharsets
 
@@ -16,9 +15,9 @@ import static java.net.HttpURLConnection.HTTP_OK
 @BlackBox
 @ToString(includeNames = true, includeFields = true, includeSuper = true)
 @CompileStatic
+@Slf4j
 abstract class SenderDefault extends SenderAbstract {
 
-    private final transient Logger log = LoggerFactory.getLogger(this.getClass().getCanonicalName())
 
     URL url
     HttpURLConnection httpURLConnection

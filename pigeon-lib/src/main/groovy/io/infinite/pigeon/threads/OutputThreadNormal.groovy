@@ -31,5 +31,4 @@ class OutputThreadNormal extends OutputThread {
     }
 
 
-
 }

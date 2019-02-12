@@ -7,14 +7,11 @@ import com.amazonaws.util.IOUtils
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 import io.infinite.blackbox.BlackBox
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 
 @BlackBox
 @CompileStatic
+@Slf4j
 class AwsResponseHandler implements HttpResponseHandler<AmazonWebServiceResponse<String>> {
-
-    private final transient Logger log = LoggerFactory.getLogger(this.getClass().getCanonicalName())
 
     @Override
     AmazonWebServiceResponse<String> handle(HttpResponse response) throws IOException {

@@ -12,17 +12,14 @@ import io.infinite.pigeon.springdatarest.InputMessageRepository
 import io.infinite.pigeon.springdatarest.OutputMessage
 import io.infinite.pigeon.springdatarest.OutputMessageRepository
 import io.infinite.supplies.ast.exceptions.ExceptionUtils
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 
 import java.util.concurrent.LinkedBlockingQueue
 
 @BlackBox
 @CompileStatic
+@Slf4j
 class SenderThread extends Thread {
-
-    private final transient Logger log = LoggerFactory.getLogger(this.getClass().getCanonicalName())
 
     @Autowired
     InputMessageRepository inputMessageRepository

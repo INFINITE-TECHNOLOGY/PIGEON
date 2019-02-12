@@ -1,11 +1,6 @@
 package io.infinite.pigeon.http
 
-import com.amazonaws.AmazonServiceException
-import com.amazonaws.AmazonWebServiceResponse
-import com.amazonaws.ClientConfiguration
-import com.amazonaws.DefaultRequest
-import com.amazonaws.Request
-import com.amazonaws.Response
+import com.amazonaws.*
 import com.amazonaws.auth.AWS4Signer
 import com.amazonaws.auth.BasicAWSCredentials
 import com.amazonaws.http.AmazonHttpClient
@@ -18,15 +13,12 @@ import io.infinite.blackbox.BlackBox
 import io.infinite.pigeon.other.AwsErrorResponseHandler
 import io.infinite.pigeon.other.AwsResponseHandler
 import io.infinite.pigeon.other.MessageStatuses
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 
 @BlackBox
 @ToString(includeNames = true, includeFields = true, includeSuper = true)
 @CompileStatic
+@Slf4j
 class SenderAWS extends SenderAbstract {
-
-    private final transient Logger log = LoggerFactory.getLogger(this.getClass().getCanonicalName())
 
     SenderAWS(HttpRequest httpRequest) {
         super(httpRequest)
