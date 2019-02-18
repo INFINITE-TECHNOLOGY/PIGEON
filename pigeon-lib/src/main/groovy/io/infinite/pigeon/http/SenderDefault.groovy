@@ -14,10 +14,12 @@ import static java.net.HttpURLConnection.HTTP_OK
 
 @BlackBox
 @ToString(includeNames = true, includeFields = true, includeSuper = true)
-@CompileStatic
+//@compilestatic
 @Slf4j
 abstract class SenderDefault extends SenderAbstract {
 
+    Integer DEFAULT_CONNECT_TIMEOUT = 15000
+    Integer DEFAULT_READ_TIMEOUT = 15000
 
     URL url
     HttpURLConnection httpURLConnection
@@ -34,6 +36,16 @@ abstract class SenderDefault extends SenderAbstract {
             urlConnection = url.openConnection(proxy)
         } else {
             urlConnection = url.openConnection()
+        }
+        if (httpRequest.httpProperties?.get("connectTimeout") != null && httpRequest.httpProperties?.get("connectTimeout") == true) {
+            urlConnection.setConnectTimeout(httpRequest.httpProperties?.get("connectTimeout") as int)
+        } else {
+            urlConnection.setConnectTimeout(DEFAULT_CONNECT_TIMEOUT)
+        }
+        if (httpRequest.httpProperties?.get("readTimeout") != null && httpRequest.httpProperties?.get("readTimeout") == true) {
+            urlConnection.setReadTimeout(httpRequest.httpProperties?.get("readTimeout") as int)
+        } else {
+            urlConnection.setReadTimeout(DEFAULT_READ_TIMEOUT)
         }
         if (httpRequest.httpProperties?.get("basicAuthEnabled") != null && httpRequest.httpProperties?.get("basicAuthEnabled") == true) {
             String username = httpRequest.httpProperties?.get("username")
