@@ -8,7 +8,7 @@ import javax.persistence.*
 @Entity
 @Table(name = "OutputMessages")
 @ToString(includeNames = true, includeFields = true, excludes = "httpLogs")
-@CompileStatic
+//@compilestatic
 class OutputMessage {
 
     @Id
@@ -21,6 +21,7 @@ class OutputMessage {
 
     String outputQueueName
 
+    @Lob
     String url
 
     Integer attemptsCount = 0

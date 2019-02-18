@@ -8,7 +8,7 @@ import javax.persistence.*
 @Entity
 @Table
 @ToString(includeNames = true, includeFields = true)
-@CompileStatic
+//@compilestatic
 class HttpLog {
 
     @Id
@@ -22,6 +22,7 @@ class HttpLog {
     @Lob
     String requestBody
     String method
+    @Lob
     String url
     String requestStatus
     @Lob
