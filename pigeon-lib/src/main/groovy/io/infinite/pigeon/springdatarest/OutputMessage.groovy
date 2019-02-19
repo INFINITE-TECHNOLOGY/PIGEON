@@ -1,6 +1,6 @@
 package io.infinite.pigeon.springdatarest
 
-
+import groovy.transform.CompileStatic
 import groovy.transform.ToString
 
 import javax.persistence.*
@@ -8,6 +8,7 @@ import javax.persistence.*
 @Entity
 @Table(name = "OutputMessages")
 @ToString(includeNames = true, includeFields = true, excludes = "httpLogs")
+@CompileStatic
 class OutputMessage {
 
     @Id

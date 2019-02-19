@@ -2,6 +2,7 @@ package io.infinite.pigeon.springdatarest
 
 
 import groovy.transform.Memoized
+import io.infinite.blackbox.BlackBox
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Controller
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
 @Controller
+@BlackBox
 class PluginHttpController {
 
     @Value('${pigeonInputPluginsHttpDir}')

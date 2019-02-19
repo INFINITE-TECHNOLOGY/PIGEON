@@ -25,7 +25,6 @@ import org.springframework.hateoas.config.EnableHypermediaSupport
 
 @EnableHypermediaSupport(type = EnableHypermediaSupport.HypermediaType.HAL)
 @SpringBootApplication
-@CompileStatic
 class App implements CommandLineRunner {
 
     @Autowired
