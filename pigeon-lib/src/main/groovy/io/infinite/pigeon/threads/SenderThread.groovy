@@ -1,6 +1,5 @@
 package io.infinite.pigeon.threads
 
-import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 import io.infinite.blackbox.BlackBox
 import io.infinite.pigeon.conf.OutputQueue
@@ -17,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import java.util.concurrent.LinkedBlockingQueue
 
 @BlackBox
-@CompileStatic
 @Slf4j
 class SenderThread extends Thread {
 

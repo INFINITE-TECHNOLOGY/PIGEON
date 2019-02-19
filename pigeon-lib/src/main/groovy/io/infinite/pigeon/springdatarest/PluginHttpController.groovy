@@ -1,6 +1,6 @@
 package io.infinite.pigeon.springdatarest
 
-import groovy.transform.CompileStatic
+
 import groovy.transform.Memoized
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
 @Controller
-@CompileStatic
 class PluginHttpController {
 
     @Value('${pigeonInputPluginsHttpDir}')

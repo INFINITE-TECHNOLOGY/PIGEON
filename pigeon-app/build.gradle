@@ -1,5 +1,7 @@
 plugins {
     id "groovy"
+    id "maven-publish"
+    id "com.jfrog.bintray" version "1.8.4"
     id "idea"
     id "jacoco"
     //id 'application'
@@ -7,20 +9,19 @@ plugins {
     id "io.spring.dependency-management" version "1.0.6.RELEASE"
 }
 bootJar {
-    baseName = 'pigeon'
-    version = '1.0.0-SNAPSHOT'
+    baseName = 'pigeon-app'
+    version = '0.0.1'
 }
 ext['groovy.version'] = '2.5.4'
 sourceCompatibility = 1.7
 group = "io.infinite"
-version = "1.0.0-SNAPSHOT"
+version = "0.0.1"
 description = "HTTP Message Broker"
 repositories {
     jcenter()
     maven {
         url "https://oss.jfrog.org/artifactory/oss-snapshot-local"
     }
-    mavenLocal()
 }
 dependencies {
     compile project(':pigeon-lib')
@@ -28,6 +29,50 @@ dependencies {
     compile 'org.springframework.boot:spring-boot-starter-data-rest'
     compile 'org.springframework.boot:spring-boot-starter-data-jpa'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
+}
+task sourceJar(type: Jar) {
+    from sourceSets.main.allSource
+    classifier "sources"
+}
+ext {
+    theTitle = "HTTP Message Broker"
+    titleForDocumentation = archivesBaseName + " " + version
+    packageTitle = group
+    description = "HTTP Message Broker"
+}
+publishing {
+    publications {
+        groovyMaven(MavenPublication) {
+            from components.java
+            artifact(sourceJar) {
+                classifier "sources"
+            }
+        }
+    }
+}
+task jarSrc(type: Jar, dependsOn: classes) {
+    classifier = "sources"
+    from sourceSets.main.allSource
+}
+artifacts {
+    archives(jarSrc)
+}
+bintray {
+    user = System.getProperty("bintrayuser")
+    key = System.getProperty("bintraypassword")
+    publications = ["groovyMaven"]
+    def projectName = project.name
+    def projectDescription = project.description
+    pkg {
+        userOrg = "infinite-technology"
+        repo = "m2"
+        name = "pigeon-app"
+        desc = "HTTP Message Broker"
+        issueTrackerUrl = "https://github.com/INFINITE-TECHNOLOGY/PIGEON/issues"
+        vcsUrl = "https://github.com/INFINITE-TECHNOLOGY/PIGEON.git"
+        websiteUrl = "https://i-t.io/Pigeon/"
+        licenses = ["Apache-2.0"]
+    }
 }
 configurations {
     providedRuntime

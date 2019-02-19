@@ -1,10 +1,8 @@
 package io.infinite.pigeon.http
 
-import groovy.transform.CompileStatic
 import groovy.transform.ToString
 import groovy.util.logging.Slf4j
 import io.infinite.blackbox.BlackBox
-
 import javax.net.ssl.HttpsURLConnection
 import javax.net.ssl.KeyManager
 import javax.net.ssl.SSLContext
@@ -12,7 +10,6 @@ import java.security.SecureRandom
 
 @BlackBox
 @ToString(includeNames = true, includeFields = true, includeSuper = true)
-@CompileStatic
 @Slf4j
 class SenderDefaultHttpsUnsecure extends SenderDefault {
 

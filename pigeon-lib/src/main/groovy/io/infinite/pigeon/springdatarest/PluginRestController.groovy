@@ -1,7 +1,6 @@
 package io.infinite.pigeon.springdatarest
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
-import groovy.transform.CompileStatic
 import groovy.transform.Memoized
 import io.infinite.blackbox.BlackBox
 import org.springframework.beans.factory.annotation.Autowired
@@ -21,7 +20,6 @@ import javax.xml.bind.annotation.XmlAccessorType
 @XmlAccessorType(XmlAccessType.NONE)
 @RestController
 @BlackBox
-@CompileStatic
 class PluginRestController {
 
     @Value('${pigeonInputPluginsRestDir}')

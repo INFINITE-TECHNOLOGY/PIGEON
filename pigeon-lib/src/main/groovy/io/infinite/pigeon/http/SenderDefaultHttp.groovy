@@ -1,6 +1,5 @@
 package io.infinite.pigeon.http
 
-import groovy.transform.CompileStatic
 import groovy.transform.ToString
 import groovy.util.logging.Slf4j
 import io.infinite.blackbox.BlackBox
@@ -8,7 +7,6 @@ import io.infinite.pigeon.other.PigeonException
 
 @BlackBox
 @ToString(includeNames = true, includeFields = true, includeSuper = true)
-@CompileStatic
 @Slf4j
 class SenderDefaultHttp extends SenderDefault {
 

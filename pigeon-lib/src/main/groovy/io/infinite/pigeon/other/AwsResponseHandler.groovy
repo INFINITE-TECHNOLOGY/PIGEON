@@ -4,12 +4,10 @@ import com.amazonaws.AmazonWebServiceResponse
 import com.amazonaws.http.HttpResponse
 import com.amazonaws.http.HttpResponseHandler
 import com.amazonaws.util.IOUtils
-import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 import io.infinite.blackbox.BlackBox
 
 @BlackBox
-@CompileStatic
 @Slf4j
 class AwsResponseHandler implements HttpResponseHandler<AmazonWebServiceResponse<String>> {
 

@@ -6,7 +6,6 @@ import com.amazonaws.auth.BasicAWSCredentials
 import com.amazonaws.http.AmazonHttpClient
 import com.amazonaws.http.ExecutionContext
 import com.amazonaws.http.HttpMethodName
-import groovy.transform.CompileStatic
 import groovy.transform.ToString
 import groovy.util.logging.Slf4j
 import io.infinite.blackbox.BlackBox
@@ -16,7 +15,6 @@ import io.infinite.pigeon.other.MessageStatuses
 
 @BlackBox
 @ToString(includeNames = true, includeFields = true, includeSuper = true)
-@CompileStatic
 @Slf4j
 class SenderAWS extends SenderAbstract {
 

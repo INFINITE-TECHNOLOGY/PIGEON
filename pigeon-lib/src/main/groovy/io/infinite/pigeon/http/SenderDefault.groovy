@@ -1,20 +1,16 @@
 package io.infinite.pigeon.http
 
-import groovy.transform.CompileStatic
 import groovy.transform.ToString
 import groovy.util.logging.Slf4j
 import io.infinite.blackbox.BlackBox
 import io.infinite.pigeon.other.MessageStatuses
 import io.infinite.supplies.ast.exceptions.ExceptionUtils
-
 import java.nio.charset.StandardCharsets
-
 import static java.net.HttpURLConnection.HTTP_CREATED
 import static java.net.HttpURLConnection.HTTP_OK
 
 @BlackBox
 @ToString(includeNames = true, includeFields = true, includeSuper = true)
-//@compilestatic
 @Slf4j
 abstract class SenderDefault extends SenderAbstract {
 

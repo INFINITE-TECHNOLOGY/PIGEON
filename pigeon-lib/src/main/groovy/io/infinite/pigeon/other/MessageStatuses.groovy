@@ -1,8 +1,5 @@
 package io.infinite.pigeon.other
 
-import groovy.transform.CompileStatic
-
-@CompileStatic
 enum MessageStatuses {
 
     NEW("new"),

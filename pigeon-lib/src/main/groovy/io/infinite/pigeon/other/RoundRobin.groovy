@@ -1,8 +1,5 @@
 package io.infinite.pigeon.other
 
-import groovy.transform.CompileStatic
-
-@CompileStatic
 class RoundRobin<Type> extends ArrayList<Type> {
 
     private Integer index = 0

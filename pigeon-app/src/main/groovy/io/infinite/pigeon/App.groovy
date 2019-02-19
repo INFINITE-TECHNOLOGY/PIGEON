@@ -1,6 +1,7 @@
 package io.infinite.pigeon
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import groovy.util.logging.Slf4j
 import io.infinite.blackbox.BlackBox
 import io.infinite.pigeon.conf.Configuration
 import io.infinite.pigeon.other.MessageStatusSets

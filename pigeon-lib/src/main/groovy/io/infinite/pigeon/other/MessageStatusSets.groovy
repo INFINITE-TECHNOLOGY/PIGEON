@@ -1,8 +1,5 @@
 package io.infinite.pigeon.other
 
-import groovy.transform.CompileStatic
-
-@CompileStatic
 enum MessageStatusSets {
 
     INPUT_RENEW_MESSAGE_STATUSES([MessageStatuses.NEW.value(), MessageStatuses.NEW2.value()] as String[]),
