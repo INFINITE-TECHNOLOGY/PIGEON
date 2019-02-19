@@ -1,7 +1,7 @@
 package io.infinite.pigeon
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import groovy.util.logging.Slf4j
+import groovy.transform.CompileStatic
 import io.infinite.blackbox.BlackBox
 import io.infinite.pigeon.conf.Configuration
 import io.infinite.pigeon.other.MessageStatusSets
@@ -25,6 +25,7 @@ import org.springframework.hateoas.config.EnableHypermediaSupport
 
 @EnableHypermediaSupport(type = EnableHypermediaSupport.HypermediaType.HAL)
 @SpringBootApplication
+@CompileStatic
 class App implements CommandLineRunner {
 
     @Autowired
