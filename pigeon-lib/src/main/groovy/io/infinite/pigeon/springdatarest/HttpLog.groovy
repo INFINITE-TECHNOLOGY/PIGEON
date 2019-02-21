@@ -34,5 +34,6 @@ class HttpLog {
     Date insertDate = new Date()
     @ManyToOne(fetch = FetchType.EAGER)
     OutputMessage outputMessage
+    String senderThreadName
 
 }

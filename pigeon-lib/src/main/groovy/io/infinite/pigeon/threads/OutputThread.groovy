@@ -41,7 +41,8 @@ abstract class OutputThread extends Thread {
     void senderEnqueue(OutputMessage outputMessage) {
         SenderThread senderThread = ++senderThreadRobin.iterator()
         outputMessage.setStatus(MessageStatuses.WAITING.value())
-        outputMessage.setThreadName(senderThread.getName())
+        outputMessage.setOutputThreadName(getName())
+        outputMessage.setLastSenderThreadName(senderThread.getName())
         outputMessageRepository.save(outputMessage)
         senderThread.sendingQueue.put(outputMessage)
         synchronized (senderThread) {

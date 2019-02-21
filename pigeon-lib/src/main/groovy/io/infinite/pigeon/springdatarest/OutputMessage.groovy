@@ -26,7 +26,9 @@ class OutputMessage {
 
     String status
 
-    String threadName
+    String outputThreadName
+
+    String lastSenderThreadName
 
     Date insertTime = new Date()
 

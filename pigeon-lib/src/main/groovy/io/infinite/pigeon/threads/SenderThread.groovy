@@ -79,6 +79,7 @@ class SenderThread extends Thread {
             /*/\/\/\/\/\/\/\/\*/
             SenderAbstract senderAbstract = Class.forName(outputThread.outputQueue.getSenderClassName()).newInstance(httpRequest) as SenderAbstract
             outputMessage.setStatus(MessageStatuses.SENDING.value())
+            outputMessage.setAttemptsCount(outputMessage.attemptsCount + 1)
             outputMessageRepository.save(outputMessage)
             /*\/\/\/\/\/\/\/\/*/
             try {
@@ -88,7 +89,6 @@ class SenderThread extends Thread {
             }
             /*/\/\/\/\/\/\/\/\*/
             outputMessage.setStatus(httpRequest.getRequestStatus())
-            outputMessage.setAttemptsCount(outputMessage.getAttemptsCount() + 1)
             outputMessage.setLastSendTime(new Date())
         } catch (Exception e) {
             outputMessage.setExceptionString(new ExceptionUtils().stacktrace(e))
@@ -113,6 +113,7 @@ class SenderThread extends Thread {
         httpLog.responseBody = senderAbstract.httpResponse?.body
         httpLog.responseStatus = senderAbstract.httpResponse?.status
         httpLog.outputMessage = outputMessage
+        httpLog.senderThreadName = getName()
         return httpLog
     }
 

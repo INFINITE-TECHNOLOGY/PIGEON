@@ -44,9 +44,8 @@ class InputThread extends Thread {
                     if (inputMessageRepository.findDuplicates(inputMessage.sourceName, inputMessage.inputQueueName, inputMessage.externalId, inputMessage.id, MessageStatuses.SPLIT.value()) == 0) {
                         outputThreadsNormal.each { outputThreadNormal ->
                             OutputMessage outputMessage = new OutputMessage(inputMessage)
-                            outputMessage.setOutputQueueName(outputThreadNormal.getName())
-                            outputMessage.setAttemptsCount(outputThreadNormal.getOutputQueue().getMaxRetryCount())
-                            outputMessage.setUrl(outputThreadNormal.getOutputQueue().getUrl())
+                            outputMessage.setOutputQueueName(outputThreadNormal.outputQueue.name)
+                            outputMessage.setUrl(outputThreadNormal.outputQueue.url)
                             outputMessage.setInputMessage(inputMessage)
                             outputMessages.add(outputMessage)
                             if (inputMessage.status != MessageStatuses.RENEWED.value()) {

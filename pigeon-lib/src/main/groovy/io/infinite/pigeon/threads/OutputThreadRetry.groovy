@@ -14,9 +14,12 @@ class OutputThreadRetry extends OutputThread {
 
     OutputThreadRetry(OutputQueue outputQueue, InputThread inputThread, ApplicationContext applicationContext) {
         super(outputQueue, inputThread, applicationContext)
+        senderThreadRobin.clear()
         setName(getName() + "_RETRY")
         (1..outputQueue.retryThreadCount).each {
             SenderThread senderThread = new SenderThread(this, it, applicationContext.getEnvironment().getProperty("pigeonOutPluginsDir"))
+            senderThread.setName(senderThread.getName() + "_RETRY")
+            applicationContext.getAutowireCapableBeanFactory().autowireBean(senderThread)
             senderThreadRobin.add(senderThread)
             senderThread.start()
         }
