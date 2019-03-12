@@ -19,9 +19,6 @@ version = "0.0.1"
 description = "HTTP Message Broker"
 repositories {
     jcenter()
-    maven {
-        url "https://oss.jfrog.org/artifactory/oss-snapshot-local"
-    }
 }
 dependencies {
     compile project(':pigeon-lib')
