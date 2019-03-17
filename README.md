@@ -10,20 +10,20 @@
 
 ## Purpose
 
-`Pigeon` is an HTTP Message Broker end-user server application designed for the purpose of distribution of textual messages in HTTP format.
+`Pigeon` is an end-user server application (HTTP Message Broker) designed for distribution of text messages in HTTP format.
+
 
 ## In short
 
 `Pigeon` is capable to:
-1) Enqueue a textual message from external source
-2) Convert it into one or more HTTP messages with a specified body/query string parameters using appropriate Plugins
-3) Dispatch the resulting messages ansynchronously towards one or more recipients (URLs) using a variety of HTTP connection and authentication mechanisms (such as AWS v4 signature)
+1) Enqueue a text message from external source using REST API or direct insert into Pigeon DB by the external app
+2) Convert it into one or more HTTP messages with a specified body/query string parameters using appropriate `Plugins` (plugins can be developed by end-users using Groovy script)
+3) Dispatch the resulting messages ansynchronously to one or more recipients (URLs) using a variety of HTTP connection and authentication mechanisms (such as AWS v4 signature)
 4) If needed retry sending the message several times
 
 ## Documentation
 
 * [**Pigeon Documentation**](https://github.com/INFINITE-TECHNOLOGY/PIGEON/wiki)
-
 
 ## Technology stack
 
