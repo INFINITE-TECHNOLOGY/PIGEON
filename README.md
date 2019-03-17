@@ -1,20 +1,5 @@
 # Infinite Technology ♾ Pigeon 🕊
 
-**HTTP Message Broker.**
-
-> Post **`pigeons`** have been (and sometimes still are) extensively used for quick delivery of paper-based messages (such as text, drawings, maps) - thus the project name: **`Pigeon`**.
-
-It is capable to:
-1) Enqueue a textual message from external source
-2) Convert it into one or more HTTP messages with a specified body/query string parameters using appropriate Plugins
-3) Dispatch the resulting messages ansynchronously towards one or more recipients (URLs) using a variety of HTTP connection and authentication mechanisms (such as AWS v4 signature)
-4) If needed retry sending the message several times
-
-References:
-* [**Pigeon Documentation**](https://github.com/INFINITE-TECHNOLOGY/PIGEON/wiki)
-
-Release info:
-
 |Attribute\Release type|Latest|Stable|
 |----------------------|------|------|
 |Version|1.0.0-SNAPSHOT|1.0.x|
@@ -23,7 +8,25 @@ Release info:
 |Test coverage|[![codecov](https://codecov.io/gh/INFINITE-TECHNOLOGY/PIGEON/branch/master/graphs/badge.svg)](https://codecov.io/gh/INFINITE-TECHNOLOGY/PIGEON/branch/master/graphs)|[![codecov](https://codecov.io/gh/INFINITE-TECHNOLOGY/PIGEON/branch/PIGEON_1_0_X/graphs/badge.svg)](https://codecov.io/gh/INFINITE-TECHNOLOGY/PIGEON/branch/PIGEON_1_0_X/graphs)|
 |Library (Maven)|[oss.jfrog.org snapshot](https://oss.jfrog.org/artifactory/webapp/#/artifacts/browse/tree/General/oss-snapshot-local/io/infinite/pigeon/1.0.0-SNAPSHOT)|[ ![Download](https://api.bintray.com/packages/infinite-technology/m2/pigeon/images/download.svg) ](https://bintray.com/infinite-technology/m2/pigeon/_latestVersion)|
 
-Technology stack:
+## Purpose
+
+`Pigeon` is an HTTP Message Broker application used to for distribution of textual messages in HTTP format.
+
+## In short
+
+`Pigeon` is capable to:
+1) Enqueue a textual message from external source
+2) Convert it into one or more HTTP messages with a specified body/query string parameters using appropriate Plugins
+3) Dispatch the resulting messages ansynchronously towards one or more recipients (URLs) using a variety of HTTP connection and authentication mechanisms (such as AWS v4 signature)
+4) If needed retry sending the message several times
+
+## Documentation
+
+* [**Pigeon Documentation**](https://github.com/INFINITE-TECHNOLOGY/PIGEON/wiki)
+
+
+## Technology stack
+
 * Spring Boot
 * Groovy
 * SQL DB (via JPA and Spring Data)
@@ -31,7 +34,7 @@ Technology stack:
 * Functionality extensible using Plugins (Groovy scripts)
 * Scalable (multithreaded app with configurable outbound thread pool sizes for load balancing and scalability)
 
-Sample configuration:
+## Sample configuration
 
 ```json
 {
