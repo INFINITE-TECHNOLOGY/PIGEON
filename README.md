@@ -10,7 +10,7 @@
 
 ## Purpose
 
-`Pigeon` is an HTTP Message Broker application used to for distribution of textual messages in HTTP format.
+`Pigeon` is an HTTP Message Broker end-user server application designed for the purpose of distribution of textual messages in HTTP format.
 
 ## In short
 
