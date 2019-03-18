@@ -11,16 +11,13 @@ plugins {
 }
 bootJar {
     baseName = 'pigeon-app'
-    version = '1.0.0-RC1'
+    version = '1.0.0-RC2'
 }
 ext['groovy.version'] = '2.5.4'
 sourceCompatibility = 1.7
 group = "io.infinite"
-version = "1.0.0-RC1"
+version = "1.0.0-RC2"
 description = "HTTP Message Broker"
-wrapper {
-    gradleVersion = "5.2.1"
-}
 repositories {
     jcenter()
 }

@@ -7,22 +7,24 @@ plugins {
     id "groovy"
     id "maven-publish"
     id "com.jfrog.bintray" version "1.8.4"
-    id "com.jfrog.artifactory" version "4.8.1"
+    //id "com.jfrog.artifactory" version "4.8.1"
     id "idea"
     id "jacoco"
+    id "org.springframework.boot" version "2.1.1.RELEASE"
     id "io.spring.dependency-management" version "1.0.6.RELEASE"
-    id 'maven'
+    //id 'maven'
     id "enterprise.groovy.plugin" version "1.0.1"
+}
+bootJar {
+    baseName = 'pigeon-lib'
+    version = '1.0.0-RC2'
 }
 ext['groovy.version'] = '2.5.4'
 ext['springBootVersion'] = '2.1.1.RELEASE'
 sourceCompatibility = 1.7
 group = "io.infinite"
-version = "1.0.0-RC1"
+version = "1.0.0-RC2"
 description = "HTTP Message Broker"
-wrapper {
-    gradleVersion = "5.2.1"
-}
 repositories {
     jcenter()
 }
@@ -87,7 +89,7 @@ bintray {
         licenses = ["Apache-2.0"]
     }
 }
-artifactory {
+/*artifactory {
     contextUrl = 'http://oss.jfrog.org'
     publish {
         repository {
@@ -105,7 +107,7 @@ artifactory {
         repoKey = 'jcenter'
     }
     clientConfig.info.setBuildNumber(System.getProperty('build.number'))
-}
+}*/
 test {
     testLogging {
         events "passed", "skipped", "failed"
