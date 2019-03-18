@@ -12,14 +12,17 @@ plugins {
     id "jacoco"
     id "io.spring.dependency-management" version "1.0.6.RELEASE"
     id 'maven'
-    id "enterprise.groovy.plugin" version "1.0.RC4"
+    id "enterprise.groovy.plugin" version "1.0.1"
 }
 ext['groovy.version'] = '2.5.4'
 ext['springBootVersion'] = '2.1.1.RELEASE'
 sourceCompatibility = 1.7
 group = "io.infinite"
-version = "1.0.0-SNAPSHOT"
+version = "1.0.0-RC1"
 description = "HTTP Message Broker"
+wrapper {
+    gradleVersion = "5.2.1"
+}
 repositories {
     jcenter()
 }
@@ -32,8 +35,8 @@ dependencies {
     compile 'org.springframework.boot:spring-boot-starter-data-rest'
     compile 'org.springframework.boot:spring-boot-starter-data-jpa'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
-    compile "io.infinite:bobbin:2.0.1"
-    compile 'io.infinite:blackbox:1.0.12'
+    compile "io.infinite:bobbin:2.0.3"
+    compile 'io.infinite:blackbox:1.0.15'
     //compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.9.7'
     compile 'com.h2database:h2:1.4.197'
     compile 'mysql:mysql-connector-java'
@@ -76,7 +79,7 @@ bintray {
     pkg {
         userOrg = "infinite-technology"
         repo = "m2"
-        name = "pigeon"
+        name = "pigeon-lib"
         desc = "HTTP Message Broker"
         issueTrackerUrl = "https://github.com/INFINITE-TECHNOLOGY/PIGEON/issues"
         vcsUrl = "https://github.com/INFINITE-TECHNOLOGY/PIGEON.git"
@@ -89,8 +92,8 @@ artifactory {
     publish {
         repository {
             repoKey = 'oss-snapshot-local'
-            username = System.getProperty("bintray.user")
-            password = System.getProperty("bintray.key")
+            username = System.getProperty('bintray.user')
+            password = System.getProperty('bintray.key')
         }
         defaults {
             publications('groovyMaven')
@@ -101,7 +104,7 @@ artifactory {
     resolve {
         repoKey = 'jcenter'
     }
-    clientConfig.info.setBuildNumber(System.currentTimeMillis().toString())
+    clientConfig.info.setBuildNumber(System.getProperty('build.number'))
 }
 test {
     testLogging {
