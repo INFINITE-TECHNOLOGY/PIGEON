@@ -1,38 +1,40 @@
-# Infinite Technology ♾ Pigeon 🕊
-
-**HTTP Message Broker.**
-
-> Post pigeons have been (and sometimes still are) extensively used for quick delivery of paper-based messages (such as text, drawings, maps) - thus the project name.
-
-It is capable to:
-1) Enqueue a textual message from external source
-2) Convert it into one or more HTTP messages with a specified body/query string parameters using appropriate Plugins
-3) Dispatch the resulting messages ansynchronously towards one or more recipients (URLs) using a variety of HTTP connection and authentication mechanisms (such as AWS v4 signature)
-4) If needed retry sending the message several times
-
-References:
-* [**Pigeon Documentation**](https://github.com/INFINITE-TECHNOLOGY/PIGEON/wiki)
-
-Release info:
+# Infinite Technology ∞ Pigeon 🕊
 
 |Attribute\Release type|Latest|Stable|
 |----------------------|------|------|
-|Version|1.0.0-SNAPSHOT|N/A|
-|Branch|[master](https://github.com/INFINITE-TECHNOLOGY/PIGEON)|N/A|
-|CI Build status|[![Build Status](https://travis-ci.com/INFINITE-TECHNOLOGY/PIGEON.svg?branch=master)](https://travis-ci.com/INFINITE-TECHNOLOGY/PIGEON)|N/A|
-|Test coverage|[![codecov](https://codecov.io/gh/INFINITE-TECHNOLOGY/PIGEON/branch/master/graphs/badge.svg)](https://codecov.io/gh/INFINITE-TECHNOLOGY/PIGEON/branch/master/graphs)|N/A|
-|Application distributive|[Download](https://github.com/INFINITE-TECHNOLOGY/PIGEON/releases/download/1.0.0-SNAPSHOT/pigeon-1.0.0-SNAPSHOT.jar)|N/A|
-|Library (Maven)|[oss.jfrog.org snapshot](https://oss.jfrog.org/artifactory/webapp/#/artifacts/browse/tree/General/oss-snapshot-local/io/infinite/pigeon-lib/1.0.0-SNAPSHOT)|N/A|
+|Version|1.0.0-SNAPSHOT|1.0.x|
+|Branch|[master](https://github.com/INFINITE-TECHNOLOGY/PIGEON)|[PIGEON_1_0_X](https://github.com/INFINITE-TECHNOLOGY/PIGEON/tree/PIGEON_1_0_X)|
+|CI Build status|[![Build Status](https://travis-ci.com/INFINITE-TECHNOLOGY/PIGEON.svg?branch=master)](https://travis-ci.com/INFINITE-TECHNOLOGY/PIGEON)|[![Build Status](https://travis-ci.com/INFINITE-TECHNOLOGY/PIGEON.svg?branch=PIGEON_1_0_X)](https://travis-ci.com/INFINITE-TECHNOLOGY/PIGEON)|
+|Test coverage|[![codecov](https://codecov.io/gh/INFINITE-TECHNOLOGY/PIGEON/branch/master/graphs/badge.svg)](https://codecov.io/gh/INFINITE-TECHNOLOGY/PIGEON/branch/master/graphs)|[![codecov](https://codecov.io/gh/INFINITE-TECHNOLOGY/PIGEON/branch/PIGEON_1_0_X/graphs/badge.svg)](https://codecov.io/gh/INFINITE-TECHNOLOGY/PIGEON/branch/PIGEON_1_0_X/graphs)|
+|Library (Maven)|[oss.jfrog.org snapshot](https://oss.jfrog.org/artifactory/webapp/#/artifacts/browse/tree/General/oss-snapshot-local/io/infinite/pigeon/1.0.0-SNAPSHOT)|[ ![Download](https://api.bintray.com/packages/infinite-technology/m2/pigeon/images/download.svg) ](https://bintray.com/infinite-technology/m2/pigeon/_latestVersion)|
 
-Technical details:
+## Purpose
+
+`Pigeon` is an end-user server application (HTTP Message Broker) designed for distribution of text messages in HTTP format.
+
+
+## In short
+
+`Pigeon` is capable to:
+1) Enqueue a text message from external source using REST API or direct insert into Pigeon DB by the external app
+2) Convert it into one or more HTTP messages with a specified body/query string parameters using appropriate `Plugins` (plugins can be developed by end-users using Groovy script)
+3) Dispatch the resulting messages ansynchronously to one or more recipients (URLs) using a variety of HTTP connection and authentication mechanisms (such as AWS v4 signature)
+4) If needed retry sending the message several times
+
+## Documentation
+
+* [**Pigeon Documentation**](https://github.com/INFINITE-TECHNOLOGY/PIGEON/wiki)
+
+## Technology stack
+
 * Spring Boot
 * Groovy
 * SQL DB (via JPA and Spring Data)
-* HATEOAS (via Spring Data Rest repositories)
+* REST+HATEOAS (via Spring Data Rest repositories)
 * Functionality extensible using Plugins (Groovy scripts)
 * Scalable (multithreaded app with configurable outbound thread pool sizes for load balancing and scalability)
 
-Sample configuration:
+## Sample configuration
 
 ```json
 {
