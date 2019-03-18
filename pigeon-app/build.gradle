@@ -1,30 +1,40 @@
+/*
+File
+https://github.com/virtualdogbert/GroovyConfigWriter/blob/master/build.gradle
+has been used as basis for this file.
+ */
 plugins {
     id "groovy"
     id "maven-publish"
-    id "com.jfrog.bintray" version "1.8.4"
     id "idea"
     id "jacoco"
-    //id 'application'
     id "org.springframework.boot" version "2.1.1.RELEASE"
     id "io.spring.dependency-management" version "1.0.6.RELEASE"
     id "enterprise.groovy.plugin" version "1.0.1"
 }
+
+apply plugin: 'com.jfrog.bintray'
+
 bootJar {
     baseName = 'pigeon-app'
     version = '1.0.0-RC2'
 }
+
 ext['groovy.version'] = '2.5.4'
 sourceCompatibility = 1.7
 group = "io.infinite"
 version = "1.0.0-RC2"
 description = "HTTP Message Broker"
+
 repositories {
     jcenter()
 }
+
 sourceSets {
     main.groovy.srcDirs = ["src/main/groovy"]
     test.groovy.srcDirs = ["src/test/groovy"]
 }
+
 dependencies {
     compile project(':pigeon-lib')
     compile 'org.codehaus.groovy:groovy-all:2.5.4'
@@ -32,16 +42,19 @@ dependencies {
     compile 'org.springframework.boot:spring-boot-starter-data-jpa'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
 }
+
 task sourceJar(type: Jar) {
     from sourceSets.main.allSource
     classifier "sources"
 }
+
 ext {
     theTitle = "HTTP Message Broker"
     titleForDocumentation = archivesBaseName + " " + version
     packageTitle = group
     description = "HTTP Message Broker"
 }
+
 publishing {
     publications {
         groovyMaven(MavenPublication) {
@@ -52,13 +65,16 @@ publishing {
         }
     }
 }
+
 task jarSrc(type: Jar, dependsOn: classes) {
     classifier = "sources"
     from sourceSets.main.allSource
 }
+
 artifacts {
     archives(jarSrc)
 }
+
 bintray {
     user = System.getProperty("bintrayuser")
     key = System.getProperty("bintraypassword")
@@ -76,8 +92,8 @@ bintray {
         licenses = ["Apache-2.0"]
     }
 }
+
 configurations {
     providedRuntime
     compile.exclude(group: 'ch.qos.logback')
 }
-//mainClassName = 'App'
