@@ -83,7 +83,7 @@ class SenderThread extends Thread {
             outputMessage.setAttemptsCount(outputMessage.attemptsCount + 1)
             outputMessageRepository.save(outputMessage)
             /*\/\/\/\/\/\/\/\/*/
-            HttpResponse httpResponse
+            HttpResponse httpResponse = new HttpResponse()
             try {
                 senderAbstract.sendHttpMessage(httpRequest, httpResponse)//<<<<<<<<<<<sending message
             } finally {
