@@ -7,14 +7,6 @@ import io.infinite.blackbox.BlackBox
 @ToString(includeNames = true, includeFields = true)
 abstract class SenderAbstract {
 
-    HttpRequest httpRequest
-    HttpResponse httpResponse
-
-    SenderAbstract(HttpRequest httpRequest) {
-        this.httpRequest = httpRequest
-        this.httpResponse = new HttpResponse()
-    }
-
-    abstract void sendHttpMessage()
+    abstract void sendHttpMessage(HttpRequest httpRequest, HttpResponse httpResponse)
 
 }

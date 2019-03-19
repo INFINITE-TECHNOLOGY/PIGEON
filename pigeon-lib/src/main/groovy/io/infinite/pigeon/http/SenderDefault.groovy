@@ -17,15 +17,10 @@ abstract class SenderDefault extends SenderAbstract {
     Integer DEFAULT_CONNECT_TIMEOUT = 15000
     Integer DEFAULT_READ_TIMEOUT = 15000
 
-    URL url
     HttpURLConnection httpURLConnection
 
-    SenderDefault(HttpRequest httpRequest) {
-        super(httpRequest)
-        this.url = new URL(httpRequest.getUrl())
-    }
-
-    URLConnection openConnection() {
+    URLConnection openConnection(HttpRequest httpRequest) {
+        URL url = new URL(httpRequest.getUrl())
         URLConnection urlConnection
         if (httpRequest.httpProperties?.get("proxyHost") != null && httpRequest.httpProperties?.get("proxyPort") != null) {
             Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(httpRequest.httpProperties.get("proxyHost") as String, httpRequest.httpProperties.get("proxyPort") as Integer))
@@ -58,8 +53,8 @@ abstract class SenderDefault extends SenderAbstract {
     }
 
     @Override
-    void sendHttpMessage() {
-        this.httpURLConnection.setRequestMethod(httpRequest.getMethod())
+    void sendHttpMessage(HttpRequest httpRequest, HttpResponse httpResponse) {
+        httpURLConnection.setRequestMethod(httpRequest.getMethod())
         for (headerName in httpRequest.getHeaders().keySet()) {
             httpURLConnection.setRequestProperty(headerName, httpRequest.getHeaders().get(headerName))
         }

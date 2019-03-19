@@ -10,19 +10,15 @@ import io.infinite.pigeon.other.PigeonException
 @Slf4j
 class SenderDefaultHttp extends SenderDefault {
 
-    SenderDefaultHttp(HttpRequest httpRequest) {
-        super(httpRequest)
-        httpURLConnection = (HttpURLConnection) openConnection()
-    }
-
     @Override
-    void sendHttpMessage() {
+    void sendHttpMessage(HttpRequest httpRequest, HttpResponse httpResponse) {
+        httpURLConnection = (HttpURLConnection) openConnection(httpRequest)
         log.warn("UNSECURE TEST PLAINTEXT HTTP CONNECTION")
         log.warn("DO NOT USE ON PRODUCTION")
-        if (url.getProtocol().contains("https")) {
+        if (httpURLConnection.getURL().getProtocol().contains("https")) {
             throw new PigeonException("Invalid protocol 'https' for SenderDefaultHttp in ${httpRequest.url}. Use 'http' protocol.")
         }
-        super.sendHttpMessage()
+        super.sendHttpMessage(httpRequest, httpResponse)
     }
 
 }

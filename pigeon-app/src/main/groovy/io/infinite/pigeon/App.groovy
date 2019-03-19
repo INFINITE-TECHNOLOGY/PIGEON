@@ -1,6 +1,7 @@
 package io.infinite.pigeon
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import groovy.util.logging.Slf4j
 import io.infinite.blackbox.BlackBox
 import io.infinite.pigeon.conf.Configuration
 import io.infinite.pigeon.other.MessageStatusSets
@@ -24,6 +25,7 @@ import org.springframework.hateoas.config.EnableHypermediaSupport
 
 @EnableHypermediaSupport(type = EnableHypermediaSupport.HypermediaType.HAL)
 @SpringBootApplication
+@Slf4j
 class App implements CommandLineRunner {
 
     @Autowired
@@ -49,6 +51,7 @@ class App implements CommandLineRunner {
 
     @BlackBox
     void runWithLogging() {
+        log.debug("Using Pigeon.json: " + pigeonConfigResource.getFile().getCanonicalPath())
         Configuration configuration = new ObjectMapper().readValue(pigeonConfigResource.getFile().getText(), Configuration.class)
         Set<InputMessage> delayedMessages = inputMessageRepository.findByMessageStatusList(MessageStatusSets.INPUT_RENEW_MESSAGE_STATUSES.value())
         delayedMessages.each {

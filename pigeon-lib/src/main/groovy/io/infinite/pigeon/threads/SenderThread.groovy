@@ -4,6 +4,7 @@ import groovy.util.logging.Slf4j
 import io.infinite.blackbox.BlackBox
 import io.infinite.pigeon.conf.OutputQueue
 import io.infinite.pigeon.http.HttpRequest
+import io.infinite.pigeon.http.HttpResponse
 import io.infinite.pigeon.http.SenderAbstract
 import io.infinite.pigeon.other.MessageStatuses
 import io.infinite.pigeon.springdatarest.HttpLog
@@ -77,15 +78,16 @@ class SenderThread extends Thread {
                 return
             }
             /*/\/\/\/\/\/\/\/\*/
-            SenderAbstract senderAbstract = Class.forName(outputThread.outputQueue.getSenderClassName()).newInstance(httpRequest) as SenderAbstract
+            SenderAbstract senderAbstract = Class.forName(outputThread.outputQueue.getSenderClassName()).newInstance() as SenderAbstract
             outputMessage.setStatus(MessageStatuses.SENDING.value())
             outputMessage.setAttemptsCount(outputMessage.attemptsCount + 1)
             outputMessageRepository.save(outputMessage)
             /*\/\/\/\/\/\/\/\/*/
+            HttpResponse httpResponse
             try {
-                senderAbstract.sendHttpMessage()//<<<<<<<<<<<sending message
+                senderAbstract.sendHttpMessage(httpRequest, httpResponse)//<<<<<<<<<<<sending message
             } finally {
-                outputMessage.getHttpLogs().add(createHttpLog(senderAbstract, outputMessage))
+                outputMessage.getHttpLogs().add(createHttpLog(httpRequest, httpResponse, outputMessage))
             }
             /*/\/\/\/\/\/\/\/\*/
             outputMessage.setStatus(httpRequest.getRequestStatus())
@@ -99,19 +101,19 @@ class SenderThread extends Thread {
         }
     }
 
-    HttpLog createHttpLog(SenderAbstract senderAbstract, OutputMessage outputMessage) {
+    HttpLog createHttpLog(HttpRequest httpRequest, HttpResponse httpResponse, OutputMessage outputMessage) {
         HttpLog httpLog = new HttpLog()
-        httpLog.requestDate = senderAbstract.httpRequest?.sendDate
-        httpLog.requestHeaders = senderAbstract.httpRequest?.headers?.toString()
-        httpLog.requestBody = senderAbstract.httpRequest?.body
-        httpLog.method = senderAbstract.httpRequest?.method
-        httpLog.url = senderAbstract.httpRequest?.url
-        httpLog.requestStatus = senderAbstract.httpRequest?.requestStatus
-        httpLog.requestExceptionString = senderAbstract.httpRequest?.exceptionString
-        httpLog.responseDate = senderAbstract.httpResponse?.receiveDate
-        httpLog.responseHeaders = senderAbstract.httpResponse?.headers?.toString()
-        httpLog.responseBody = senderAbstract.httpResponse?.body
-        httpLog.responseStatus = senderAbstract.httpResponse?.status
+        httpLog.requestDate = httpRequest?.sendDate
+        httpLog.requestHeaders = httpRequest?.headers?.toString()
+        httpLog.requestBody = httpRequest?.body
+        httpLog.method = httpRequest?.method
+        httpLog.url = httpRequest?.url
+        httpLog.requestStatus = httpRequest?.requestStatus
+        httpLog.requestExceptionString = httpRequest?.exceptionString
+        httpLog.responseDate = httpResponse?.receiveDate
+        httpLog.responseHeaders = httpResponse?.headers?.toString()
+        httpLog.responseBody = httpResponse?.body
+        httpLog.responseStatus = httpResponse?.status
         httpLog.outputMessage = outputMessage
         httpLog.senderThreadName = getName()
         return httpLog

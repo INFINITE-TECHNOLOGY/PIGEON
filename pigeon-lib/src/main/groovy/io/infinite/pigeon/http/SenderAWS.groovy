@@ -18,12 +18,9 @@ import io.infinite.pigeon.other.MessageStatuses
 @Slf4j
 class SenderAWS extends SenderAbstract {
 
-    SenderAWS(HttpRequest httpRequest) {
-        super(httpRequest)
-    }
 
     @Override
-    void sendHttpMessage() {
+    void sendHttpMessage(HttpRequest httpRequest, HttpResponse httpResponse) {
         if (httpRequest.httpProperties.get("awsAccessKey") == null || httpRequest.httpProperties.get("awsSecretKey") == null) {
             log.warn("Configuration: One of the AWS keys is null")
         }

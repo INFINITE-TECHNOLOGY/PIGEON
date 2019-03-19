@@ -13,21 +13,17 @@ import java.security.SecureRandom
 @Slf4j
 class SenderDefaultHttpsUnsecure extends SenderDefault {
 
-    SenderDefaultHttpsUnsecure(HttpRequest httpRequest) {
-        super(httpRequest)
+    @Override
+    void sendHttpMessage(HttpRequest httpRequest, HttpResponse httpResponse) {
         SSLContext sslContext = SSLContext.getInstance("TLS")
         UnsecureTrustManager[] unsecureTrustManagers = new UnsecureTrustManager() as UnsecureTrustManager[]
         sslContext.init(null as KeyManager[], unsecureTrustManagers, null as SecureRandom)
         HttpsURLConnection.setDefaultSSLSocketFactory(sslContext.getSocketFactory())
-        httpURLConnection = (HttpsURLConnection) openConnection()
+        httpURLConnection = (HttpsURLConnection) openConnection(httpRequest)
         ((HttpsURLConnection) httpURLConnection).setHostnameVerifier(new UnsecureHostNameVerifier())
-    }
-
-    @Override
-    void sendHttpMessage() {
         log.warn("UNSECURE TEST TLS MODE IS USED")
         log.warn("DO NOT USE ON PRODUCTION")
-        super.sendHttpMessage()
+        super.sendHttpMessage(httpRequest, httpResponse)
     }
 
 }

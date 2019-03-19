@@ -11,10 +11,11 @@ import javax.net.ssl.SSLSocketFactory
 @Slf4j
 class SenderDefaultHttps extends SenderDefault {
 
-    SenderDefaultHttps(HttpRequest httpRequest) {
-        super(httpRequest)
+    @Override
+    void sendHttpMessage(HttpRequest httpRequest, HttpResponse httpResponse) {
         HttpsURLConnection.setDefaultSSLSocketFactory(SSLSocketFactory.getDefault() as SSLSocketFactory)
-        httpURLConnection = (HttpsURLConnection) openConnection()
+        httpURLConnection = (HttpsURLConnection) openConnection(httpRequest)
+        super.sendHttpMessage(httpRequest, httpResponse)
     }
 
 }
