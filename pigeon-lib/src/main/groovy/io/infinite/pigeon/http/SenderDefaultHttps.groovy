@@ -14,8 +14,8 @@ class SenderDefaultHttps extends SenderDefault {
     @Override
     void sendHttpMessage(HttpRequest httpRequest, HttpResponse httpResponse) {
         HttpsURLConnection.setDefaultSSLSocketFactory(SSLSocketFactory.getDefault() as SSLSocketFactory)
-        httpURLConnection = (HttpsURLConnection) openConnection(httpRequest)
-        super.sendHttpMessage(httpRequest, httpResponse)
+        HttpURLConnection httpURLConnection = (HttpsURLConnection) openConnection(httpRequest)
+        super.sendHttpMessageWithUrlConnection(httpRequest, httpResponse, httpURLConnection)
     }
 
 }

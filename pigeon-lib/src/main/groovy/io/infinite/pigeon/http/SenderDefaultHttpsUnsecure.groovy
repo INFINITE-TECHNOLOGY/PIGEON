@@ -19,11 +19,11 @@ class SenderDefaultHttpsUnsecure extends SenderDefault {
         UnsecureTrustManager[] unsecureTrustManagers = new UnsecureTrustManager() as UnsecureTrustManager[]
         sslContext.init(null as KeyManager[], unsecureTrustManagers, null as SecureRandom)
         HttpsURLConnection.setDefaultSSLSocketFactory(sslContext.getSocketFactory())
-        httpURLConnection = (HttpsURLConnection) openConnection(httpRequest)
+        HttpURLConnection httpURLConnection = (HttpsURLConnection) openConnection(httpRequest)
         ((HttpsURLConnection) httpURLConnection).setHostnameVerifier(new UnsecureHostNameVerifier())
         log.warn("UNSECURE TEST TLS MODE IS USED")
         log.warn("DO NOT USE ON PRODUCTION")
-        super.sendHttpMessage(httpRequest, httpResponse)
+        super.sendHttpMessageWithUrlConnection(httpRequest, httpResponse, httpURLConnection)
     }
 
 }

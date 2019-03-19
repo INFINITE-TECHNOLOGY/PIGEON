@@ -17,8 +17,6 @@ abstract class SenderDefault extends SenderAbstract {
     Integer DEFAULT_CONNECT_TIMEOUT = 15000
     Integer DEFAULT_READ_TIMEOUT = 15000
 
-    HttpURLConnection httpURLConnection
-
     URLConnection openConnection(HttpRequest httpRequest) {
         URL url = new URL(httpRequest.getUrl())
         URLConnection urlConnection
@@ -52,8 +50,7 @@ abstract class SenderDefault extends SenderAbstract {
         return urlConnection
     }
 
-    @Override
-    void sendHttpMessage(HttpRequest httpRequest, HttpResponse httpResponse) {
+    void sendHttpMessageWithUrlConnection(HttpRequest httpRequest, HttpResponse httpResponse, HttpURLConnection httpURLConnection) {
         httpURLConnection.setRequestMethod(httpRequest.getMethod())
         for (headerName in httpRequest.getHeaders().keySet()) {
             httpURLConnection.setRequestProperty(headerName, httpRequest.getHeaders().get(headerName))
