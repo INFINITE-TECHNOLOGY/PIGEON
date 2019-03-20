@@ -39,6 +39,7 @@ dependencies {
     compile "io.infinite:bobbin:2.0.4"
     compile 'io.infinite:blackbox:1.0.18'
     //compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.9.7'
+    compile 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.9.7'
     compile 'com.h2database:h2:1.4.197'
     //compile 'mysql:mysql-connector-java'
     compile group: 'com.amazonaws', name: 'aws-java-sdk-s3', version: '1.11.449'
