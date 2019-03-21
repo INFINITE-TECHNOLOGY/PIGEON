@@ -1,9 +1,10 @@
-package io.infinite.pigeon.springdatarest
+package io.infinite.pigeon.springdatarest.configurations
 
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
+import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Primary
@@ -26,8 +27,13 @@ class ObjectMapperConfiguration {
 
     @Bean
     ObjectMapper yamlObjectMapper() {
-        ObjectMapper yamlObjectMapper = new ObjectMapper(new YAMLFactory())
         //Enable or disable features
+        YAMLFactory yamlFactory = new YAMLFactory()
+        yamlFactory.enable(YAMLGenerator.Feature.MINIMIZE_QUOTES)
+        yamlFactory.disable(YAMLGenerator.Feature.WRITE_DOC_START_MARKER)
+        yamlFactory.disable(YAMLGenerator.Feature.SPLIT_LINES)
+        yamlFactory.enable(YAMLGenerator.Feature.INDENT_ARRAYS)
+        ObjectMapper yamlObjectMapper = new ObjectMapper(yamlFactory)
         return yamlObjectMapper
     }
 }

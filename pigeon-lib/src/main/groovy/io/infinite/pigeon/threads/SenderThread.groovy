@@ -7,10 +7,10 @@ import io.infinite.pigeon.http.HttpRequest
 import io.infinite.pigeon.http.HttpResponse
 import io.infinite.pigeon.http.SenderAbstract
 import io.infinite.pigeon.other.MessageStatuses
-import io.infinite.pigeon.springdatarest.HttpLog
-import io.infinite.pigeon.springdatarest.InputMessageRepository
-import io.infinite.pigeon.springdatarest.OutputMessage
-import io.infinite.pigeon.springdatarest.OutputMessageRepository
+import io.infinite.pigeon.springdatarest.entities.HttpLog
+import io.infinite.pigeon.springdatarest.repositories.InputMessageRepository
+import io.infinite.pigeon.springdatarest.entities.OutputMessage
+import io.infinite.pigeon.springdatarest.repositories.OutputMessageRepository
 import io.infinite.supplies.ast.exceptions.ExceptionUtils
 import org.springframework.beans.factory.annotation.Autowired
 

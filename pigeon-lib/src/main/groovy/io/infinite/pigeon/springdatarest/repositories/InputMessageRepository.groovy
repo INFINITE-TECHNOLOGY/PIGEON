@@ -1,5 +1,6 @@
-package io.infinite.pigeon.springdatarest
+package io.infinite.pigeon.springdatarest.repositories
 
+import io.infinite.pigeon.springdatarest.entities.InputMessage
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
@@ -21,7 +22,9 @@ interface InputMessageRepository extends JpaRepository<InputMessage, Long> {
             @Param("sourceName") String sourceName
     )
 
-    @Query("select count(i.id) from InputMessage i where sourceName = :sourceName and inputQueueName = :inputQueueName and externalId = :externalId and id <> :id and status = :status")
+    @Query("""select count(i.id) from InputMessage i where sourceName = :sourceName 
+            and inputQueueName = :inputQueueName
+            and externalId = :externalId and id <> :id and status = :status""")
     Integer findDuplicates(
             @Param("sourceName") String sourceName,
             @Param("inputQueueName") String inputQueueName,

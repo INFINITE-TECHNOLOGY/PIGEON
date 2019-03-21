@@ -1,21 +1,37 @@
 {
   "levels": "['debug', 'info', 'warn', 'error'].contains(level)",
-  "classes": "className.contains('io.infinite.')",
   "destinations": [
     {
       "name": "io.infinite.bobbin.destinations.FileDestination",
       "properties": {
-        "fileKey": "MDC.unitName + level",
-        "fileName": "\"./LOGS/BLACKBOX/${level}/${MDC.unitName}/${MDC.unitName}_${level}_${date}.log\"",
-        "zipFileName": "\"./LOGS/BLACKBOX/${level}/${MDC.unitName}/ARCHIVE/${MDC.unitName}_${level}_${date}.zip\"",
-        "cleanupZipFileName": "\"${origFileName}_${System.currentTimeMillis().toString()}.zip\""
+        "fileName": "\"./LOGS/PLUGINS/INPUT/${className}/${level}/${className}_${level}.log\""
       },
-      "format": "\"${dateTime}|${level}|${MDC.unitName}|${className}|${event.message}\""
+      "classes": "className.contains('conf.plugins.input')"
+    },
+    {
+      "name": "io.infinite.bobbin.destinations.FileDestination",
+      "properties": {
+        "fileName": "\"./LOGS/PLUGINS/OUTPUT/${className}/${level}/${threadName}_${level}_${date}.log\""
+      },
+      "classes": "className.contains('conf.plugins.output')"
+    },
+    {
+      "name": "io.infinite.bobbin.destinations.FileDestination",
+      "properties": {
+        "fileName": "\"./LOGS/THREADS/${threadGroupName}/${threadName}/${level}/${threadName}_${level}_${date}.log\""
+      },
+      "classes": "className.contains('io.infinite.')"
+    },
+    {
+      "name": "io.infinite.bobbin.destinations.FileDestination",
+      "properties": {
+        "fileName": "\"./LOGS/ALL/WARNINGS_AND_ERRORS_${date}.log\""
+      },
+      "levels": "['warn', 'error'].contains(level)"
     },
     {
       "name": "io.infinite.bobbin.destinations.ConsoleDestination",
-      "format": "\"${dateTime}|${level}|${MDC.unitName}|${className}|${event.message}\"",
-      "levels": "['info', 'warn', 'error'].contains(level)"
+      "levels": "['warn', 'error'].contains(level)"
     }
   ]
 }

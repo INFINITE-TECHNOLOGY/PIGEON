@@ -1,5 +1,6 @@
-package io.infinite.pigeon.springdatarest
+package io.infinite.pigeon.springdatarest.repositories
 
+import io.infinite.pigeon.springdatarest.entities.OutputMessage
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
@@ -31,6 +32,7 @@ interface OutputMessageRepository extends JpaRepository<OutputMessage, Long> {
         i.externalId = :externalId and i.sourceName = :sourceName""")
     LinkedHashSet<OutputMessage> searchByInputExternalIdAndSourceName(
             @Param("externalId") String externalId,
-            @Param("sourceName") String sourceName)
+            @Param("sourceName") String sourceName
+    )
 
 }

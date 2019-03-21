@@ -1,4 +1,4 @@
-package io.infinite.pigeon.springdatarest
+package io.infinite.pigeon.springdatarest.entities
 
 import groovy.transform.ToString
 
@@ -15,25 +15,38 @@ class HttpLog {
     Long id
 
     Date requestDate
+
     @Lob
     String requestHeaders
+
     @Lob
     String requestBody
+
     String method
+
     @Lob
     String url
+
     String requestStatus
+
     @Lob
     String requestExceptionString
+
     Date responseDate
+
     @Lob
     String responseHeaders
+
     @Lob
     String responseBody
+
     Integer responseStatus
+
     Date insertDate = new Date()
+
     @ManyToOne(fetch = FetchType.EAGER)
     OutputMessage outputMessage
+
     String senderThreadName
 
 }

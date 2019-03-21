@@ -1,4 +1,4 @@
-package io.infinite.pigeon.springdatarest
+package io.infinite.pigeon.springdatarest.configurations
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.beans.factory.annotation.Autowired

@@ -6,9 +6,9 @@ import io.infinite.carburetor.CarburetorLevel
 import io.infinite.pigeon.conf.OutputQueue
 import io.infinite.pigeon.other.MessageStatuses
 import io.infinite.pigeon.other.RoundRobin
-import io.infinite.pigeon.springdatarest.InputMessageRepository
-import io.infinite.pigeon.springdatarest.OutputMessage
-import io.infinite.pigeon.springdatarest.OutputMessageRepository
+import io.infinite.pigeon.springdatarest.repositories.InputMessageRepository
+import io.infinite.pigeon.springdatarest.entities.OutputMessage
+import io.infinite.pigeon.springdatarest.repositories.OutputMessageRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationContext
 

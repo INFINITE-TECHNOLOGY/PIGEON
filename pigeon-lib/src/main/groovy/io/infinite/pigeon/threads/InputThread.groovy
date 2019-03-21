@@ -7,10 +7,10 @@ import io.infinite.carburetor.CarburetorLevel
 import io.infinite.pigeon.conf.InputQueue
 import io.infinite.pigeon.other.MessageStatusSets
 import io.infinite.pigeon.other.MessageStatuses
-import io.infinite.pigeon.springdatarest.InputMessage
-import io.infinite.pigeon.springdatarest.InputMessageRepository
-import io.infinite.pigeon.springdatarest.OutputMessage
-import io.infinite.pigeon.springdatarest.OutputMessageRepository
+import io.infinite.pigeon.springdatarest.entities.InputMessage
+import io.infinite.pigeon.springdatarest.repositories.InputMessageRepository
+import io.infinite.pigeon.springdatarest.entities.OutputMessage
+import io.infinite.pigeon.springdatarest.repositories.OutputMessageRepository
 import org.springframework.beans.factory.annotation.Autowired
 
 @BlackBox
