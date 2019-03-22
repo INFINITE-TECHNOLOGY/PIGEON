@@ -68,6 +68,10 @@ abstract class SenderDefault extends SenderAbstract {
         }
         if (httpRequest.getBody() != null) {
             dataOutputStream.writeBytes(httpRequest.getBody())
+        } else {
+            if (httpRequest.method == "POST") {
+                log.warn("POST request with empty body")
+            }
         }
         dataOutputStream.flush()
         dataOutputStream.close()

@@ -25,6 +25,13 @@
     {
       "name": "io.infinite.bobbin.destinations.FileDestination",
       "properties": {
+        "fileName": "\"./LOGS/SPRING_WEB/${threadGroupName}/${threadName}/${level}/${threadName}_${level}_${date}.log\""
+      },
+      "classes": "className.contains('org.springframework.web')"
+    },
+    {
+      "name": "io.infinite.bobbin.destinations.FileDestination",
+      "properties": {
         "fileName": "\"./LOGS/ALL/WARNINGS_AND_ERRORS_${date}.log\""
       },
       "levels": "['warn', 'error'].contains(level)"

@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletRequest
 @Controller
 @BlackBox
 @Slf4j
-class HttpLogController {
+class ReadableHttpLogsController {
 
     @Value('${pigeonInputPluginsHttpDir}')
     String pigeonInputPluginsHttpDir

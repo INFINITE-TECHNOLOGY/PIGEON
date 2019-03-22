@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Component
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 
 import javax.servlet.http.HttpServletRequest
@@ -30,12 +31,13 @@ class PluginRestController {
     InputMessageRepository inputMessageRepository
 
     @PostMapping(value = "/pigeon/plugins/input/rest/*")
-    ResponseEntity<CustomResponse> post(HttpServletRequest httpServletRequest) {
+    ResponseEntity<CustomResponse> post(HttpServletRequest httpServletRequest, @RequestBody String requestBody) {
         String path = httpServletRequest.getRequestURI()
         String pluginName = path.substring(path.lastIndexOf('/') + 1)
         Binding binding = new Binding()
         binding.setVariable("httpServletRequest", httpServletRequest)
         binding.setVariable("inputMessageRepository", inputMessageRepository)
+        binding.setVariable("requestBody", requestBody)
         return groovyScriptEngine.run(pluginName + ".groovy", binding) as ResponseEntity<CustomResponse>
     }
 
