@@ -46,6 +46,7 @@ class PluginHttpController {
         Binding binding = new Binding()
         binding.setVariable("httpServletRequest", httpServletRequest)
         binding.setVariable("httpServletResponse", httpServletResponse)
+        binding.setVariable("requestBody", "")
         binding.setVariable("inputMessageRepository", inputMessageRepository)
         return groovyScriptEngine.run(pluginName + ".groovy", binding)
     }

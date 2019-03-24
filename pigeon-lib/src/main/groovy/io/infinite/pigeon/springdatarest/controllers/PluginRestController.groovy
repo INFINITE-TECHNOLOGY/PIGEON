@@ -48,6 +48,7 @@ class PluginRestController {
         Binding binding = new Binding()
         binding.setVariable("httpServletRequest", httpServletRequest)
         binding.setVariable("inputMessageRepository", inputMessageRepository)
+        binding.setVariable("requestBody", "")
         return groovyScriptEngine.run(pluginName + ".groovy", binding) as ResponseEntity<CustomResponse>
     }
 

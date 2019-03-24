@@ -23,7 +23,7 @@ bootJar {
 ext['groovy.version'] = '2.5.4'
 sourceCompatibility = 1.7
 group = "io.infinite"
-version = "1.0.0-RC4"
+version = "1.0.0-RC5"
 description = "HTTP Message Broker"
 
 repositories {
