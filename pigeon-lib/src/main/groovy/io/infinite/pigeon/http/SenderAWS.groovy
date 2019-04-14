@@ -12,6 +12,7 @@ import io.infinite.blackbox.BlackBox
 import io.infinite.pigeon.other.AwsErrorResponseHandler
 import io.infinite.pigeon.other.AwsResponseHandler
 import io.infinite.pigeon.other.MessageStatuses
+import io.infinite.supplies.ast.exceptions.ExceptionUtils
 
 @BlackBox
 @ToString(includeNames = true, includeFields = true, includeSuper = true)
@@ -62,6 +63,7 @@ class SenderAWS extends SenderAbstract {
         } catch (AmazonServiceException amazonServiceException) {
             log.warn("AmazonServiceException: " + amazonServiceException.statusCode)
             httpRequest.setRequestStatus(MessageStatuses.FAILED_RESPONSE.value())
+            httpRequest.setExceptionString(new ExceptionUtils().stacktrace(amazonServiceException))
             httpResponse.setStatus(amazonServiceException.statusCode)
             for (l_header_name in amazonServiceException.httpHeaders.keySet()) {
                 httpResponse.getHeaders().put(l_header_name, amazonServiceException.httpHeaders.get(l_header_name))
