@@ -1,5 +1,6 @@
 package io.infinite.pigeon.springdatarest.controllers
 
+import groovy.json.JsonBuilder
 import groovy.util.logging.Slf4j
 import io.infinite.blackbox.BlackBox
 import io.infinite.pigeon.other.MessageStatuses
@@ -49,6 +50,7 @@ class EnqueueController {
         inputMessage.inputQueueName = inputQueueName
         inputMessage.payload = payload
         inputMessage.status = MessageStatuses.NEW
+        inputMessage.queryParams = new JsonBuilder(httpServletRequest.getParameterMap()).toString()
         inputMessageRepository.save(inputMessage)
         CustomResponse customResponse = new CustomResponse()
         customResponse.response = "Enqueued Successfully"
