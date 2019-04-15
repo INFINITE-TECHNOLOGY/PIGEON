@@ -8,6 +8,7 @@ import io.infinite.pigeon.springdatarest.repositories.InputMessageRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Controller
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.ResponseBody
 
@@ -26,7 +27,19 @@ class EnqueueController {
 
     @PostMapping(value = "/pigeon/enqueue")
     @ResponseBody
+    CustomResponse post(HttpServletRequest httpServletRequest) {
+        String payload = httpServletRequest.getReader().getText()
+        return any(httpServletRequest, payload)
+    }
+
+    @GetMapping(value = "/pigeon/enqueue")
+    @ResponseBody
     CustomResponse get(HttpServletRequest httpServletRequest) {
+        String payload = httpServletRequest.getParameter("payload")
+        return any(httpServletRequest, payload)
+    }
+
+    CustomResponse any(HttpServletRequest httpServletRequest, String payload) {
         String externalId = httpServletRequest.getParameter("externalId") ?: httpServletRequest.getParameter("txn_id")
         String sourceName = httpServletRequest.getParameter("sourceName") ?: httpServletRequest.getParameter("source")
         String inputQueueName = httpServletRequest.getParameter("inputQueueName") ?: httpServletRequest.getParameter("endpoint")
@@ -34,7 +47,7 @@ class EnqueueController {
         inputMessage.externalId = externalId
         inputMessage.sourceName = sourceName
         inputMessage.inputQueueName = inputQueueName
-        inputMessage.payload = httpServletRequest.getReader().getText()
+        inputMessage.payload = payload
         inputMessage.status = MessageStatuses.NEW
         inputMessageRepository.save(inputMessage)
         CustomResponse customResponse = new CustomResponse()
