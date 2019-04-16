@@ -46,7 +46,12 @@ class SenderAWS extends SenderAbstract {
             log.info("Sending AWS Request")
             log.info(awsRequest.toString())
             log.info(httpRequest.toString())
-            awsResponse = new AmazonHttpClient(new ClientConfiguration())
+            ClientConfiguration clientConfiguration = new ClientConfiguration()
+            if (httpRequest.httpProperties?.get("proxyHost") != null && httpRequest.httpProperties?.get("proxyPort") != null) {
+                clientConfiguration.setProxyHost(httpRequest.httpProperties?.get("proxyHost")?.toString())
+                clientConfiguration.setProxyPort(httpRequest.httpProperties?.get("proxyPort") as Integer)
+            }
+            awsResponse = new AmazonHttpClient(clientConfiguration)
                     .requestExecutionBuilder()
                     .executionContext(new ExecutionContext(true))
                     .request(awsRequest)
