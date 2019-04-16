@@ -42,7 +42,7 @@ class ReadableHttpLogsController {
     @ResponseBody
     Set<HttpLog> findByInputMessageId(HttpServletRequest httpServletRequest) {
         String inputMessageId = httpServletRequest.getParameter("inputMessageId")
-        Set<HttpLog> httpLogs = httpLogRepository.findByInputMessageId(inputMessageId)
+        Set<HttpLog> httpLogs = httpLogRepository.findByInputMessageId(Long.valueOf(inputMessageId))
         httpLogs.each {
             it.outputMessage = null
             it.requestBody = it.requestBody?.replace("\r", "")

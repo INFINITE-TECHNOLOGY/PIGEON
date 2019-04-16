@@ -25,7 +25,7 @@ interface HttpLogRepository extends JpaRepository<HttpLog, Long> {
         where i.id = :inputMessageId
     """)
     Set<HttpLog> findByInputMessageId(
-            @Param("inputMessageId") String inputMessageId
+            @Param("inputMessageId") Long inputMessageId
     )
 
 }

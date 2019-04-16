@@ -62,9 +62,8 @@ class EnqueueController {
         EnqueueResponse enqueueResponse = new EnqueueResponse()
         enqueueResponse.result = "Enqueued successfully"
         String port = (httpServletRequest.serverPort == 443 ? "" : ":$httpServletRequest.serverPort")
-        String baseUrl = "https://" + httpServletRequest.localName + port + "/" + httpServletRequest.contextPath + "/"
-        enqueueResponse.inputMessageUrl = baseUrl + "inputMessages/$inputMessage.id"
-        enqueueResponse.readableHttpLogsUrl = baseUrl + "readableHttpLog/search/findByInputMessageId?inputMessageId=${inputMessage.id}"
+        enqueueResponse.inputMessageUrl = "/pigeon/inputMessages/$inputMessage.id"
+        enqueueResponse.readableHttpLogsUrl = "/pigeon/readableHttpLogs/findByInputMessageId?inputMessageId=${inputMessage.id}"
         return enqueueResponse
     }
 
