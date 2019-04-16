@@ -1,12 +1,13 @@
 # Infinite Technology ∞ Pigeon 🕊
 
-|Attribute\Release type|Latest|Stable|
-|----------------------|------|------|
-|Version|1.0.0-SNAPSHOT|1.0.x|
-|Branch|[master](https://github.com/INFINITE-TECHNOLOGY/PIGEON)|[PIGEON_1_0_X](https://github.com/INFINITE-TECHNOLOGY/PIGEON/tree/PIGEON_1_0_X)|
-|CI Build status|[![Build Status](https://travis-ci.com/INFINITE-TECHNOLOGY/PIGEON.svg?branch=master)](https://travis-ci.com/INFINITE-TECHNOLOGY/PIGEON)|[![Build Status](https://travis-ci.com/INFINITE-TECHNOLOGY/PIGEON.svg?branch=PIGEON_1_0_X)](https://travis-ci.com/INFINITE-TECHNOLOGY/PIGEON)|
-|Test coverage|[![codecov](https://codecov.io/gh/INFINITE-TECHNOLOGY/PIGEON/branch/master/graphs/badge.svg)](https://codecov.io/gh/INFINITE-TECHNOLOGY/PIGEON/branch/master/graphs)|[![codecov](https://codecov.io/gh/INFINITE-TECHNOLOGY/PIGEON/branch/PIGEON_1_0_X/graphs/badge.svg)](https://codecov.io/gh/INFINITE-TECHNOLOGY/PIGEON/branch/PIGEON_1_0_X/graphs)|
-|Library (Maven)|[oss.jfrog.org snapshot](https://oss.jfrog.org/artifactory/webapp/#/artifacts/browse/tree/General/oss-snapshot-local/io/infinite/pigeon/1.0.0-SNAPSHOT)|[ ![Download](https://api.bintray.com/packages/infinite-technology/m2/pigeon/images/download.svg) ](https://bintray.com/infinite-technology/m2/pigeon/_latestVersion)|
+|Attribute\Release type|Latest|
+|----------------------|------|
+|Version|1.0.0-SNAPSHOT|
+|Branch|[master](https://github.com/INFINITE-TECHNOLOGY/PIGEON)|
+|CI Build status|[![Build Status](https://travis-ci.com/INFINITE-TECHNOLOGY/PIGEON.svg?branch=master)](https://travis-ci.com/INFINITE-TECHNOLOGY/PIGEON)|
+|Test coverage|[![codecov](https://codecov.io/gh/INFINITE-TECHNOLOGY/PIGEON/branch/master/graphs/badge.svg)](https://codecov.io/gh/INFINITE-TECHNOLOGY/PIGEON/branch/master/graphs)|
+|Library (Maven)|[oss.jfrog.org snapshot](https://oss.jfrog.org/artifactory/webapp/#/artifacts/browse/tree/General/oss-snapshot-local/io/infinite/pigeon/1.0.0-SNAPSHOT)|
+|Heroku|![Heroku](https://heroku-badge.herokuapp.com/?app=pigeon-public&root=/pigeon/inputMessages)|
 
 ## Purpose
 
@@ -33,6 +34,23 @@
 * REST+HATEOAS (via Spring Data Rest repositories)
 * Functionality extensible using Plugins (Groovy scripts)
 * Scalable (multithreaded app with configurable outbound thread pool sizes for load balancing and scalability)
+
+## Try me now!
+
+We have deployed a demo [Pigeon Plugins](https://github.com/INFINITE-TECHNOLOGY/PIGEON_PLUGINS) repository is as a demo Heroku app (`pigeon-public`).
+
+Just open the below URL in your browser:
+
+https://pigeon-public.herokuapp.com/pigeon/enqueue?source=browser&endpoint=GET_TO_SMTP&recipient=email@gmail.com&subject=Test123&text=Test1234&from=pigeon@i-t.io
+
+This demo Heroku `pigeon-public` app asynchronously enqueues and sends a email.
+
+* Replace `email@gmail.com` with your email (we will not save/share/store/disclose it, it is fully private)<br/>
+* Only Gmail addresses are supported in this demo<br/>
+* You can change also subject, text and from <br/>
+* Check `spam` folder in your Gmail account<br/>
+* Navigate through returned URLs to see message status and HTTP logs<br/>
+* First time request may take up to 50 seconds, due to free Heroku dyno unidlying startup.
 
 ## Sample configuration
 
