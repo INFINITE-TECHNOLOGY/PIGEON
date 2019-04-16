@@ -19,4 +19,13 @@ interface HttpLogRepository extends JpaRepository<HttpLog, Long> {
             @Param("sourceName") String sourceName
     )
 
+    @Query("""select l from HttpLog l
+        join l.outputMessage o
+        join o.inputMessage i
+        where i.id = :inputMessageId
+    """)
+    Set<HttpLog> findByInputMessageId(
+            @Param("inputMessageId") String inputMessageId
+    )
+
 }

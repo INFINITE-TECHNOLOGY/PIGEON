@@ -38,4 +38,17 @@ class ReadableHttpLogsController {
         return httpLogs
     }
 
+    @GetMapping(value = "/pigeon/readableHttpLogs/search/findByInputMessageId")
+    @ResponseBody
+    Set<HttpLog> findByInputMessageId(HttpServletRequest httpServletRequest) {
+        String inputMessageId = httpServletRequest.getParameter("inputMessageId")
+        Set<HttpLog> httpLogs = httpLogRepository.findByInputMessageId(inputMessageId)
+        httpLogs.each {
+            it.outputMessage = null
+            it.requestBody = it.requestBody?.replace("\r", "")
+            it.responseBody = it.responseBody?.replace("\r", "")
+        }
+        return httpLogs
+    }
+
 }

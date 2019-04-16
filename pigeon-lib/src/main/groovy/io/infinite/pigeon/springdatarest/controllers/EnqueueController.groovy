@@ -8,6 +8,7 @@ import io.infinite.pigeon.springdatarest.entities.InputMessage
 import io.infinite.pigeon.springdatarest.repositories.InputMessageRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.core.io.FileSystemResource
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
@@ -28,33 +29,43 @@ class EnqueueController {
 
     @PostMapping(value = "/pigeon/enqueue")
     @ResponseBody
-    CustomResponse post(HttpServletRequest httpServletRequest) {
+    EnqueueResponse post(HttpServletRequest httpServletRequest) {
         String payload = httpServletRequest.getReader().getText()
         return any(httpServletRequest, payload)
     }
 
+    @Value('${disableDuplicateChecks:false}')
+    Boolean disableDuplicateChecks
+
     @GetMapping(value = "/pigeon/enqueue")
     @ResponseBody
-    CustomResponse get(HttpServletRequest httpServletRequest) {
+    EnqueueResponse get(HttpServletRequest httpServletRequest) {
         String payload = httpServletRequest.getParameter("payload")
         return any(httpServletRequest, payload)
     }
 
-    CustomResponse any(HttpServletRequest httpServletRequest, String payload) {
+    EnqueueResponse any(HttpServletRequest httpServletRequest, String payload) {
         String externalId = httpServletRequest.getParameter("externalId") ?: httpServletRequest.getParameter("txn_id")
         String sourceName = httpServletRequest.getParameter("sourceName") ?: httpServletRequest.getParameter("source")
         String inputQueueName = httpServletRequest.getParameter("inputQueueName") ?: httpServletRequest.getParameter("endpoint")
         InputMessage inputMessage = new InputMessage()
         inputMessage.externalId = externalId
+        if (inputMessage.externalId == null && disableDuplicateChecks) {
+            inputMessage.externalId = System.currentTimeMillis().toString()
+        }
         inputMessage.sourceName = sourceName
         inputMessage.inputQueueName = inputQueueName
         inputMessage.payload = payload
         inputMessage.status = MessageStatuses.NEW
         inputMessage.queryParams = new JsonBuilder(httpServletRequest.getParameterMap()).toString()
-        inputMessageRepository.save(inputMessage)
-        CustomResponse customResponse = new CustomResponse()
-        customResponse.response = "Enqueued Successfully"
-        return customResponse
+        inputMessageRepository.saveAndFlush(inputMessage)
+        EnqueueResponse enqueueResponse = new EnqueueResponse()
+        enqueueResponse.result = "Enqueued successfully"
+        String port = (httpServletRequest.serverPort == 443 ? "" : ":$httpServletRequest.serverPort")
+        String baseUrl = "https://" + httpServletRequest.localName + port + "/" + httpServletRequest.contextPath + "/"
+        enqueueResponse.inputMessageUrl = baseUrl + "inputMessages/$inputMessage.id"
+        enqueueResponse.readableHttpLogsUrl = baseUrl + "readableHttpLog/search/findByInputMessageId?inputMessageId=${inputMessage.id}"
+        return enqueueResponse
     }
 
 }
