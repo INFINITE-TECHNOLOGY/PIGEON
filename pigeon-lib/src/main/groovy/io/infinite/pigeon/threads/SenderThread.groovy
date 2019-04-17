@@ -102,6 +102,7 @@ class SenderThread extends Thread {
     }
 
     HttpLog createHttpLog(HttpRequest httpRequest, HttpResponse httpResponse, OutputMessage outputMessage) {
+        //todo: null status/exception
         HttpLog httpLog = new HttpLog()
         httpLog.requestDate = httpRequest?.sendDate
         httpLog.requestHeaders = httpRequest?.headers?.toString()
