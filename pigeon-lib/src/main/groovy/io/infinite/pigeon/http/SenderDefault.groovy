@@ -51,7 +51,8 @@ abstract class SenderDefault extends SenderAbstract {
     }
 
     void sendHttpMessageWithUrlConnection(HttpRequest httpRequest, HttpResponse httpResponse, HttpURLConnection httpURLConnection) {
-        httpURLConnection.setRequestMethod(httpRequest.getMethod())
+        httpURLConnection.setRequestMethod(httpRequest.method)
+        log.warn("!!!!" + httpRequest.method)
         for (headerName in httpRequest.getHeaders().keySet()) {
             httpURLConnection.setRequestProperty(headerName, httpRequest.getHeaders().get(headerName))
         }
