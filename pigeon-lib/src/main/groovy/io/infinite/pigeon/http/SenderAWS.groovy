@@ -74,6 +74,8 @@ class SenderAWS extends SenderAbstract {
                 httpResponse.getHeaders().put(l_header_name, amazonServiceException.httpHeaders.get(l_header_name))
             }
             httpResponse.setBody(amazonServiceException.getErrorMessage())
+        } catch (Exception e) {
+            fail(httpRequest, e, MessageStatuses.EXCEPTION)
         } finally {
             log.info("Received response data:")
             log.info(httpResponse.toString())

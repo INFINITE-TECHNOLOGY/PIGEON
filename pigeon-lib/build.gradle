@@ -19,7 +19,7 @@ ext['springBootVersion'] = '2.1.1.RELEASE'
 
 sourceCompatibility = 1.7
 group = "io.infinite"
-version = "1.0.0-RC13"
+version = "1.0.0-RC14"
 description = "HTTP Message Broker"
 
 repositories {

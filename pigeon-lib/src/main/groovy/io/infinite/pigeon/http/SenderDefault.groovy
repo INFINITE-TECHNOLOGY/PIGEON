@@ -4,7 +4,6 @@ import groovy.transform.ToString
 import groovy.util.logging.Slf4j
 import io.infinite.blackbox.BlackBox
 import io.infinite.pigeon.other.MessageStatuses
-import io.infinite.supplies.ast.exceptions.ExceptionUtils
 
 import java.nio.charset.StandardCharsets
 
@@ -53,61 +52,61 @@ abstract class SenderDefault extends SenderAbstract {
     }
 
     void sendHttpMessageWithUrlConnection(HttpRequest httpRequest, HttpResponse httpResponse, HttpURLConnection httpURLConnection) {
-        httpURLConnection.setRequestMethod(httpRequest.method)
-        for (headerName in httpRequest.getHeaders().keySet()) {
-            httpURLConnection.setRequestProperty(headerName, httpRequest.getHeaders().get(headerName))
-        }
-        if (httpRequest.method == "POST") {
-            httpURLConnection.setDoOutput(true)
-            DataOutputStream dataOutputStream
+        try {
+            httpURLConnection.setRequestMethod(httpRequest.method)
+            for (headerName in httpRequest.getHeaders().keySet()) {
+                httpURLConnection.setRequestProperty(headerName, httpRequest.getHeaders().get(headerName))
+            }
+            if (httpRequest.method == "POST") {
+                httpURLConnection.setDoOutput(true)
+            }
             try {
-                dataOutputStream = new DataOutputStream(httpURLConnection.getOutputStream())
-            } catch (ConnectException connectException) {
-                failNoConnection(httpRequest, connectException)
+                httpURLConnection.connect()
+            } catch (ConnectException connectException) { //no timeout set
+                fail(httpRequest, connectException, MessageStatuses.FAILED_NO_CONNECTION)
+                return
+            } catch (SocketTimeoutException connectException) {
+                //in this situation ONLY connection timeout; NO read timeout.
+                fail(httpRequest, connectException, MessageStatuses.FAILED_NO_CONNECTION)
                 return
             }
-            if (httpRequest.getBody() != null) {
-                dataOutputStream.writeBytes(httpRequest.getBody())
-            } else {
-                log.warn("POST request with empty body")
+            if (httpRequest.method == "POST") {
+                DataOutputStream dataOutputStream
+                dataOutputStream = new DataOutputStream(httpURLConnection.getOutputStream())
+                if (httpRequest.getBody() != null) {
+                    dataOutputStream.writeBytes(httpRequest.getBody())
+                } else {
+                    log.warn("POST request with empty body")
+                }
+                dataOutputStream.flush()
+                dataOutputStream.close()
             }
-            dataOutputStream.flush()
-            dataOutputStream.close()
-        }
-        log.info("Successfully sent request data:")
-        log.info(httpRequest.toString())
-        Integer responseCode
-        try {
+            log.info("Successfully sent request data:")
+            log.info(httpRequest.toString())
+            Integer responseCode
             responseCode = httpURLConnection.getResponseCode()
-        } catch (ConnectException connectException) {
-            failNoConnection(httpRequest, connectException)
-            return
+            httpResponse.setStatus(responseCode)
+            InputStream inputStream = getInputStream(httpURLConnection)
+            if (inputStream != null) {
+                httpResponse.setBody(inputStream.getText())
+            } else {
+                log.info("Null input stream")
+            }
+            for (headerName in httpURLConnection.getHeaderFields().keySet()) {
+                httpResponse.getHeaders().put(headerName, httpURLConnection.getHeaderField(headerName))
+            }
+            if ([HTTP_OK, HTTP_CREATED].contains(httpResponse.getStatus())) {
+                httpRequest.setRequestStatus(MessageStatuses.DELIVERED.value())
+            } else {
+                log.warn("Failed response status: " + httpResponse.getStatus())
+                httpRequest.setRequestStatus(MessageStatuses.FAILED_RESPONSE.value())
+            }
+        } catch (Exception e) {
+            fail(httpRequest, e, MessageStatuses.EXCEPTION)
+        } finally {
+            log.info("Received response data:")
+            log.info(httpResponse.toString())
         }
-        httpResponse.setStatus(responseCode)
-        InputStream inputStream = getInputStream(httpURLConnection)
-        if (inputStream != null) {
-            httpResponse.setBody(inputStream.getText())
-        } else {
-            log.info("Null input stream")
-        }
-        for (headerName in httpURLConnection.getHeaderFields().keySet()) {
-            httpResponse.getHeaders().put(headerName, httpURLConnection.getHeaderField(headerName))
-        }
-        if ([HTTP_OK, HTTP_CREATED].contains(httpResponse.getStatus())) {
-            httpRequest.setRequestStatus(MessageStatuses.DELIVERED.value())
-        } else {
-            log.warn("Failed response status: " + httpResponse.getStatus())
-            httpRequest.setRequestStatus(MessageStatuses.FAILED_RESPONSE.value())
-        }
-        log.info("Received response data:")
-        log.info(httpResponse.toString())
-    }
-
-    void failNoConnection(HttpRequest httpRequest, ConnectException connectException) {
-        httpRequest.setExceptionString(new ExceptionUtils().stacktrace(connectException))
-        log.warn("Exception during connection:")
-        log.warn(httpRequest.getExceptionString())
-        httpRequest.setRequestStatus(MessageStatuses.FAILED_NO_CONNECTION.value())
     }
 
     InputStream getInputStream(HttpURLConnection httpURLConnection) {

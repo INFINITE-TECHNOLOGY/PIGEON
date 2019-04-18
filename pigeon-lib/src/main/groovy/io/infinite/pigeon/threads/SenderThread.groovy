@@ -90,11 +90,12 @@ class SenderThread extends Thread {
                 outputMessage.getHttpLogs().add(createHttpLog(httpRequest, httpResponse, outputMessage))
             }
             /*/\/\/\/\/\/\/\/\*/
-            outputMessage.setStatus(httpRequest.getRequestStatus())
+            outputMessage.setStatus(httpRequest.requestStatus)
+            outputMessage.setExceptionString(httpRequest.exceptionString)
             outputMessage.setLastSendTime(new Date())
         } catch (Exception e) {
-            outputMessage.setExceptionString(new ExceptionUtils().stacktrace(e))
             outputMessage.setStatus(MessageStatuses.EXCEPTION.value())
+            outputMessage.setExceptionString(new ExceptionUtils().stacktrace(e))
             log.warn("Sending exception (Output Message ${outputMessage.id})")
         } finally {
             outputMessageRepository.save(outputMessage)
