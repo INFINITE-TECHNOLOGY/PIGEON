@@ -4,6 +4,7 @@ import groovy.transform.ToString
 import groovy.util.logging.Slf4j
 import io.infinite.blackbox.BlackBox
 import io.infinite.pigeon.other.MessageStatuses
+import io.infinite.supplies.ast.exceptions.ExceptionUtils
 
 import java.nio.charset.StandardCharsets
 
@@ -106,6 +107,13 @@ abstract class SenderDefault extends SenderAbstract {
         } finally {
             log.info("Received response data:")
             log.info(httpResponse.toString())
+            try {
+                httpURLConnection.disconnect()
+                closeInputStream(httpURLConnection)
+            } catch (Exception disconnectException) {
+                log.warn("Exception during releasing connection:")
+                log.warn(new ExceptionUtils().stacktrace(disconnectException))
+            }
         }
     }
 
@@ -119,6 +127,16 @@ abstract class SenderDefault extends SenderAbstract {
             inputStream = httpURLConnection.getErrorStream()
         }
         return inputStream
+    }
+
+    void closeInputStream(HttpURLConnection httpURLConnection) {
+        if (httpURLConnection.getErrorStream() == null) {
+            if (httpURLConnection.getResponseCode() == HTTP_OK) {
+                httpURLConnection.getInputStream().close()
+            }
+        } else {
+            httpURLConnection.getErrorStream().close()
+        }
     }
 
 }
