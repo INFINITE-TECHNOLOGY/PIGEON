@@ -8,7 +8,6 @@ import io.infinite.pigeon.springdatarest.entities.InputMessage
 import io.infinite.pigeon.springdatarest.repositories.InputMessageRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.core.io.FileSystemResource
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping

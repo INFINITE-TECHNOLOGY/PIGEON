@@ -2,14 +2,21 @@ package io.infinite.pigeon.threads
 
 import groovy.time.TimeCategory
 import groovy.transform.CompileDynamic
+import groovy.util.logging.Slf4j
 import io.infinite.blackbox.BlackBox
 import io.infinite.carburetor.CarburetorLevel
 import io.infinite.pigeon.conf.OutputQueue
 import io.infinite.pigeon.other.MessageStatusSets
 import io.infinite.pigeon.springdatarest.entities.OutputMessage
 import org.springframework.context.ApplicationContext
+import org.springframework.dao.DataAccessException
+
+import java.sql.SQLNonTransientConnectionException
+import java.sql.SQLRecoverableException
+import java.sql.SQLTransientConnectionException
 
 @BlackBox
+@Slf4j
 class OutputThreadRetry extends OutputThread {
 
     OutputThreadRetry(OutputQueue outputQueue, InputThread inputThread, ApplicationContext applicationContext) {
@@ -35,16 +42,27 @@ class OutputThreadRetry extends OutputThread {
         return outputMessageRepository.masterQueryRetry(outputQueueName, MessageStatusSets.OUTPUT_RETRY_MESSAGE_STATUSES.value(), outputQueue.maxRetryCount, maxLastSendDate)
     }
 
+    @BlackBox(level = CarburetorLevel.METHOD)
+    void mainCycle() {
+        Set<OutputMessage> outputMessages = masterQuery(outputQueue.getName())
+        if (outputMessages.size() > 0) {
+            outputMessages.each { outputMessage ->
+                senderEnqueue(outputMessage)
+            }
+        }
+    }
+
     @Override
+    @BlackBox(level = CarburetorLevel.METHOD)
     void run() {
         while (true) {
-            Set<OutputMessage> outputMessages = masterQuery(outputQueue.getName())
-            if (outputMessages.size() > 0) {
-                outputMessages.each { outputMessage ->
-                    senderEnqueue(outputMessage)
-                }
+            try {
+                mainCycle()
+                sleep(outputQueue.pollPeriodMillisecondsRetry)
+            } catch (DataAccessException dataAccessException) {
+                log.warn("Waiting for recovery of DataAccessException", dataAccessException)
+                sleep(outputQueue.recoveryTryPeriodMillisecondsRetry)
             }
-            sleep(outputQueue.pollPeriodMillisecondsRetry)
         }
     }
 

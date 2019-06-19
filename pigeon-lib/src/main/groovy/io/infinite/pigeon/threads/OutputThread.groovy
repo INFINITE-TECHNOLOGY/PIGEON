@@ -1,12 +1,10 @@
 package io.infinite.pigeon.threads
 
-
 import io.infinite.blackbox.BlackBox
 import io.infinite.carburetor.CarburetorLevel
 import io.infinite.pigeon.conf.OutputQueue
 import io.infinite.pigeon.other.MessageStatuses
 import io.infinite.pigeon.other.RoundRobin
-import io.infinite.pigeon.springdatarest.repositories.InputMessageRepository
 import io.infinite.pigeon.springdatarest.entities.OutputMessage
 import io.infinite.pigeon.springdatarest.repositories.OutputMessageRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -21,9 +19,6 @@ abstract class OutputThread extends Thread {
 
     @Autowired
     OutputMessageRepository outputMessageRepository
-
-    @Autowired
-    InputMessageRepository inputMessageRepository
 
     OutputThread(OutputQueue outputQueue, InputThread inputThread, ApplicationContext applicationContext) {
         super(new ThreadGroup("OUTPUT"), outputQueue.getName() + "_OUTPUT")

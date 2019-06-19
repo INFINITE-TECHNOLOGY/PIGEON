@@ -7,6 +7,7 @@ class InputQueue {
 
     String name
     Long pollPeriodMilliseconds = 500
+    Long recoveryTryPeriodMilliseconds = 60000
     OutputQueue[] outputQueues
     Boolean enabled = true
 
