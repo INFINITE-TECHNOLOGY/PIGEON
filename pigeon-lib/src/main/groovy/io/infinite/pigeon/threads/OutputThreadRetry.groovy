@@ -11,10 +11,6 @@ import io.infinite.pigeon.springdatarest.entities.OutputMessage
 import org.springframework.context.ApplicationContext
 import org.springframework.dao.DataAccessException
 
-import java.sql.SQLNonTransientConnectionException
-import java.sql.SQLRecoverableException
-import java.sql.SQLTransientConnectionException
-
 @BlackBox
 @Slf4j
 class OutputThreadRetry extends OutputThread {

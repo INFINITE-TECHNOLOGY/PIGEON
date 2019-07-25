@@ -13,10 +13,6 @@ import io.infinite.pigeon.springdatarest.repositories.OutputMessageRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.DataAccessException
 
-import java.sql.SQLNonTransientConnectionException
-import java.sql.SQLRecoverableException
-import java.sql.SQLTransientConnectionException
-
 @BlackBox
 @Slf4j
 class InputThread extends Thread {
