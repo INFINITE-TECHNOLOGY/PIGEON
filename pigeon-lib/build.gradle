@@ -36,11 +36,11 @@ dependencies {
     compile 'org.springframework.boot:spring-boot-starter-data-rest'
     compile 'org.springframework.boot:spring-boot-starter-data-jpa'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
+    compile "io.infinite:bobbin:2.0.5"
     compile 'io.infinite:blackbox:1.0.18'
     //compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.9.7'
     compile 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.9.8'
     compile 'com.h2database:h2:1.4.197'
-    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.9'
     //compile 'mysql:mysql-connector-java'
     compile group: 'com.amazonaws', name: 'aws-java-sdk-s3', version: '1.11.449'
     compile group: 'com.neovisionaries', name: 'nv-i18n', version: '1.23'
