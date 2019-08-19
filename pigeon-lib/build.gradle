@@ -18,8 +18,8 @@ ext['groovy.version'] = '2.5.4'
 ext['springBootVersion'] = '2.1.1.RELEASE'
 
 sourceCompatibility = 1.7
-group = "io.infinite"
-version = "1.0.0-RC17"
+group = "io.i-t"
+version = "1.0.0-RC18"
 description = "HTTP Message Broker"
 
 repositories {
@@ -36,8 +36,8 @@ dependencies {
     compile 'org.springframework.boot:spring-boot-starter-data-rest'
     compile 'org.springframework.boot:spring-boot-starter-data-jpa'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
-    compile "io.infinite:bobbin:2.0.5"
-    compile 'io.infinite:blackbox:1.0.18'
+    compile "io.i-t:bobbin:2.0.11"
+    compile 'io.i-t:blackbox:1.0.20'
     //compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.9.7'
     compile 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.9.8'
     compile 'com.h2database:h2:1.4.197'
@@ -87,7 +87,7 @@ bintray {
     def projectDescription = project.description
     pkg {
         userOrg = "infinite-technology"
-        repo = "m2"
+        repo = "io.i-t"
         name = "pigeon-lib"
         desc = "HTTP Message Broker"
         issueTrackerUrl = "https://github.com/INFINITE-TECHNOLOGY/PIGEON/issues"

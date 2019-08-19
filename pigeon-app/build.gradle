@@ -17,13 +17,13 @@ apply plugin: 'com.jfrog.bintray'
 
 bootJar {
     baseName = 'pigeon-app'
-    version = '1.0.0-RC17'
+    version = '1.0.0-RC18'
 }
 
 ext['groovy.version'] = '2.5.4'
 sourceCompatibility = 1.7
-group = "io.infinite"
-version = "1.0.0-RC17"
+group = "io.i-t"
+version = "1.0.0-RC18"
 description = "HTTP Message Broker"
 
 repositories {
@@ -83,7 +83,7 @@ bintray {
     def projectDescription = project.description
     pkg {
         userOrg = "infinite-technology"
-        repo = "m2"
+        repo = "io.i-t"
         name = "pigeon-app"
         desc = "HTTP Message Broker"
         issueTrackerUrl = "https://github.com/INFINITE-TECHNOLOGY/PIGEON/issues"
