@@ -7,8 +7,8 @@ import io.infinite.pigeon.conf.Configuration
 import io.infinite.pigeon.other.MessageStatusSets
 import io.infinite.pigeon.other.MessageStatuses
 import io.infinite.pigeon.springdatarest.entities.InputMessage
-import io.infinite.pigeon.springdatarest.repositories.InputMessageRepository
 import io.infinite.pigeon.springdatarest.entities.OutputMessage
+import io.infinite.pigeon.springdatarest.repositories.InputMessageRepository
 import io.infinite.pigeon.springdatarest.repositories.OutputMessageRepository
 import io.infinite.pigeon.threads.InputThread
 import io.infinite.pigeon.threads.OutputThread

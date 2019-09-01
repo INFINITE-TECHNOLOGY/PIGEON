@@ -1,14 +1,18 @@
 package io.infinite.pigeon.springdatarest.configurations.security
 
+import io.infinite.ascend.validation.AccessJwtManager
 import io.infinite.ascend.validation.AuthorizationValidator
 import io.infinite.blackbox.BlackBox
+import io.infinite.pigeon.springdatarest.repositories.AscendUsageRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.web.authentication.preauth.AbstractPreAuthenticatedProcessingFilter
 
+import javax.annotation.PostConstruct
 import javax.servlet.http.HttpServletResponse
 
 /**
@@ -17,8 +21,34 @@ import javax.servlet.http.HttpServletResponse
 @EnableWebSecurity
 class SecurityTokenConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired
     AuthorizationValidator authorizationValidator
+
+    @Autowired
+    AscendUsageRepository ascendUsageRepository
+
+    @Value('${jwtAccessKeystorePath}')
+    String jwtAccessKeystorePath
+
+    @Value('${jwtAccessKeystoreType}')
+    String jwtAccessKeystoreType
+
+    @Value('${jwtAccessKeystorePassword}')
+    String jwtAccessKeystorePassword
+
+    @Value('${jwtAccessKeystoreAlias}')
+    String jwtAccessKeystoreAlias
+
+    @PostConstruct
+    void init() {
+        authorizationValidator = new AuthorizationValidator(
+                jwtManager: new AccessJwtManager(
+                        jwtAccessKeystorePath,
+                        jwtAccessKeystoreType,
+                        jwtAccessKeystorePassword,
+                        jwtAccessKeystoreAlias
+                ),
+                usageRepository: ascendUsageRepository)
+    }
 
     @Override
     @BlackBox
