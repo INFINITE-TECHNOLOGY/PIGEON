@@ -86,8 +86,10 @@ artifacts {
 }
 
 bintray {
-    user = System.getProperty("bintrayuser")
-    key = System.getProperty("bintraypassword")
+    user = System.getenv("bintrayuser")
+    key = System.getenv("bintraypassword")
+    System.out.println(user)
+    System.out.println(key)
     publications = ["groovyMaven"]
     def projectName = project.name
     def projectDescription = project.description
