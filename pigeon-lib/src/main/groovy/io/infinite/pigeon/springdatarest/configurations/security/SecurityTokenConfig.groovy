@@ -1,13 +1,9 @@
 package io.infinite.pigeon.springdatarest.configurations.security
 
 import groovy.util.logging.Slf4j
-import io.infinite.ascend.validation.AccessJwtManager
+import io.infinite.ascend.common.JwtManager
 import io.infinite.ascend.validation.AuthorizationValidator
 import io.infinite.blackbox.BlackBox
-import io.infinite.pigeon.http.HttpRequest
-import io.infinite.pigeon.http.HttpResponse
-import io.infinite.pigeon.http.SenderAbstract
-import io.infinite.pigeon.other.PigeonException
 import io.infinite.pigeon.springdatarest.repositories.AscendUsageRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
@@ -18,8 +14,6 @@ import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.web.authentication.preauth.AbstractPreAuthenticatedProcessingFilter
 
 import javax.annotation.PostConstruct
-import javax.crypto.SecretKey
-import javax.crypto.spec.SecretKeySpec
 import javax.servlet.http.HttpServletResponse
 /**
  * https://github.com/OmarElGabry/microservices-spring-boot/blob/master/spring-eureka-zuul/src/main/java/com/eureka/zuul/security/SecurityTokenConfig.java
@@ -41,25 +35,10 @@ class SecurityTokenConfig extends WebSecurityConfigurerAdapter {
 
     @PostConstruct
     void init() {
-        log.info("Sit back and relax, while Pigeon is getting its trusted Ascend Access Public Key.")
-        SenderAbstract senderAbstract = Class.forName(ascendSenderClassName).newInstance() as SenderAbstract
-        HttpRequest httpRequest = new HttpRequest(
-                url: ascendPublicKeyUrl,
-                method: "GET"
-        )
-        HttpResponse httpResponse = new HttpResponse()
-        senderAbstract.sendHttpMessage(httpRequest, httpResponse)
-        if (httpResponse.status != 200) {
-            throw new PigeonException("Unable to get trusted Ascend Public Key")
-        }
-        log.info("Pigeon trusted Ascend Key is: " + httpResponse.body)
-        String trustedAscendAccessPublicKeyBytesString = httpResponse.body
-        byte[] trustedAscendAccessPublicKeyBytes = Base64.getDecoder().decode(trustedAscendAccessPublicKeyBytesString)
-        SecretKey trustedAscendAccessPublicKey = new SecretKeySpec(trustedAscendAccessPublicKeyBytes, 0, trustedAscendAccessPublicKeyBytes.length, "AES")
+        JwtManager jwtManager = new JwtManager()
+        jwtManager.setJwtAccessKeyPublic(jwtManager.loadPublicKeyFromEnv("TRUSTED_ASCEND_PUBLIC_KEY"))
         authorizationValidator = new AuthorizationValidator(
-                jwtManager: new AccessJwtManager(
-                        trustedAscendAccessPublicKey
-                ),
+                jwtManager: jwtManager,
                 usageRepository: ascendUsageRepository)
     }
 
