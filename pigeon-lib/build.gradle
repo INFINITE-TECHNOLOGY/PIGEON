@@ -19,7 +19,7 @@ ext['springBootVersion'] = '2.1.1.RELEASE'
 
 sourceCompatibility = 1.7
 group = "io.i-t"
-version = "1.0.0-RC18S3"
+version = "1.0.0-RC18S5"
 description = "HTTP Message Broker"
 
 repositories {
@@ -43,7 +43,7 @@ dependencies {
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
     compile "io.i-t:bobbin:2.0.11"
     compile 'io.i-t:blackbox:1.0.20'
-    compile 'io.i-t:ascend-lib:0.0.25'
+    compile 'io.i-t:ascend-lib:0.1.2'
     //compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.9.7'
     compile 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.9.8'
     compile 'com.h2database:h2:1.4.197'
