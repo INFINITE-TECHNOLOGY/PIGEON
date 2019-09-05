@@ -46,7 +46,7 @@ class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
                     body: null as String
             )
             HttpRequest ascendRequest = new HttpRequest(
-                    url: "https://ascend-gfs.herokuapp.com/ascend/validation",
+                    url: "https://ascend-gfs.herokuapp.com/ascend/validation",//todo: make configurable
                     headers: ["content-type": "application/json"],
                     method: "POST",
                     body: objectMapper.writeValueAsString(ascendHttpRequest)
