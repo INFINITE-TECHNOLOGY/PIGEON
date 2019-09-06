@@ -1,4 +1,4 @@
-package io.infinite.pigeon.springdatarest.configurations.security
+package io.infinite.pigeon.configurations.security
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import groovy.util.logging.Slf4j

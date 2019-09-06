@@ -1,4 +1,4 @@
-package io.infinite.pigeon.springdatarest.configurations.security
+package io.infinite.pigeon.configurations.security
 
 import io.infinite.blackbox.BlackBox
 import io.infinite.carburetor.CarburetorLevel

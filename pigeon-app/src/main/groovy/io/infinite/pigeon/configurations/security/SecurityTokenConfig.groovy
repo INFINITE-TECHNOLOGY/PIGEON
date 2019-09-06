@@ -1,4 +1,4 @@
-package io.infinite.pigeon.springdatarest.configurations.security
+package io.infinite.pigeon.configurations.security
 
 import groovy.util.logging.Slf4j
 import io.infinite.blackbox.BlackBox
