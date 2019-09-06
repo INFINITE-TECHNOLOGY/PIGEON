@@ -36,12 +36,18 @@ class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
                 chain.doFilter(request, response)
                 return
             }
+            String incomingUrl
+            if (request.getQueryString() != null) {
+                incomingUrl = request.requestURL
+                        .append('?')
+                        .append(request.getQueryString())
+                        .toString()
+            } else {
+                incomingUrl = request.requestURL
+            }
             AscendHttpRequest ascendHttpRequest = new AscendHttpRequest(
                     authorizationHeader: authorizationHeader,
-                    incomingUrl: request.requestURL
-                            .append('?')
-                            .append(request.getQueryString())
-                            .toString(),
+                    incomingUrl: incomingUrl,
                     method: request.method,
                     body: null as String
             )
@@ -58,6 +64,9 @@ class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
             }
             AscendHttpRequest ascendHttpResponse = objectMapper.readValue(ascendResponse.body, AscendHttpRequest.class)
             if (ascendResponse.status != 200) {
+                throw new AscendException("Unauthorized.")
+            }
+            if (ascendHttpResponse.status != 200) {
                 throw new AscendException("Unauthorized.")
             }
             PreAuthenticatedAuthenticationToken preAuthenticatedAuthenticationToken =
