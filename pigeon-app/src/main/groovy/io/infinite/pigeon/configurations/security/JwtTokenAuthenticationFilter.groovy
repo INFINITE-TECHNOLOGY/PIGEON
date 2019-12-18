@@ -2,39 +2,46 @@ package io.infinite.pigeon.configurations.security
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import groovy.util.logging.Slf4j
-import io.infinite.ascend.other.AscendException
 import io.infinite.ascend.validation.model.AscendHttpRequest
 import io.infinite.blackbox.BlackBox
 import io.infinite.carburetor.CarburetorLevel
 import io.infinite.pigeon.http.HttpRequest
 import io.infinite.pigeon.http.HttpResponse
 import io.infinite.pigeon.http.SenderDefaultHttps
+import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken
-import org.springframework.web.filter.OncePerRequestFilter
 
-import javax.servlet.FilterChain
-import javax.servlet.ServletException
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
+
 /**
  * https://github.com/OmarElGabry/microservices-spring-boot/blob/master/spring-eureka-zuul/src/main/java/com/eureka/zuul/security/JwtTokenAuthenticationFilter.java
  */
 
 @Slf4j
 @BlackBox
-class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
+class JwtTokenAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
+
+    String ascendUrl
+
+    JwtTokenAuthenticationFilter(String ascendUrl) {
+        super("/pigeon/**")
+        this.ascendUrl = ascendUrl
+    }
 
     @Override
     @BlackBox(level = CarburetorLevel.METHOD)
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
-            throws ServletException, IOException {
+    Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) {
         try {
             ObjectMapper objectMapper = new ObjectMapper()
             String authorizationHeader = request.getHeader("Authorization")
-            if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
-                chain.doFilter(request, response)
-                return
+            if (authorizationHeader == null){
+                return failure(response, HttpServletResponse.SC_UNAUTHORIZED, "Missing 'Authorization' header.")
+            }
+            if (!authorizationHeader.startsWith("Bearer ")) {
+                return failure(response, HttpServletResponse.SC_UNAUTHORIZED, "Missing 'Bearer' prefix.")
             }
             String incomingUrl
             if (request.getQueryString() != null) {
@@ -52,7 +59,7 @@ class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
                     body: null as String
             )
             HttpRequest ascendRequest = new HttpRequest(
-                    url: "https://ascend-gfs.herokuapp.com/ascend/validation",//todo: make configurable
+                    url: ascendUrl,
                     headers: ["content-type": "application/json"],
                     method: "POST",
                     body: objectMapper.writeValueAsString(ascendHttpRequest)
@@ -60,27 +67,35 @@ class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
             HttpResponse ascendResponse = new HttpResponse()
             new SenderDefaultHttps().sendHttpMessage(ascendRequest, ascendResponse)
             if (ascendResponse.status != 200) {
-                throw new AscendException("Failed Ascend HTTP status")
+                return failure(response, HttpServletResponse.SC_UNAUTHORIZED,
+                        "\"There was an issue communicating with Authorization Server.")
             }
-            AscendHttpRequest ascendHttpResponse = objectMapper.readValue(ascendResponse.body, AscendHttpRequest.class)
-            if (ascendResponse.status != 200) {
-                throw new AscendException("Unauthorized.")
+            AscendHttpRequest parsedAscendResponse = objectMapper.readValue(ascendResponse.body, AscendHttpRequest.class)
+            if (parsedAscendResponse.status != 200) {
+                return success(parsedAscendResponse, parsedAscendResponse)
+                /*return failure(response, parsedAscendResponse.status,
+                        parsedAscendResponse.statusDescription)*/
             }
-            if (ascendHttpResponse.status != 200) {
-                throw new AscendException("Unauthorized.")
-            }
-            PreAuthenticatedAuthenticationToken preAuthenticatedAuthenticationToken =
-                    new PreAuthenticatedAuthenticationToken(ascendHttpResponse.authorization.identity, ascendHttpResponse.authorization.identity?.authentications)
-            preAuthenticatedAuthenticationToken.setAuthenticated(true)
-            SecurityContextHolder.getContext().setAuthentication(preAuthenticatedAuthenticationToken)
+            return success(parsedAscendResponse.authorization.identity, parsedAscendResponse.authorization.identity?.authentications)
         }
         catch (Exception e) {
-            log.warn("Exception during validation", e)
-            SecurityContextHolder.clearContext()
-        } finally {
-            chain.doFilter(request, response)
+            log.warn("Exception", e)
+            return failure(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Unexpected exception")
         }
     }
 
+    Authentication success(Object principal, Object credentials) {
+        PreAuthenticatedAuthenticationToken preAuthenticatedAuthenticationToken =
+                new PreAuthenticatedAuthenticationToken(principal, credentials)
+        preAuthenticatedAuthenticationToken.setAuthenticated(true)
+        SecurityContextHolder.getContext().setAuthentication(preAuthenticatedAuthenticationToken)
+        return preAuthenticatedAuthenticationToken
+    }
+
+    Authentication failure(HttpServletResponse httpServletResponse, Integer httpCode, String message) {
+        SecurityContextHolder.clearContext()
+        httpServletResponse.sendError(httpCode, message)
+        return null
+    }
 
 }

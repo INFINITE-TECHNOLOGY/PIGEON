@@ -85,6 +85,7 @@ class App implements CommandLineRunner {
                 inputThread.start()
             }
         }
+        log.info("Started Pigeon.")
     }
 
 }

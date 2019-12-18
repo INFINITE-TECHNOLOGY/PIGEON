@@ -29,7 +29,7 @@ class WebMvcConfiguration implements WebMvcConfigurer {
     @Qualifier("yamlObjectMapper")
     private ObjectMapper yamlObjectMapper
 
-    @Value('${server.http.port}')
+    @Value('${server.http.port:}')
     Integer serverHttpPort
 
     @Override

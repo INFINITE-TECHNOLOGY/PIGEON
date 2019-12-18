@@ -39,6 +39,11 @@
     {
       "name": "io.infinite.bobbin.destinations.ConsoleDestination",
       "levels": "['warn', 'error'].contains(level)"
+    },
+    {
+      "name": "io.infinite.bobbin.destinations.ConsoleDestination",
+      "levels": "['info'].contains(level)",
+      "classes": "className.contains('io.infinite.')"
     }
   ]
 }
