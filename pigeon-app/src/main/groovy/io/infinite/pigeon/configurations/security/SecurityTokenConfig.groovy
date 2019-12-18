@@ -2,7 +2,9 @@ package io.infinite.pigeon.configurations.security
 
 import groovy.util.logging.Slf4j
 import io.infinite.blackbox.BlackBox
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
@@ -38,7 +40,7 @@ class SecurityTokenConfig extends WebSecurityConfigurerAdapter {
 
     void secured(HttpSecurity http) {
         log.info("Pigeon secured by Ascend.")
-        JwtTokenAuthenticationFilter jwtTokenAuthenticationFilter = new JwtTokenAuthenticationFilter(ascendUrl)
+        JwtTokenAuthenticationFilter jwtTokenAuthenticationFilter = new JwtTokenAuthenticationFilter(ascendUrl, this.authenticationManager())
         http
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)

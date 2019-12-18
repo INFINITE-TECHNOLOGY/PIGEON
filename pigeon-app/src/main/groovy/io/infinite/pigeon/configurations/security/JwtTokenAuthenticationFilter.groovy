@@ -8,6 +8,7 @@ import io.infinite.carburetor.CarburetorLevel
 import io.infinite.pigeon.http.HttpRequest
 import io.infinite.pigeon.http.HttpResponse
 import io.infinite.pigeon.http.SenderDefaultHttps
+import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter
@@ -26,9 +27,10 @@ class JwtTokenAuthenticationFilter extends AbstractAuthenticationProcessingFilte
 
     String ascendUrl
 
-    JwtTokenAuthenticationFilter(String ascendUrl) {
+    JwtTokenAuthenticationFilter(String ascendUrl, AuthenticationManager authenticationManager) {
         super("/pigeon/**")
         this.ascendUrl = ascendUrl
+        this.authenticationManager = authenticationManager
     }
 
     @Override
@@ -89,6 +91,7 @@ class JwtTokenAuthenticationFilter extends AbstractAuthenticationProcessingFilte
                 new PreAuthenticatedAuthenticationToken(principal, credentials)
         preAuthenticatedAuthenticationToken.setAuthenticated(true)
         SecurityContextHolder.getContext().setAuthentication(preAuthenticatedAuthenticationToken)
+        getAuthenticationManager().authenticate(preAuthenticatedAuthenticationToken)
         return preAuthenticatedAuthenticationToken
     }
 
