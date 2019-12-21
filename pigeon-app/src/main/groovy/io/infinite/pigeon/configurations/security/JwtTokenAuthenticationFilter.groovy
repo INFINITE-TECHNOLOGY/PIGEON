@@ -8,12 +8,11 @@ import io.infinite.carburetor.CarburetorLevel
 import io.infinite.pigeon.http.HttpRequest
 import io.infinite.pigeon.http.HttpResponse
 import io.infinite.pigeon.http.SenderDefaultHttps
-import org.springframework.security.authentication.AuthenticationManager
-import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContextHolder
-import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken
+import org.springframework.web.filter.OncePerRequestFilter
 
+import javax.servlet.FilterChain
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
@@ -23,27 +22,27 @@ import javax.servlet.http.HttpServletResponse
 
 @Slf4j
 @BlackBox
-class JwtTokenAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
+class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
 
     String ascendUrl
 
-    JwtTokenAuthenticationFilter(String ascendUrl, AuthenticationManager authenticationManager) {
-        super("/pigeon/**")
+    JwtTokenAuthenticationFilter(String ascendUrl) {
         this.ascendUrl = ascendUrl
-        this.authenticationManager = authenticationManager
     }
 
     @Override
     @BlackBox(level = CarburetorLevel.METHOD)
-    Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) {
+    void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) {
         try {
             ObjectMapper objectMapper = new ObjectMapper()
             String authorizationHeader = request.getHeader("Authorization")
-            if (authorizationHeader == null){
-                return failure(response, HttpServletResponse.SC_UNAUTHORIZED, "Missing 'Authorization' header.")
+            if (authorizationHeader == null) {
+                failure(response, HttpServletResponse.SC_UNAUTHORIZED, "Missing 'Authorization' header.")
+                return
             }
             if (!authorizationHeader.startsWith("Bearer ")) {
-                return failure(response, HttpServletResponse.SC_UNAUTHORIZED, "Missing 'Bearer' prefix.")
+                failure(response, HttpServletResponse.SC_UNAUTHORIZED, "Missing 'Bearer' prefix.")
+                return
             }
             String incomingUrl
             if (request.getQueryString() != null) {
@@ -69,36 +68,35 @@ class JwtTokenAuthenticationFilter extends AbstractAuthenticationProcessingFilte
             HttpResponse ascendResponse = new HttpResponse()
             new SenderDefaultHttps().sendHttpMessage(ascendRequest, ascendResponse)
             if (ascendResponse.status != 200) {
-                return failure(response, HttpServletResponse.SC_UNAUTHORIZED,
+                failure(response, HttpServletResponse.SC_UNAUTHORIZED,
                         "\"There was an issue communicating with Authorization Server.")
+                return
             }
             AscendHttpRequest parsedAscendResponse = objectMapper.readValue(ascendResponse.body, AscendHttpRequest.class)
             if (parsedAscendResponse.status != 200) {
-                return success(parsedAscendResponse, parsedAscendResponse)
-                /*return failure(response, parsedAscendResponse.status,
-                        parsedAscendResponse.statusDescription)*/
+                /*failure(response, parsedAscendResponse.status,
+                        parsedAscendResponse.statusDescription)
+                return*/
             }
-            return success(parsedAscendResponse.authorization.identity, parsedAscendResponse.authorization.identity?.authentications)
+            success(parsedAscendResponse.authorization?.identity, parsedAscendResponse.authorization?.identity?.authentications)
+        } catch (Exception e) {
+            log.warn("Authentication exception", e)
+            failure(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Authentication exception")
+            return
         }
-        catch (Exception e) {
-            log.warn("Exception", e)
-            return failure(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Unexpected exception")
-        }
+        chain.doFilter(request, response)
     }
 
-    Authentication success(Object principal, Object credentials) {
+    void success(Object principal, Object credentials) {
         PreAuthenticatedAuthenticationToken preAuthenticatedAuthenticationToken =
                 new PreAuthenticatedAuthenticationToken(principal, credentials)
         preAuthenticatedAuthenticationToken.setAuthenticated(true)
         SecurityContextHolder.getContext().setAuthentication(preAuthenticatedAuthenticationToken)
-        getAuthenticationManager().authenticate(preAuthenticatedAuthenticationToken)
-        return preAuthenticatedAuthenticationToken
     }
 
-    Authentication failure(HttpServletResponse httpServletResponse, Integer httpCode, String message) {
+    void failure(HttpServletResponse httpServletResponse, Integer httpCode, String message) {
         SecurityContextHolder.clearContext()
         httpServletResponse.sendError(httpCode, message)
-        return null
     }
 
 }

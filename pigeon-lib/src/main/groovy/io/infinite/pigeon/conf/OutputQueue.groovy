@@ -15,7 +15,7 @@ class OutputQueue {
     Integer normalThreadCount = 4
     Integer retryThreadCount = 0
     String conversionModuleName
-    String senderClassName
+    String senderClassName = "io.infinite.pigeon.http.SenderDefaultHttps"
     Long pollPeriodMillisecondsRetry = 60000
     Long recoveryTryPeriodMillisecondsRetry = 60000
     Map<String, Object> httpProperties = new HashMap<>()

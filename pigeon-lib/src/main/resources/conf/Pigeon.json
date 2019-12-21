@@ -1,0 +1,14 @@
+{
+  "inputQueues": [
+    {
+      "name": "HEALTHCHECK",
+      "outputQueues": [
+        {
+          "name": "GOOGLE",
+          "url": "https://google.com",
+          "conversionModuleName": "GET.groovy"
+        }
+      ]
+    }
+  ]
+}
