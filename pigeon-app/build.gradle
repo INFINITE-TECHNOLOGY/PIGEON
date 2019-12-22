@@ -17,13 +17,13 @@ apply plugin: 'com.jfrog.bintray'
 
 bootJar {
     baseName = 'pigeon-app'
-    version = '1.0.0-RC18S8'
+    version = '1.0.0-RC19'
 }
 
 ext['groovy.version'] = '2.5.4'
 sourceCompatibility = 1.7
 group = "io.i-t"
-version = "1.0.0-RC18S8"
+version = "1.0.0-RC19"
 description = "HTTP Message Broker"
 
 repositories {
