@@ -21,7 +21,10 @@ class OutputThreadNormal extends OutputThread {
     void run() {
         while (true) {
             while (!messages.isEmpty()) {
-                senderEnqueue(messages.poll())
+                SenderThread senderThread = senderEnqueue(messages.poll())
+                synchronized (senderThread) {
+                    senderThread.notify()
+                }
             }
             synchronized (this) {
                 this.wait()

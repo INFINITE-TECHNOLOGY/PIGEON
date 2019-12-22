@@ -9,6 +9,7 @@ import io.infinite.pigeon.springdatarest.entities.OutputMessage
 import io.infinite.pigeon.springdatarest.repositories.OutputMessageRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationContext
+import org.springframework.transaction.annotation.Transactional
 
 @BlackBox
 abstract class OutputThread extends Thread {
@@ -33,16 +34,15 @@ abstract class OutputThread extends Thread {
     }
 
     @BlackBox(level = CarburetorLevel.ERROR)
-    void senderEnqueue(OutputMessage outputMessage) {
+    @Transactional
+    SenderThread senderEnqueue(OutputMessage outputMessage) {
         SenderThread senderThread = ++senderThreadRobin.iterator()
         outputMessage.setStatus(MessageStatuses.WAITING.value())
         outputMessage.setOutputThreadName(getName())
         outputMessage.setLastSenderThreadName(senderThread.getName())
         outputMessageRepository.save(outputMessage)
         senderThread.sendingQueue.put(outputMessage)
-        synchronized (senderThread) {
-            senderThread.notify()
-        }
+        return senderThread
     }
 
     @Override

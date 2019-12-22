@@ -36,7 +36,7 @@ class InputMessage {
     @Lob
     String queryParams
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "Input2output")
     Set<OutputMessage> outputMessages = new HashSet<>()
 

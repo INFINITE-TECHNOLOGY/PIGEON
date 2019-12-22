@@ -37,7 +37,7 @@ class OutputMessage {
     @Lob
     String exceptionString
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "Output2httplog")
     Set<HttpLog> httpLogs = new HashSet<>()
 

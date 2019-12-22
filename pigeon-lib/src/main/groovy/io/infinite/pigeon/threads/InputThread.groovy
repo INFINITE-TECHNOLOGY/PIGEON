@@ -12,6 +12,7 @@ import io.infinite.pigeon.springdatarest.repositories.InputMessageRepository
 import io.infinite.pigeon.springdatarest.repositories.OutputMessageRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.DataAccessException
+import org.springframework.transaction.annotation.Transactional
 
 @BlackBox
 @Slf4j
@@ -38,35 +39,43 @@ class InputThread extends Thread {
         Set<InputMessage> inputMessages = inputMessageRepository.findByInputQueueNameAndStatus(inputQueue.getName(), MessageStatusSets.INPUT_NEW_MESSAGE_STATUSES.value())
         if (inputMessages.size() > 0) {
             inputMessages.each { inputMessage ->
-                Set<OutputMessage> outputMessages = new HashSet<>()
-                if (inputMessageRepository.findDuplicates(inputMessage.sourceName, inputMessage.inputQueueName, inputMessage.externalId, inputMessage.id, MessageStatuses.SPLIT.value()) == 0) {
-                    outputThreadsNormal.each { outputThreadNormal ->
-                        OutputMessage outputMessage = new OutputMessage(inputMessage)
-                        outputMessage.setOutputQueueName(outputThreadNormal.outputQueue.name)
-                        outputMessage.setUrl(outputThreadNormal.outputQueue.url)
-                        outputMessage.setInputMessage(inputMessage)
-                        outputMessages.add(outputMessage)
-                        if (inputMessage.status != MessageStatuses.RENEWED.value()) {
-                            outputMessage.setStatus(MessageStatuses.NEW.value())
-                            outputMessageRepository.save(outputMessage)
-                            outputThreadNormal.messages.put(outputMessage)
-                            synchronized (outputThreadNormal) {
-                                outputThreadNormal.notify()
-                            }
-                        } else {
-                            outputMessage.setStatus(MessageStatuses.RENEWED.value())
-                            outputMessageRepository.save(outputMessage)
-                        }
+                splitInput(inputMessage)
+                outputThreadsNormal.each { outputThreadNormal ->
+                    synchronized (outputThreadNormal) {
+                        outputThreadNormal.notify()
                     }
-                    inputMessage.getOutputMessages().addAll(outputMessages)
-                    inputMessage.setStatus(MessageStatuses.SPLIT.value())
-                } else {
-                    log.warn(String.format("Input Message with same externalId %s and different id already exists in status %s for new message with id %s for source %s and inputQueueName %s", inputMessage.externalId, MessageStatuses.SPLIT.value(), inputMessage.id, inputMessage.sourceName, inputMessage.inputQueueName))
-                    inputMessage.setStatus(MessageStatuses.DUPLICATE.value())
                 }
-                inputMessageRepository.save(inputMessage)
             }
         }
+    }
+
+    @BlackBox(level = CarburetorLevel.ERROR)
+    @Transactional
+    void splitInput(InputMessage inputMessage) {
+        Set<OutputMessage> outputMessages = new HashSet<>()
+        if (inputMessageRepository.findDuplicates(inputMessage.sourceName, inputMessage.inputQueueName, inputMessage.externalId, inputMessage.id, MessageStatuses.SPLIT.value()) == 0) {
+            outputThreadsNormal.each { outputThreadNormal ->
+                OutputMessage outputMessage = new OutputMessage(inputMessage)
+                outputMessage.setOutputQueueName(outputThreadNormal.outputQueue.name)
+                outputMessage.setUrl(outputThreadNormal.outputQueue.url)
+                outputMessage.setInputMessage(inputMessage)
+                outputMessages.add(outputMessage)
+                if (inputMessage.status != MessageStatuses.RENEWED.value()) {
+                    outputMessage.setStatus(MessageStatuses.NEW.value())
+                    outputMessageRepository.save(outputMessage)
+                    outputThreadNormal.messages.put(outputMessage)
+                } else {
+                    outputMessage.setStatus(MessageStatuses.RENEWED.value())
+                    outputMessageRepository.save(outputMessage)
+                }
+            }
+            inputMessage.getOutputMessages().addAll(outputMessages)
+            inputMessage.setStatus(MessageStatuses.SPLIT.value())
+        } else {
+            log.warn(String.format("Input Message with same externalId %s and different id already exists in status %s for new message with id %s for source %s and inputQueueName %s", inputMessage.externalId, MessageStatuses.SPLIT.value(), inputMessage.id, inputMessage.sourceName, inputMessage.inputQueueName))
+            inputMessage.setStatus(MessageStatuses.DUPLICATE.value())
+        }
+        inputMessageRepository.save(inputMessage)
     }
 
     @Override

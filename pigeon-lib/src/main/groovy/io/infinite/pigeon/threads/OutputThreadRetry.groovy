@@ -43,7 +43,10 @@ class OutputThreadRetry extends OutputThread {
         Set<OutputMessage> outputMessages = masterQuery(outputQueue.getName())
         if (outputMessages.size() > 0) {
             outputMessages.each { outputMessage ->
-                senderEnqueue(outputMessage)
+                SenderThread senderThread = senderEnqueue(outputMessage)
+                synchronized (senderThread) {
+                    senderThread.notify()
+                }
             }
         }
     }

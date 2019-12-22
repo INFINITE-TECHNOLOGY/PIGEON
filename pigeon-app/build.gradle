@@ -47,6 +47,7 @@ dependencies {
     compile 'org.springframework.boot:spring-boot-starter-security'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
     compile 'io.i-t:ascend-lib:0.1.2'
+    //compile group: 'com.microsoft.sqlserver', name: 'mssql-jdbc', version: '7.4.1.jre8'
 }
 
 task sourceJar(type: Jar) {
