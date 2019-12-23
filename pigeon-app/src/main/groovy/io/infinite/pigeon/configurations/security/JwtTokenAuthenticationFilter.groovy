@@ -74,9 +74,9 @@ class JwtTokenAuthenticationFilter extends OncePerRequestFilter {
             }
             AscendHttpRequest parsedAscendResponse = objectMapper.readValue(ascendResponse.body, AscendHttpRequest.class)
             if (parsedAscendResponse.status != 200) {
-                /*failure(response, parsedAscendResponse.status,
+                failure(response, parsedAscendResponse.status,
                         parsedAscendResponse.statusDescription)
-                return*/
+                return
             }
             success(parsedAscendResponse.authorization?.identity, parsedAscendResponse.authorization?.identity?.authentications)
         } catch (Exception e) {
