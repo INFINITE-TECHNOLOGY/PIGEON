@@ -12,7 +12,6 @@ import io.infinite.pigeon.springdatarest.repositories.InputMessageRepository
 import io.infinite.pigeon.springdatarest.repositories.OutputMessageRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.DataAccessException
-import org.springframework.transaction.annotation.Transactional
 
 @BlackBox
 @Slf4j
@@ -50,7 +49,6 @@ class InputThread extends Thread {
     }
 
     @BlackBox(level = CarburetorLevel.ERROR)
-    @Transactional
     void splitInput(InputMessage inputMessage) {
         Set<OutputMessage> outputMessages = new HashSet<>()
         if (inputMessageRepository.findDuplicates(inputMessage.sourceName, inputMessage.inputQueueName, inputMessage.externalId, inputMessage.id, MessageStatuses.SPLIT.value()) == 0) {

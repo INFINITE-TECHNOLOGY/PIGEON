@@ -5,6 +5,8 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 import org.springframework.data.rest.core.annotation.RepositoryRestResource
+import org.springframework.transaction.annotation.Propagation
+import org.springframework.transaction.annotation.Transactional
 
 @RepositoryRestResource
 interface InputMessageRepository extends JpaRepository<InputMessage, Long> {
@@ -12,11 +14,13 @@ interface InputMessageRepository extends JpaRepository<InputMessage, Long> {
     @Query("""select i from InputMessage i where
         inputQueueName = :inputQueueName and
         status in :messageStatusList""")
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     Set<InputMessage> findByInputQueueNameAndStatus(
             @Param("inputQueueName") String inputQueueName,
             @Param("messageStatusList") List<String> messageStatusList
     )
 
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     Set<InputMessage> findByExternalIdAndSourceName(
             @Param("externalId") String externalId,
             @Param("sourceName") String sourceName
@@ -25,6 +29,7 @@ interface InputMessageRepository extends JpaRepository<InputMessage, Long> {
     @Query("""select count(i.id) from InputMessage i where sourceName = :sourceName 
             and inputQueueName = :inputQueueName
             and externalId = :externalId and id <> :id and status = :status""")
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     Integer findDuplicates(
             @Param("sourceName") String sourceName,
             @Param("inputQueueName") String inputQueueName,
@@ -34,6 +39,7 @@ interface InputMessageRepository extends JpaRepository<InputMessage, Long> {
     )
 
     @Query("""select i from InputMessage i where status in :messageStatusList""")
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     Set<InputMessage> findByMessageStatusList(@Param("messageStatusList") List<String> messageStatusList)
 
 }

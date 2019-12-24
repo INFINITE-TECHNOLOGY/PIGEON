@@ -13,7 +13,6 @@ import io.infinite.pigeon.springdatarest.repositories.HttpLogRepository
 import io.infinite.pigeon.springdatarest.repositories.OutputMessageRepository
 import io.infinite.supplies.ast.exceptions.ExceptionUtils
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.transaction.annotation.Transactional
 
 import java.util.concurrent.LinkedBlockingQueue
 
@@ -60,7 +59,6 @@ class SenderThread extends Thread {
     }
 
     @BlackBox
-    @Transactional
     void sendMessage(OutputMessage outputMessage) {
         try {
             Binding binding = new Binding()
@@ -104,7 +102,6 @@ class SenderThread extends Thread {
         }
     }
 
-    @Transactional
     HttpLog createHttpLog(HttpRequest httpRequest, HttpResponse httpResponse, OutputMessage outputMessage) {
         //todo: null status/exception
         HttpLog httpLog = new HttpLog()
