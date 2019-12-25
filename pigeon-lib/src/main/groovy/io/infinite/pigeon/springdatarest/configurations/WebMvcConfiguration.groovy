@@ -9,14 +9,12 @@ import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactor
 import org.springframework.boot.web.servlet.server.ServletWebServerFactory
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.core.io.FileSystemResource
 import org.springframework.http.MediaType
 import org.springframework.http.converter.HttpMessageConverter
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter
 import org.springframework.web.filter.CommonsRequestLoggingFilter
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
-
 /**
  * Taken from: https://blog.jdriven.com/2016/11/handling-yaml-format-rest-spring-boot/
  */
@@ -38,15 +36,15 @@ class WebMvcConfiguration implements WebMvcConfigurer {
                 .favorPathExtension(false)
                 .favorParameter(true)
                 .ignoreAcceptHeader(false)
-                .mediaType(MediaType.APPLICATION_JSON.getSubtype(), MediaType.APPLICATION_JSON)
-                .mediaType(MEDIA_TYPE_YAML.getSubtype(), MEDIA_TYPE_YAML)
+                .mediaType(MediaType.APPLICATION_JSON.subtype, MediaType.APPLICATION_JSON)
+                .mediaType(MEDIA_TYPE_YAML.subtype, MEDIA_TYPE_YAML)
     }
 
     @Override
     void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
         MappingJackson2HttpMessageConverter yamlConverter =
                 new MappingJackson2HttpMessageConverter(yamlObjectMapper)
-        yamlConverter.setSupportedMediaTypes([MEDIA_TYPE_YAML])
+        yamlConverter.supportedMediaTypes = [MEDIA_TYPE_YAML]
         converters.add(yamlConverter)
     }
 
@@ -56,11 +54,11 @@ class WebMvcConfiguration implements WebMvcConfigurer {
      */
     CommonsRequestLoggingFilter logFilter() {
         CommonsRequestLoggingFilter filter = new CommonsRequestLoggingFilter()
-        filter.setIncludeQueryString(true)
-        filter.setIncludePayload(true)
-        filter.setMaxPayloadLength(100000)
-        filter.setIncludeHeaders(false)
-        filter.setAfterMessagePrefix("REQUEST DATA : ")
+        filter.includeQueryString= true
+        filter.includePayload= true
+        filter.maxPayloadLength= 100000
+        filter.includeHeaders= false
+        filter.afterMessagePrefix= "REQUEST DATA : "
         return filter
     }
 
@@ -72,7 +70,7 @@ class WebMvcConfiguration implements WebMvcConfigurer {
         TomcatServletWebServerFactory tomcat = new TomcatServletWebServerFactory()
         if (serverHttpPort != null) {
             Connector connector = new Connector(TomcatServletWebServerFactory.DEFAULT_PROTOCOL)
-            connector.setPort(serverHttpPort)
+            connector.port = serverHttpPort
             tomcat.addAdditionalTomcatConnectors(connector)
         }
         return tomcat

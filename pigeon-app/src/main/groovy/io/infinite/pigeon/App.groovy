@@ -51,18 +51,20 @@ class App implements CommandLineRunner {
 
     @BlackBox
     void runWithLogging() {
-        log.debug("Using Pigeon.json: " + pigeonConfigResource.getFile().getCanonicalPath())
+        log.info("Using Pigeon.json: " + pigeonConfigResource.getFile().getCanonicalPath())
         Configuration configuration = new ObjectMapper().readValue(pigeonConfigResource.getFile().getText(), Configuration.class)
         Set<InputMessage> delayedMessages = inputMessageRepository.findByMessageStatusList(MessageStatusSets.INPUT_RENEW_MESSAGE_STATUSES.value())
         delayedMessages.each {
             it.status = MessageStatuses.RENEWED.value()
         }
         inputMessageRepository.saveAll(delayedMessages)
+        inputMessageRepository.flush()
         Set<OutputMessage> renewedMessages = outputMessageRepository.findByMessageStatusList(MessageStatusSets.OUTPUT_RENEW_MESSAGE_STATUSES.value())
         renewedMessages.each {
             it.status = MessageStatuses.RENEWED.value()
         }
         outputMessageRepository.saveAll(renewedMessages)
+        outputMessageRepository.flush()
         configuration.inputQueues.each { inputQueue ->
             if (inputQueue.enabled) {
                 InputThread inputThread = new InputThread(inputQueue)
@@ -79,6 +81,7 @@ class App implements CommandLineRunner {
                             outputThreadRetry = new OutputThreadRetry(outputQueue, inputThread, applicationContext)
                             applicationContext.getAutowireCapableBeanFactory().autowireBean(outputThreadRetry)
                             outputThreadRetry.start()
+                            inputThread.outputThreadsRetry.add(outputThreadRetry)
                         }
                     }
                 }

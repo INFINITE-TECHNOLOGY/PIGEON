@@ -20,7 +20,7 @@ abstract class SenderDefault extends SenderAbstract {
     Integer DEFAULT_READ_TIMEOUT = 15000
 
     URLConnection openConnection(HttpRequest httpRequest) {
-        URL url = new URL(httpRequest.getUrl())
+        URL url = new URL(httpRequest.url)
         URLConnection urlConnection
         if (httpRequest.httpProperties?.get("proxyHost") != null && httpRequest.httpProperties?.get("proxyPort") != null) {
             Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(httpRequest.httpProperties.get("proxyHost") as String, httpRequest.httpProperties.get("proxyPort") as Integer))
@@ -29,20 +29,20 @@ abstract class SenderDefault extends SenderAbstract {
             urlConnection = url.openConnection()
         }
         if (httpRequest.httpProperties?.get("connectTimeout") != null && httpRequest.httpProperties?.get("connectTimeout") == true) {
-            urlConnection.setConnectTimeout(httpRequest.httpProperties?.get("connectTimeout") as int)
+            urlConnection.connectTimeout = httpRequest.httpProperties?.get("connectTimeout") as int
         } else {
-            urlConnection.setConnectTimeout(DEFAULT_CONNECT_TIMEOUT)
+            urlConnection.connectTimeout = DEFAULT_CONNECT_TIMEOUT
         }
         if (httpRequest.httpProperties?.get("readTimeout") != null && httpRequest.httpProperties?.get("readTimeout") == true) {
-            urlConnection.setReadTimeout(httpRequest.httpProperties?.get("readTimeout") as int)
+            urlConnection.readTimeout = httpRequest.httpProperties?.get("readTimeout") as int
         } else {
-            urlConnection.setReadTimeout(DEFAULT_READ_TIMEOUT)
+            urlConnection.readTimeout = DEFAULT_READ_TIMEOUT
         }
         if (httpRequest.httpProperties?.get("basicAuthEnabled") != null && httpRequest.httpProperties?.get("basicAuthEnabled") == true) {
             String username = httpRequest.httpProperties?.get("username")
             String password = httpRequest.httpProperties?.get("password")
             if (username != null && username != "" && password != null && password != "") {
-                String encoded = Base64.getEncoder().encodeToString((username + ":" + password).getBytes(StandardCharsets.UTF_8))
+                String encoded = Base64.encoder.encodeToString((username + ":" + password).getBytes(StandardCharsets.UTF_8))
                 httpRequest.headers.put("Authorization", "Basic " + encoded)
                 //urlConnection.setRequestProperty("Authorization", "Basic " + encoded)
             } else {
@@ -54,12 +54,12 @@ abstract class SenderDefault extends SenderAbstract {
 
     void sendHttpMessageWithUrlConnection(HttpRequest httpRequest, HttpResponse httpResponse, HttpURLConnection httpURLConnection) {
         try {
-            httpURLConnection.setRequestMethod(httpRequest.method)
-            for (headerName in httpRequest.getHeaders().keySet()) {
-                httpURLConnection.setRequestProperty(headerName, httpRequest.getHeaders().get(headerName))
+            httpURLConnection.requestMethod = httpRequest.method
+            for (headerName in httpRequest.headers.keySet()) {
+                httpURLConnection.setRequestProperty(headerName, httpRequest.headers.get(headerName))
             }
             if (httpRequest.method == "POST") {
-                httpURLConnection.setDoOutput(true)
+                httpURLConnection.doOutput = true
             }
             try {
                 httpURLConnection.connect()
@@ -73,40 +73,40 @@ abstract class SenderDefault extends SenderAbstract {
             }
             if (httpRequest.method == "POST") {
                 DataOutputStream dataOutputStream
-                dataOutputStream = new DataOutputStream(httpURLConnection.getOutputStream())
-                if (httpRequest.getBody() != null) {
-                    dataOutputStream.writeBytes(httpRequest.getBody())
+                dataOutputStream = new DataOutputStream(httpURLConnection.outputStream)
+                if (httpRequest.body != null) {
+                    dataOutputStream.writeBytes(httpRequest.body)
                 } else {
                     log.warn("POST request with empty body")
                 }
                 dataOutputStream.flush()
                 dataOutputStream.close()
             }
-            log.info("Successfully sent request data:")
-            log.info(httpRequest.toString())
+            log.trace("Successfully sent request data:")
+            log.trace(httpRequest.toString())
             Integer responseCode
-            responseCode = httpURLConnection.getResponseCode()
-            httpResponse.setStatus(responseCode)
+            responseCode = httpURLConnection.responseCode
+            httpResponse.status = responseCode
             InputStream inputStream = getInputStream(httpURLConnection)
             if (inputStream != null) {
-                httpResponse.setBody(inputStream.getText())
+                httpResponse.body = inputStream.text
             } else {
-                log.info("Null input stream")
+                log.trace("Null input stream")
             }
-            for (headerName in httpURLConnection.getHeaderFields().keySet()) {
+            for (headerName in httpURLConnection.headerFields.keySet()) {
                 httpResponse.getHeaders().put(headerName, httpURLConnection.getHeaderField(headerName))
             }
-            if ([HTTP_OK, HTTP_CREATED].contains(httpResponse.getStatus())) {
-                httpRequest.setRequestStatus(MessageStatuses.DELIVERED.value())
+            if ([HTTP_OK, HTTP_CREATED].contains(httpResponse.status)) {
+                httpRequest.requestStatus = MessageStatuses.DELIVERED.value()
             } else {
-                log.warn("Failed response status: " + httpResponse.getStatus())
-                httpRequest.setRequestStatus(MessageStatuses.FAILED_RESPONSE.value())
+                log.warn("Failed response status: " + httpResponse.status)
+                httpRequest.requestStatus = MessageStatuses.FAILED_RESPONSE.value()
             }
         } catch (Exception e) {
             fail(httpRequest, e, MessageStatuses.EXCEPTION)
         } finally {
-            log.info("Received response data:")
-            log.info(httpResponse.toString())
+            log.trace("Received response data:")
+            log.trace(httpResponse.toString())
             try {
                 httpURLConnection.disconnect()
                 closeInputStream(httpURLConnection)
@@ -119,23 +119,23 @@ abstract class SenderDefault extends SenderAbstract {
 
     InputStream getInputStream(HttpURLConnection httpURLConnection) {
         InputStream inputStream = null
-        if (httpURLConnection.getErrorStream() == null) {
-            if (httpURLConnection.getResponseCode() == HTTP_OK) {
-                inputStream = httpURLConnection.getInputStream()
+        if (httpURLConnection.errorStream == null) {
+            if (httpURLConnection.responseCode == HTTP_OK) {
+                inputStream = httpURLConnection.inputStream
             }
         } else {
-            inputStream = httpURLConnection.getErrorStream()
+            inputStream = httpURLConnection.errorStream
         }
         return inputStream
     }
 
     void closeInputStream(HttpURLConnection httpURLConnection) {
-        if (httpURLConnection.getErrorStream() == null) {
-            if (httpURLConnection.getResponseCode() == HTTP_OK) {
-                httpURLConnection.getInputStream().close()
+        if (httpURLConnection.errorStream == null) {
+            if (httpURLConnection.responseCode == HTTP_OK) {
+                httpURLConnection.inputStream.close()
             }
         } else {
-            httpURLConnection.getErrorStream().close()
+            httpURLConnection.errorStream.close()
         }
     }
 

@@ -18,11 +18,11 @@ class OutputThreadRetry extends OutputThread {
     OutputThreadRetry(OutputQueue outputQueue, InputThread inputThread, ApplicationContext applicationContext) {
         super(outputQueue, inputThread, applicationContext)
         senderThreadRobin.clear()
-        setName(getName() + "_RETRY")
+        name = name + "_RETRY"
         (1..outputQueue.retryThreadCount).each {
-            SenderThread senderThread = new SenderThread(this, it, applicationContext.getEnvironment().getProperty("pigeonOutPluginsDir"))
-            senderThread.setName(senderThread.getName() + "_RETRY")
-            applicationContext.getAutowireCapableBeanFactory().autowireBean(senderThread)
+            SenderThread senderThread = new SenderThread(this, it, applicationContext.environment.getProperty("pigeonOutPluginsDir"))
+            senderThread.name = senderThread.name + "_RETRY"
+            applicationContext.autowireCapableBeanFactory.autowireBean(senderThread)
             senderThreadRobin.add(senderThread)
             senderThread.start()
         }
@@ -38,15 +38,12 @@ class OutputThreadRetry extends OutputThread {
         return outputMessageRepository.masterQueryRetry(outputQueueName, MessageStatusSets.OUTPUT_RETRY_MESSAGE_STATUSES.value(), outputQueue.maxRetryCount, maxLastSendDate)
     }
 
-    @BlackBox(level = CarburetorLevel.METHOD)
+    @BlackBox(level = CarburetorLevel.ERROR)
     void mainCycle() {
-        Set<OutputMessage> outputMessages = masterQuery(outputQueue.getName())
+        Set<OutputMessage> outputMessages = masterQuery(outputQueue.name)
         if (outputMessages.size() > 0) {
             outputMessages.each { outputMessage ->
-                SenderThread senderThread = senderEnqueue(outputMessage)
-                synchronized (senderThread) {
-                    senderThread.notify()
-                }
+                senderEnqueue(outputMessage)
             }
         }
     }

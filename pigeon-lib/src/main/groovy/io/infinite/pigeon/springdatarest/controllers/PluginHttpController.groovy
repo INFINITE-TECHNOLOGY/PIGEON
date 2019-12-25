@@ -28,7 +28,7 @@ class PluginHttpController {
     @PostMapping(value = "/pigeon/plugins/input/http/*")
     @ResponseBody
     String post(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, @RequestBody String requestBody) {
-        String path = httpServletRequest.getRequestURI()
+        String path = httpServletRequest.requestURI
         String pluginName = path.substring(path.lastIndexOf('/') + 1)
         Binding binding = new Binding()
         binding.setVariable("httpServletRequest", httpServletRequest)
@@ -41,7 +41,7 @@ class PluginHttpController {
     @GetMapping(value = "/pigeon/plugins/input/http/*")
     @ResponseBody
     String get(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
-        String path = httpServletRequest.getRequestURI()
+        String path = httpServletRequest.requestURI
         String pluginName = path.substring(path.lastIndexOf('/') + 1)
         Binding binding = new Binding()
         binding.setVariable("httpServletRequest", httpServletRequest)
@@ -53,7 +53,7 @@ class PluginHttpController {
 
     @Memoized
     GroovyScriptEngine getGroovyScriptEngine() {
-        return new GroovyScriptEngine(pigeonInputPluginsHttpDir, this.getClass().getClassLoader())
+        return new GroovyScriptEngine(pigeonInputPluginsHttpDir, this.class.classLoader)
     }
 
 }

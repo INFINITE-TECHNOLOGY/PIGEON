@@ -14,10 +14,10 @@ abstract class SenderAbstract {
     abstract void sendHttpMessage(HttpRequest httpRequest, HttpResponse httpResponse)
 
     void fail(HttpRequest httpRequest, Exception connectException, MessageStatuses messageStatus) {
-        httpRequest.setExceptionString(new ExceptionUtils().stacktrace(connectException))
+        httpRequest.exceptionString = new ExceptionUtils().stacktrace(connectException)
         log.warn("Exception during sending:")
-        log.warn(httpRequest.getExceptionString())
-        httpRequest.setRequestStatus(messageStatus.value())
+        log.warn(httpRequest.exceptionString)
+        httpRequest.requestStatus = messageStatus.value()
     }
 
 }

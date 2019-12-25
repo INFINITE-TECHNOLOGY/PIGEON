@@ -32,7 +32,7 @@ class PluginRestController {
 
     @PostMapping(value = "/pigeon/plugins/input/rest/*")
     ResponseEntity<CustomResponse> post(HttpServletRequest httpServletRequest, @RequestBody String requestBody) {
-        String path = httpServletRequest.getRequestURI()
+        String path = httpServletRequest.requestURI
         String pluginName = path.substring(path.lastIndexOf('/') + 1)
         Binding binding = new Binding()
         binding.setVariable("httpServletRequest", httpServletRequest)
@@ -43,7 +43,7 @@ class PluginRestController {
 
     @GetMapping(value = "/pigeon/plugins/input/rest/*")
     ResponseEntity<CustomResponse> get(HttpServletRequest httpServletRequest) {
-        String path = httpServletRequest.getRequestURI()
+        String path = httpServletRequest.requestURI
         String pluginName = path.substring(path.lastIndexOf('/') + 1)
         Binding binding = new Binding()
         binding.setVariable("httpServletRequest", httpServletRequest)
@@ -54,7 +54,7 @@ class PluginRestController {
 
     @Memoized
     GroovyScriptEngine getGroovyScriptEngine() {
-        return new GroovyScriptEngine(pigeonInputPluginsRestDir, this.getClass().getClassLoader())
+        return new GroovyScriptEngine(pigeonInputPluginsRestDir, this.class.classLoader)
     }
 
 }

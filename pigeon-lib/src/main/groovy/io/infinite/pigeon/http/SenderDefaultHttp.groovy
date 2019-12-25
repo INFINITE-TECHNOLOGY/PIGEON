@@ -15,7 +15,7 @@ class SenderDefaultHttp extends SenderDefault {
         HttpURLConnection httpURLConnection = (HttpURLConnection) openConnection(httpRequest)
         log.warn("UNSECURE TEST PLAINTEXT HTTP CONNECTION")
         log.warn("DO NOT USE ON PRODUCTION")
-        if (httpURLConnection.getURL().getProtocol().contains("https")) {
+        if (httpURLConnection.getURL().protocol.contains("https")) {
             throw new PigeonException("Invalid protocol 'https' for SenderDefaultHttp in ${httpRequest.url}. Use 'http' protocol.")
         }
         super.sendHttpMessageWithUrlConnection(httpRequest, httpResponse, httpURLConnection)

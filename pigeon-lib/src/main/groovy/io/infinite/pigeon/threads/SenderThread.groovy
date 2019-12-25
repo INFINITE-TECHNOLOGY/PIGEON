@@ -33,9 +33,9 @@ class SenderThread extends Thread {
     GroovyScriptEngine groovyScriptEngine
 
     SenderThread(OutputThread outputThread, Integer id, String pigeonOutPluginsDir) {
-        super(new ThreadGroup("SENDER"), outputThread.getName() + "_SENDER_" + id)
+        super(new ThreadGroup("SENDER"), outputThread.name + "_SENDER_" + id)
         this.outputThread = outputThread
-        this.groovyScriptEngine = new GroovyScriptEngine(pigeonOutPluginsDir, this.getClass().getClassLoader())
+        this.groovyScriptEngine = new GroovyScriptEngine(pigeonOutPluginsDir, this.class.classLoader)
     }
 
     @Override
@@ -65,40 +65,40 @@ class SenderThread extends Thread {
             HttpRequest httpRequest = createHttpRequest(outputThread.outputQueue)
             binding.setVariable("outputMessage", outputMessage)
             binding.setVariable("outputQueue", outputThread.outputQueue)
-            binding.setVariable("inputMessage", outputMessage.getInputMessage())
+            binding.setVariable("inputMessage", outputMessage.inputMessage)
             binding.setVariable("httpRequest", httpRequest)
             /*\/\/\/\/\/\/\/\/*///<<<<conversion happens here
             try {
-                groovyScriptEngine.run(outputThread.outputQueue.getConversionModuleName(), binding)
+                groovyScriptEngine.run(outputThread.outputQueue.conversionModuleName, binding)
             } catch (Exception e) {
                 log.warn("Output plugin exception (Output Message ${outputMessage.id})")
-                outputMessage.setExceptionString(new ExceptionUtils().stacktrace(e))
-                outputMessage.setStatus(MessageStatuses.EXCEPTION.value())
-                outputMessageRepository.save(outputMessage)
+                outputMessage.exceptionString = new ExceptionUtils().stacktrace(e)
+                outputMessage.status = MessageStatuses.EXCEPTION.value()
+                outputMessageRepository.saveAndFlush(outputMessage)
                 return
             }
             /*/\/\/\/\/\/\/\/\*/
-            SenderAbstract senderAbstract = Class.forName(outputThread.outputQueue.getSenderClassName()).newInstance() as SenderAbstract
-            outputMessage.setStatus(MessageStatuses.SENDING.value())
-            outputMessage.setAttemptsCount(outputMessage.attemptsCount + 1)
-            outputMessageRepository.save(outputMessage)
+            SenderAbstract senderAbstract = Class.forName(outputThread.outputQueue.senderClassName).newInstance() as SenderAbstract
+            outputMessage.status = MessageStatuses.SENDING.value()
+            outputMessage.attemptsCount = outputMessage.attemptsCount + 1
+            outputMessage = outputMessageRepository.saveAndFlush(outputMessage)
             /*\/\/\/\/\/\/\/\/*/
             HttpResponse httpResponse = new HttpResponse()
             try {
                 senderAbstract.sendHttpMessage(httpRequest, httpResponse)//<<<<<<<<<<<sending message
             } finally {
-                outputMessage.getHttpLogs().add(createHttpLog(httpRequest, httpResponse, outputMessage))
+                outputMessage.httpLogs.add(createHttpLog(httpRequest, httpResponse, outputMessage))
             }
             /*/\/\/\/\/\/\/\/\*/
-            outputMessage.setStatus(httpRequest.requestStatus)
-            outputMessage.setExceptionString(httpRequest.exceptionString)
-            outputMessage.setLastSendTime(new Date())
+            outputMessage.status = httpRequest.requestStatus
+            outputMessage.exceptionString = httpRequest.exceptionString
+            outputMessage.lastSendTime = new Date()
         } catch (Exception e) {
-            outputMessage.setStatus(MessageStatuses.EXCEPTION.value())
-            outputMessage.setExceptionString(new ExceptionUtils().stacktrace(e))
+            outputMessage.status = MessageStatuses.EXCEPTION.value()
+            outputMessage.exceptionString = new ExceptionUtils().stacktrace(e)
             log.warn("Sending exception (Output Message ${outputMessage.id})")
         } finally {
-            outputMessageRepository.save(outputMessage)
+            outputMessageRepository.saveAndFlush(outputMessage)
         }
     }
 
@@ -117,14 +117,13 @@ class SenderThread extends Thread {
         httpLog.responseBody = httpResponse?.body
         httpLog.responseStatus = httpResponse?.status
         httpLog.outputMessage = outputMessage
-        httpLog.senderThreadName = getName()
-        httpLogRepository.save(httpLog)
+        httpLog.senderThreadName = name
         return httpLog
     }
 
     @Override
     String toString() {
-        return "Thread: " + getName() + "; OutputQueue: " + outputThread.outputQueue.toString() + "; messages: " + sendingQueue.toString()
+        return "Thread: " + name + "; OutputQueue: " + outputThread.outputQueue.toString() + "; messages: " + sendingQueue.toString()
     }
 
 }

@@ -29,7 +29,7 @@ class EnqueueController {
     @PostMapping(value = "/pigeon/enqueue")
     @ResponseBody
     EnqueueResponse post(HttpServletRequest httpServletRequest) {
-        String payload = httpServletRequest.getReader().getText()
+        String payload = httpServletRequest.reader.text
         return any(httpServletRequest, payload)
     }
 
@@ -56,7 +56,7 @@ class EnqueueController {
         inputMessage.inputQueueName = inputQueueName
         inputMessage.payload = payload
         inputMessage.status = MessageStatuses.NEW
-        inputMessage.queryParams = new JsonBuilder(httpServletRequest.getParameterMap()).toString()
+        inputMessage.queryParams = new JsonBuilder(httpServletRequest.parameterMap).toString()
         inputMessageRepository.saveAndFlush(inputMessage)
         EnqueueResponse enqueueResponse = new EnqueueResponse()
         enqueueResponse.result = "Enqueued successfully"

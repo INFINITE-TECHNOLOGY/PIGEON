@@ -9,7 +9,6 @@ import io.infinite.pigeon.other.MessageStatuses
 import io.infinite.pigeon.springdatarest.entities.InputMessage
 import io.infinite.pigeon.springdatarest.entities.OutputMessage
 import io.infinite.pigeon.springdatarest.repositories.InputMessageRepository
-import io.infinite.pigeon.springdatarest.repositories.OutputMessageRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.DataAccessException
 
@@ -21,59 +20,69 @@ class InputThread extends Thread {
 
     List<OutputThreadNormal> outputThreadsNormal = []
 
+    List<OutputThreadRetry> outputThreadsRetry = []
+
     @Autowired
     InputMessageRepository inputMessageRepository
 
-    @Autowired
-    OutputMessageRepository outputMessageRepository
-
     @BlackBox
     InputThread(InputQueue inputQueue) {
-        super(new ThreadGroup("INPUT"), inputQueue.getName() + "_INPUT")
+        super(new ThreadGroup("INPUT"), inputQueue.name + "_INPUT")
         this.inputQueue = inputQueue
     }
 
-    @BlackBox(level = CarburetorLevel.METHOD)
+    @BlackBox(level = CarburetorLevel.ERROR)
     void mainCycle() {
-        Set<InputMessage> inputMessages = inputMessageRepository.findByInputQueueNameAndStatus(inputQueue.getName(), MessageStatusSets.INPUT_NEW_MESSAGE_STATUSES.value())
+        Set<InputMessage> inputMessages = inputMessageRepository.findByInputQueueNameAndStatus(inputQueue.name, MessageStatusSets.INPUT_NEW_MESSAGE_STATUSES.value())
         if (inputMessages.size() > 0) {
             inputMessages.each { inputMessage ->
                 splitInput(inputMessage)
+            }
+        }
+    }
+
+    @BlackBox(level = CarburetorLevel.ERROR)
+    OutputMessage createOutputMessage(InputMessage inputMessage, OutputThread outputThread, MessageStatuses messageStatus) {
+        OutputMessage outputMessage = new OutputMessage(inputMessage)
+        outputMessage.outputQueueName = outputThread.outputQueue.name
+        outputMessage.outputThreadName = outputThread.name
+        outputMessage.url = outputThread.outputQueue.url
+        outputMessage.status = messageStatus.value()
+        return outputMessage
+    }
+
+    @BlackBox(level = CarburetorLevel.METHOD)
+    void splitInput(InputMessage inputMessage) {
+        if (inputMessageRepository.findDuplicates(inputMessage.sourceName, inputMessage.inputQueueName, inputMessage.externalId, inputMessage.id, MessageStatuses.SPLIT.value()) == 0) {
+            if (inputMessage.status != MessageStatuses.RENEWED.value()) {
                 outputThreadsNormal.each { outputThreadNormal ->
+                    inputMessage.outputMessages.add(
+                            createOutputMessage(inputMessage, outputThreadNormal, MessageStatuses.NEW)
+                    )
+                }
+            } else {
+                outputThreadsRetry.each { outputThreadRetry ->
+                    inputMessage.outputMessages.add(
+                            createOutputMessage(inputMessage, outputThreadRetry, MessageStatuses.RENEWED)
+                    )
+                }
+            }
+            inputMessage.status = MessageStatuses.SPLIT.value()
+        } else {
+            log.warn(String.format("Input Message with same externalId %s and different id already exists in status %s for new message with id %s for source %s and inputQueueName %s", inputMessage.externalId, MessageStatuses.SPLIT.value(), inputMessage.id, inputMessage.sourceName, inputMessage.inputQueueName))
+            inputMessage.status = MessageStatuses.DUPLICATE.value()
+        }
+        inputMessage = inputMessageRepository.saveAndFlush(inputMessage)
+        inputMessage.outputMessages.each { outputMessage ->
+            outputThreadsNormal.each { outputThreadNormal ->
+                if (outputMessage.outputThreadName == outputThreadNormal.name) {
+                    outputThreadNormal.outputMessages.put(outputMessage)
                     synchronized (outputThreadNormal) {
                         outputThreadNormal.notify()
                     }
                 }
             }
         }
-    }
-
-    @BlackBox(level = CarburetorLevel.ERROR)
-    void splitInput(InputMessage inputMessage) {
-        Set<OutputMessage> outputMessages = new HashSet<>()
-        if (inputMessageRepository.findDuplicates(inputMessage.sourceName, inputMessage.inputQueueName, inputMessage.externalId, inputMessage.id, MessageStatuses.SPLIT.value()) == 0) {
-            outputThreadsNormal.each { outputThreadNormal ->
-                OutputMessage outputMessage = new OutputMessage(inputMessage)
-                outputMessage.setOutputQueueName(outputThreadNormal.outputQueue.name)
-                outputMessage.setUrl(outputThreadNormal.outputQueue.url)
-                outputMessage.setInputMessage(inputMessage)
-                outputMessages.add(outputMessage)
-                if (inputMessage.status != MessageStatuses.RENEWED.value()) {
-                    outputMessage.setStatus(MessageStatuses.NEW.value())
-                    outputMessageRepository.save(outputMessage)
-                    outputThreadNormal.messages.put(outputMessage)
-                } else {
-                    outputMessage.setStatus(MessageStatuses.RENEWED.value())
-                    outputMessageRepository.save(outputMessage)
-                }
-            }
-            inputMessage.getOutputMessages().addAll(outputMessages)
-            inputMessage.setStatus(MessageStatuses.SPLIT.value())
-        } else {
-            log.warn(String.format("Input Message with same externalId %s and different id already exists in status %s for new message with id %s for source %s and inputQueueName %s", inputMessage.externalId, MessageStatuses.SPLIT.value(), inputMessage.id, inputMessage.sourceName, inputMessage.inputQueueName))
-            inputMessage.setStatus(MessageStatuses.DUPLICATE.value())
-        }
-        inputMessageRepository.save(inputMessage)
     }
 
     @Override

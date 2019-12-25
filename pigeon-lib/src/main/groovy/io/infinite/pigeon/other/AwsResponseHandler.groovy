@@ -14,7 +14,7 @@ class AwsResponseHandler implements HttpResponseHandler<AmazonWebServiceResponse
     @Override
     AmazonWebServiceResponse<String> handle(HttpResponse response) throws IOException {
         AmazonWebServiceResponse<String> awsResponse = new AmazonWebServiceResponse<>()
-        awsResponse.setResult((String) IOUtils.toString(response.getContent()))
+        awsResponse.result = (String) IOUtils.toString(response.content)
         return awsResponse
     }
 

@@ -5,8 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 import org.springframework.data.rest.core.annotation.RepositoryRestResource
-import org.springframework.transaction.annotation.Propagation
-import org.springframework.transaction.annotation.Transactional
 
 @RepositoryRestResource
 interface HttpLogRepository extends JpaRepository<HttpLog, Long> {
@@ -16,7 +14,6 @@ interface HttpLogRepository extends JpaRepository<HttpLog, Long> {
         join o.inputMessage i
         where i.externalId = :externalId and i.sourceName = :sourceName
     """)
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
     Set<HttpLog> findByExternalIdAndSourceName(
             @Param("externalId") String externalId,
             @Param("sourceName") String sourceName
@@ -27,7 +24,6 @@ interface HttpLogRepository extends JpaRepository<HttpLog, Long> {
         join o.inputMessage i
         where i.id = :inputMessageId
     """)
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
     Set<HttpLog> findByInputMessageId(
             @Param("inputMessageId") Long inputMessageId
     )

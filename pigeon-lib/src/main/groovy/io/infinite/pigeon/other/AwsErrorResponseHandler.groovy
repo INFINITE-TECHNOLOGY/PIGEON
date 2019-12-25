@@ -15,12 +15,12 @@ class AwsErrorResponseHandler implements HttpResponseHandler<AmazonServiceExcept
     AmazonServiceException handle(HttpResponse errorResponse) throws IOException {
         String requestId = errorResponse.getHeaders().get(Headers.REQUEST_ID)
         String extendedRequestId = errorResponse.getHeaders().get(Headers.EXTENDED_REQUEST_ID)
-        AmazonS3Exception ase = new AmazonS3Exception(errorResponse.getStatusText())
-        ase.setStatusCode(errorResponse.getStatusCode())
-        ase.setRequestId(requestId)
-        ase.setExtendedRequestId(extendedRequestId)
+        AmazonS3Exception ase = new AmazonS3Exception(errorResponse.statusText)
+        ase.statusCode = errorResponse.statusCode
+        ase.requestId = requestId
+        ase.extendedRequestId = extendedRequestId
         fillInErrorType(ase, errorResponse)
-        ase.setErrorMessage(((String) IOUtils.toString(errorResponse.getContent())))
+        ase.errorMessage = ((String) IOUtils.toString(errorResponse.content))
         ase.httpHeaders = errorResponse.headers
         return ase
     }
@@ -45,10 +45,10 @@ class AwsErrorResponseHandler implements HttpResponseHandler<AmazonServiceExcept
      *            type to set.
      */
     private void fillInErrorType(AmazonServiceException ase, HttpResponse errorResponse) {
-        if (errorResponse.getStatusCode() >= 500) {
-            ase.setErrorType(AmazonServiceException.ErrorType.Service)
+        if (errorResponse.statusCode >= 500) {
+            ase.errorType = AmazonServiceException.ErrorType.Service
         } else {
-            ase.setErrorType(AmazonServiceException.ErrorType.Client)
+            ase.errorType = AmazonServiceException.ErrorType.Client
         }
     }
 

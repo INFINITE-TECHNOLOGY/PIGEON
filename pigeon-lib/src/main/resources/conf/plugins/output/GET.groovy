@@ -12,3 +12,4 @@ HttpRequest httpRequest = binding.getVariable("httpRequest") as HttpRequest
 
 httpRequest.method = "GET"
 httpRequest.url = httpRequest.url + (inputMessage.payload ?: "")
+Thread.sleep(2000)
