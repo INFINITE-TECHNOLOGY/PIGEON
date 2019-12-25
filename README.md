@@ -22,6 +22,15 @@
 3) Dispatch the resulting messages ansynchronously to one or more recipients (URLs) using a variety of HTTP connection and authentication mechanisms (such as AWS v4 signature)
 4) If needed retry sending the message several times
 
+## Why?
+
+`Pigeon` is an enterprise-grade software created within banking/fintech industry.
+It is having some useful features to help survive in the daily routines and bureaucracy of large organizations:
+- DB agnostic (tested and used with MySQL, PostgreSQL and most importantly - with MSSQL which is very lock sensitive)
+- Durable (e.g. handles DB restarts, MySQL session timeouts, etc)
+- Plugins - develop or change plugins without deploying the new app version
+- Predictable - allows to explicitly control number of concurrent threads and connections
+
 ## Documentation
 
 * [**Pigeon Documentation**](https://github.com/INFINITE-TECHNOLOGY/PIGEON/wiki)
