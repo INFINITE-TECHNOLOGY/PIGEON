@@ -30,6 +30,7 @@ It is having some useful features to help survive in the daily routines and bure
 - Durable (e.g. handles DB restarts, MySQL session timeouts, etc)
 - Plugins - develop or change plugins without deploying the new app version
 - Predictable - allows to explicitly control number of concurrent threads and connections
+- Situation-friendly - as a Client software, `Pigeon` supports self-signed server HTTPS certificates, wrong server HTTPS certificates and even HTTP.
 
 ## Documentation
 
