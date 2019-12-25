@@ -26,11 +26,18 @@
 
 `Pigeon` is an enterprise-grade software created within banking/fintech industry.
 It is having some useful features to help survive in the daily routines and bureaucracy of large organizations:
-- DB agnostic (tested and used with MySQL, PostgreSQL and most importantly - with MSSQL which is very lock sensitive)
+- DB agnostic (tested and used with MySQL, PostgreSQL and most importantly - with MSSQL which is very lock sensitive + AD authentication support)
 - Durable (e.g. handles DB restarts, MySQL session timeouts, etc)
+- Supports retries when remote server was down
 - Plugins - develop or change plugins without deploying the new app version
 - Predictable - allows to explicitly control number of concurrent threads and connections
-- Situation-friendly - as a Client software, `Pigeon` supports self-signed server HTTPS certificates, wrong server HTTPS certificates and even HTTP.
+- Situation-friendly - as a Client software, `Pigeon` supports self-signed server HTTPS certificates, wrong server HTTPS certificates and even HTTP
+- User-friendly - raw HTTP log viewing in browser without special character escaping
+- Outstanding logging capabilities - using [Bobbin](https://github.com/INFINITE-TECHNOLOGY/PIGEON) and [BlackBox](https://github.com/INFINITE-TECHNOLOGY/BLACKBOX)
+- Easy installation
+- Complete documentation
+- Simple configuration using only 1 file
+- Supports enterprise security features
 
 ## Documentation
 
