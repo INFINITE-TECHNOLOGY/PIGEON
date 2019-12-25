@@ -8,8 +8,8 @@ import io.infinite.carburetor.CarburetorLevel
 import io.infinite.pigeon.conf.OutputQueue
 import io.infinite.pigeon.other.MessageStatusSets
 import io.infinite.pigeon.springdatarest.entities.OutputMessage
+import io.infinite.supplies.ast.exceptions.ExceptionUtils
 import org.springframework.context.ApplicationContext
-import org.springframework.dao.DataAccessException
 
 @BlackBox
 @Slf4j
@@ -55,9 +55,10 @@ class OutputThreadRetry extends OutputThread {
             try {
                 mainCycle()
                 sleep(outputQueue.pollPeriodMillisecondsRetry)
-            } catch (DataAccessException dataAccessException) {
-                log.warn("Waiting for recovery of DataAccessException", dataAccessException)
-                sleep(outputQueue.recoveryTryPeriodMillisecondsRetry)
+            } catch (Exception e) {
+                println("Output retry thread exception.")
+                println(new ExceptionUtils().stacktrace(e))
+                log.error("Output retry thread exception.", e)
             }
         }
     }

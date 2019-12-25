@@ -42,7 +42,13 @@ class SenderThread extends Thread {
     void run() {
         while (true) {
             while (!sendingQueue.isEmpty()) {
-                sendMessage(sendingQueue.poll())
+                try {
+                    sendMessage(sendingQueue.poll())
+                } catch (Exception e) {
+                    println("Sender thread exception.")
+                    println(new ExceptionUtils().stacktrace(e))
+                    log.error("Sender thread exception.", e)
+                }
             }
             synchronized (this) {
                 this.wait()

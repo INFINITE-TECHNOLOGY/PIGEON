@@ -9,6 +9,7 @@ import io.infinite.pigeon.other.MessageStatuses
 import io.infinite.pigeon.springdatarest.entities.InputMessage
 import io.infinite.pigeon.springdatarest.entities.OutputMessage
 import io.infinite.pigeon.springdatarest.repositories.InputMessageRepository
+import io.infinite.supplies.ast.exceptions.ExceptionUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.DataAccessException
 
@@ -92,9 +93,10 @@ class InputThread extends Thread {
             try {
                 mainCycle()
                 sleep(inputQueue.pollPeriodMilliseconds)
-            } catch (DataAccessException dataAccessException) {
-                log.warn("Waiting for recovery of DataAccessException", dataAccessException)
-                sleep(inputQueue.recoveryTryPeriodMilliseconds)
+            } catch (Exception e) {
+                println("Input thread exception.")
+                println(new ExceptionUtils().stacktrace(e))
+                log.error("Input thread exception.", e)
             }
         }
     }
