@@ -3,9 +3,9 @@ package io.infinite.pigeon.threads
 import groovy.util.logging.Slf4j
 import io.infinite.blackbox.BlackBox
 import io.infinite.pigeon.conf.OutputQueue
-import io.infinite.pigeon.http.HttpRequest
-import io.infinite.pigeon.http.HttpResponse
-import io.infinite.pigeon.http.SenderAbstract
+import io.infinite.http.HttpRequest
+import io.infinite.http.HttpResponse
+import io.infinite.http.SenderAbstract
 import io.infinite.pigeon.other.MessageStatuses
 import io.infinite.pigeon.springdatarest.entities.HttpLog
 import io.infinite.pigeon.springdatarest.entities.OutputMessage

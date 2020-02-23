@@ -5,9 +5,9 @@ import groovy.util.logging.Slf4j
 import io.infinite.ascend.validation.model.AscendHttpRequest
 import io.infinite.blackbox.BlackBox
 import io.infinite.carburetor.CarburetorLevel
-import io.infinite.pigeon.http.HttpRequest
-import io.infinite.pigeon.http.HttpResponse
-import io.infinite.pigeon.http.SenderDefaultHttps
+import io.infinite.http.HttpRequest
+import io.infinite.http.HttpResponse
+import io.infinite.http.SenderDefaultHttps
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken
 import org.springframework.web.filter.OncePerRequestFilter
