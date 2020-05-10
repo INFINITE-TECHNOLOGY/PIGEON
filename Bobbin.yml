@@ -1,0 +1,18 @@
+destinations:
+  - name: io.infinite.bobbin.config.ConsoleDestinationConfig
+    levels: [warn, error, info]
+  - name: io.infinite.bobbin.config.FileDestinationConfig
+    levels: [warn, error]
+    fileName: ("./LOGS/ALL/WARNINGS_AND_ERRORS_${date}.log")
+  - name: io.infinite.bobbin.config.FileDestinationConfig
+    packages: [org.springframework.web]
+    fileName: ("./LOGS/SPRING_WEB/SPRING_WEB_${date}.log")
+  - name: io.infinite.bobbin.config.FileDestinationConfig
+    packages: [io.infinite]
+    fileName: ("./LOGS/THREADS/${threadGroupName}/${threadName}/${level}/${threadName}_${level}_${date}.log")
+  - name: io.infinite.bobbin.config.FileDestinationConfig
+    packages: [conf.plugins.output]
+    fileName: ("./LOGS/PLUGINS/OUTPUT/${className}/${level}/${threadName}_${level}_${date}.log")
+  - name: io.infinite.bobbin.config.FileDestinationConfig
+    packages: [conf.plugins.input]
+    fileName: ("./LOGS/PLUGINS/INPUT/${className}/${level}/${className}_${level}.log")

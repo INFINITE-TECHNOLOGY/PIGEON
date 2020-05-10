@@ -1,10 +1,10 @@
-package io.infinite.pigeon.springdatarest.controllers
+package io.infinite.pigeon.mvc.controllers
 
 
 import groovy.util.logging.Slf4j
 import io.infinite.blackbox.BlackBox
-import io.infinite.pigeon.springdatarest.entities.HttpLog
-import io.infinite.pigeon.springdatarest.repositories.HttpLogRepository
+import io.infinite.pigeon.mvc.entities.HttpLog
+import io.infinite.pigeon.mvc.repositories.HttpLogRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Controller
@@ -24,7 +24,7 @@ class ReadableHttpLogsController {
     @Autowired
     HttpLogRepository httpLogRepository
 
-    @GetMapping(value = "/pigeon/readableHttpLogs")
+    @GetMapping(value = "/readableHttpLogs")
     @ResponseBody
     Set<HttpLog> get(HttpServletRequest httpServletRequest) {
         String externalId = httpServletRequest.getParameter("externalId")
@@ -38,7 +38,7 @@ class ReadableHttpLogsController {
         return httpLogs
     }
 
-    @GetMapping(value = "/pigeon/readableHttpLogs/search/findByInputMessageId")
+    @GetMapping(value = "/readableHttpLogs/search/findByInputMessageId")
     @ResponseBody
     Set<HttpLog> findByInputMessageId(HttpServletRequest httpServletRequest) {
         String inputMessageId = httpServletRequest.getParameter("inputMessageId")

@@ -4,8 +4,8 @@ import io.infinite.supplies.ast.exceptions.RuntimeException
 
 class PigeonException extends RuntimeException {
 
-    PigeonException(String var1) {
-        super(var1)
+    PigeonException(String message) {
+        super(message)
     }
 
 }

@@ -1,9 +1,9 @@
-package io.infinite.pigeon.springdatarest.controllers
+package io.infinite.pigeon.mvc.controllers
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import groovy.transform.Memoized
 import io.infinite.blackbox.BlackBox
-import io.infinite.pigeon.springdatarest.repositories.InputMessageRepository
+import io.infinite.pigeon.mvc.repositories.InputMessageRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.ResponseEntity
@@ -30,7 +30,7 @@ class PluginRestController {
     @Autowired
     InputMessageRepository inputMessageRepository
 
-    @PostMapping(value = "/pigeon/plugins/input/rest/*")
+    @PostMapping(value = "/plugins/input/rest/*")
     ResponseEntity<CustomResponse> post(HttpServletRequest httpServletRequest, @RequestBody String requestBody) {
         String path = httpServletRequest.requestURI
         String pluginName = path.substring(path.lastIndexOf('/') + 1)
@@ -41,7 +41,7 @@ class PluginRestController {
         return groovyScriptEngine.run(pluginName + ".groovy", binding) as ResponseEntity<CustomResponse>
     }
 
-    @GetMapping(value = "/pigeon/plugins/input/rest/*")
+    @GetMapping(value = "/plugins/input/rest/*")
     ResponseEntity<CustomResponse> get(HttpServletRequest httpServletRequest) {
         String path = httpServletRequest.requestURI
         String pluginName = path.substring(path.lastIndexOf('/') + 1)

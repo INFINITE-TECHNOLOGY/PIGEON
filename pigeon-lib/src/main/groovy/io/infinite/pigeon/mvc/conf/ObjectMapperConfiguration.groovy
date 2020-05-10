@@ -1,4 +1,4 @@
-package io.infinite.pigeon.springdatarest.configurations
+package io.infinite.pigeon.mvc.conf
 
 
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -36,4 +36,5 @@ class ObjectMapperConfiguration {
         ObjectMapper yamlObjectMapper = new ObjectMapper(yamlFactory)
         return yamlObjectMapper
     }
+
 }

@@ -2,15 +2,15 @@ package io.infinite.pigeon.threads
 
 import groovy.util.logging.Slf4j
 import io.infinite.blackbox.BlackBox
-import io.infinite.pigeon.conf.OutputQueue
+import io.infinite.pigeon.model.OutputQueue
 import io.infinite.http.HttpRequest
 import io.infinite.http.HttpResponse
 import io.infinite.http.SenderAbstract
 import io.infinite.pigeon.other.MessageStatuses
-import io.infinite.pigeon.springdatarest.entities.HttpLog
-import io.infinite.pigeon.springdatarest.entities.OutputMessage
-import io.infinite.pigeon.springdatarest.repositories.HttpLogRepository
-import io.infinite.pigeon.springdatarest.repositories.OutputMessageRepository
+import io.infinite.pigeon.mvc.entities.HttpLog
+import io.infinite.pigeon.mvc.entities.OutputMessage
+import io.infinite.pigeon.mvc.repositories.HttpLogRepository
+import io.infinite.pigeon.mvc.repositories.OutputMessageRepository
 import io.infinite.supplies.ast.exceptions.ExceptionUtils
 import org.springframework.beans.factory.annotation.Autowired
 
@@ -91,7 +91,7 @@ class SenderThread extends Thread {
             /*\/\/\/\/\/\/\/\/*/
             HttpResponse httpResponse = new HttpResponse()
             try {
-                senderAbstract.sendHttpMessage(httpRequest, httpResponse)//<<<<<<<<<<<sending message
+                httpResponse = senderAbstract.sendHttpMessage(httpRequest)//<<<<<<<<<<<sending message
             } finally {
                 outputMessage.httpLogs.add(createHttpLog(httpRequest, httpResponse, outputMessage))
             }

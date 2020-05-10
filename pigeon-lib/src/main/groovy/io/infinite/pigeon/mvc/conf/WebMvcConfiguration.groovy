@@ -1,4 +1,4 @@
-package io.infinite.pigeon.springdatarest.configurations
+package io.infinite.pigeon.mvc.conf
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.apache.catalina.connector.Connector
@@ -33,7 +33,6 @@ class WebMvcConfiguration implements WebMvcConfigurer {
     @Override
     void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
         configurer
-                .favorPathExtension(false)
                 .favorParameter(true)
                 .ignoreAcceptHeader(false)
                 .mediaType(MediaType.APPLICATION_JSON.subtype, MediaType.APPLICATION_JSON)

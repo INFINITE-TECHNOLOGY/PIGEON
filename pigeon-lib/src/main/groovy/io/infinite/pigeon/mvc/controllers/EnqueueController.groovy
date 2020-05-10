@@ -1,11 +1,11 @@
-package io.infinite.pigeon.springdatarest.controllers
+package io.infinite.pigeon.mvc.controllers
 
 import groovy.json.JsonBuilder
 import groovy.util.logging.Slf4j
 import io.infinite.blackbox.BlackBox
 import io.infinite.pigeon.other.MessageStatuses
-import io.infinite.pigeon.springdatarest.entities.InputMessage
-import io.infinite.pigeon.springdatarest.repositories.InputMessageRepository
+import io.infinite.pigeon.mvc.entities.InputMessage
+import io.infinite.pigeon.mvc.repositories.InputMessageRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Controller
@@ -26,7 +26,7 @@ class EnqueueController {
     @Autowired
     InputMessageRepository inputMessageRepository
 
-    @PostMapping(value = "/pigeon/enqueue")
+    @PostMapping(value = "/enqueue")
     @ResponseBody
     EnqueueResponse post(HttpServletRequest httpServletRequest) {
         String payload = httpServletRequest.reader.text
@@ -36,7 +36,7 @@ class EnqueueController {
     @Value('${disableDuplicateChecks:false}')
     Boolean disableDuplicateChecks
 
-    @GetMapping(value = "/pigeon/enqueue")
+    @GetMapping(value = "/enqueue")
     @ResponseBody
     EnqueueResponse get(HttpServletRequest httpServletRequest) {
         String payload = httpServletRequest.getParameter("payload")

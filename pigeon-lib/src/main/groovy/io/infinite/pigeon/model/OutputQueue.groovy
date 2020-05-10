@@ -1,4 +1,4 @@
-package io.infinite.pigeon.conf
+package io.infinite.pigeon.model
 
 import groovy.transform.ToString
 

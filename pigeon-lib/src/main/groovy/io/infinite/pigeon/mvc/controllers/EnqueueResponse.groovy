@@ -1,4 +1,4 @@
-package io.infinite.pigeon.springdatarest.controllers
+package io.infinite.pigeon.mvc.controllers
 
 import groovy.transform.ToString
 

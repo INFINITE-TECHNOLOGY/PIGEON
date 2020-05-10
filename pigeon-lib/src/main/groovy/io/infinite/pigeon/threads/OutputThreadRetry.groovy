@@ -5,9 +5,9 @@ import groovy.transform.CompileDynamic
 import groovy.util.logging.Slf4j
 import io.infinite.blackbox.BlackBox
 import io.infinite.carburetor.CarburetorLevel
-import io.infinite.pigeon.conf.OutputQueue
+import io.infinite.pigeon.model.OutputQueue
 import io.infinite.pigeon.other.MessageStatusSets
-import io.infinite.pigeon.springdatarest.entities.OutputMessage
+import io.infinite.pigeon.mvc.entities.OutputMessage
 import io.infinite.supplies.ast.exceptions.ExceptionUtils
 import org.springframework.context.ApplicationContext
 

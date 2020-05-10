@@ -3,12 +3,12 @@ package io.infinite.pigeon.threads
 import groovy.util.logging.Slf4j
 import io.infinite.blackbox.BlackBox
 import io.infinite.carburetor.CarburetorLevel
-import io.infinite.pigeon.conf.InputQueue
+import io.infinite.pigeon.model.InputQueue
 import io.infinite.pigeon.other.MessageStatusSets
 import io.infinite.pigeon.other.MessageStatuses
-import io.infinite.pigeon.springdatarest.entities.InputMessage
-import io.infinite.pigeon.springdatarest.entities.OutputMessage
-import io.infinite.pigeon.springdatarest.repositories.InputMessageRepository
+import io.infinite.pigeon.mvc.entities.InputMessage
+import io.infinite.pigeon.mvc.entities.OutputMessage
+import io.infinite.pigeon.mvc.repositories.InputMessageRepository
 import io.infinite.supplies.ast.exceptions.ExceptionUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.DataAccessException

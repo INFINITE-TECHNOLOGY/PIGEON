@@ -1,10 +1,10 @@
-package io.infinite.pigeon.conf
+package io.infinite.pigeon.mvc.controllers
 
 import groovy.transform.ToString
 
 @ToString(includeNames = true, includeFields = true)
-class Configuration {
+class CustomResponse {
 
-    InputQueue[] inputQueues
+    Object response
 
 }

@@ -1,9 +1,9 @@
-package io.infinite.pigeon.springdatarest.controllers
+package io.infinite.pigeon.mvc.controllers
 
 
 import groovy.transform.Memoized
 import io.infinite.blackbox.BlackBox
-import io.infinite.pigeon.springdatarest.repositories.InputMessageRepository
+import io.infinite.pigeon.mvc.repositories.InputMessageRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Controller
@@ -25,7 +25,7 @@ class PluginHttpController {
     @Autowired
     InputMessageRepository inputMessageRepository
 
-    @PostMapping(value = "/pigeon/plugins/input/http/*")
+    @PostMapping(value = "/plugins/input/http/*")
     @ResponseBody
     String post(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, @RequestBody String requestBody) {
         String path = httpServletRequest.requestURI
@@ -38,7 +38,7 @@ class PluginHttpController {
         return groovyScriptEngine.run(pluginName + ".groovy", binding)
     }
 
-    @GetMapping(value = "/pigeon/plugins/input/http/*")
+    @GetMapping(value = "/plugins/input/http/*")
     @ResponseBody
     String get(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
         String path = httpServletRequest.requestURI

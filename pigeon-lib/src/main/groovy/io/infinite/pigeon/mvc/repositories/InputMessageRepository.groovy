@@ -1,6 +1,6 @@
-package io.infinite.pigeon.springdatarest.repositories
+package io.infinite.pigeon.mvc.repositories
 
-import io.infinite.pigeon.springdatarest.entities.InputMessage
+import io.infinite.pigeon.mvc.entities.InputMessage
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
@@ -9,22 +9,25 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource
 @RepositoryRestResource
 interface InputMessageRepository extends JpaRepository<InputMessage, Long> {
 
-    @Query("""select i from InputMessage i where
-        inputQueueName = :inputQueueName and
-        status in :messageStatusList""")
+    @Query("""select i from InputMessage i
+        where inputQueueName = :inputQueueName
+        and status in :messageStatusList""")
     Set<InputMessage> findByInputQueueNameAndStatus(
             @Param("inputQueueName") String inputQueueName,
             @Param("messageStatusList") List<String> messageStatusList
     )
 
     Set<InputMessage> findByExternalIdAndSourceName(
-            @Param("externalId") String externalId,
-            @Param("sourceName") String sourceName
+             String externalId,
+             String sourceName
     )
 
-    @Query("""select count(i.id) from InputMessage i where sourceName = :sourceName 
+    @Query("""select count(i.id) from InputMessage i
+            where sourceName = :sourceName 
             and inputQueueName = :inputQueueName
-            and externalId = :externalId and id <> :id and status = :status""")
+            and externalId = :externalId
+            and id <> :id
+            and status = :status""")
     Integer findDuplicates(
             @Param("sourceName") String sourceName,
             @Param("inputQueueName") String inputQueueName,
@@ -33,7 +36,10 @@ interface InputMessageRepository extends JpaRepository<InputMessage, Long> {
             @Param("status") String status
     )
 
-    @Query("""select i from InputMessage i where status in :messageStatusList""")
-    Set<InputMessage> findByMessageStatusList(@Param("messageStatusList") List<String> messageStatusList)
+    @Query("""select i from InputMessage i
+            where status in :messageStatusList""")
+    Set<InputMessage> findByMessageStatusList(
+            @Param("messageStatusList") List<String> messageStatusList
+    )
 
 }
