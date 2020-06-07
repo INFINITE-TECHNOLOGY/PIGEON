@@ -11,6 +11,9 @@ import io.infinite.pigeon.other.RoundRobin
 import io.infinite.pigeon.repositories.OutputMessageRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationContext
+import org.springframework.stereotype.Component
+
+import javax.annotation.PostConstruct
 
 @BlackBox(level = CarburetorLevel.METHOD)
 @Slf4j
@@ -33,6 +36,10 @@ abstract class OutputThread extends Thread {
         super(new ThreadGroup("OUTPUT"), outputQueue.name + "_OUTPUT")
         this.outputQueue = outputQueue
         this.inputThread = inputThread
+    }
+
+    @PostConstruct
+    void initSenderThreads() {
         (1..outputQueue.normalThreadCount).each {
             SenderThread senderThread = new SenderThread(this, it)
             applicationContext.autowireCapableBeanFactory.autowireBean(senderThread)

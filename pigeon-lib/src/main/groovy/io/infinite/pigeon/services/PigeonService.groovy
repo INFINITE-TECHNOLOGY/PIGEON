@@ -42,6 +42,9 @@ class PigeonService {
     @Value('${pigeonConfFile}')
     FileSystemResource pigeonConfigResource
 
+    @Value('${pigeonEnableScanDB}')
+    Boolean pigeonEnableScanDB
+
     Map<String, InputThread> inputThreadsByName = [:]
 
     @PostConstruct
@@ -70,7 +73,7 @@ class PigeonService {
                     }
                 }
                 inputThreadsByName.put(inputThread.inputQueue.name, inputThread)
-                if (inputThread.inputQueue.dbScanEnabled) {
+                if (pigeonEnableScanDB) {
                     inputThread.start()
                 }
             }
