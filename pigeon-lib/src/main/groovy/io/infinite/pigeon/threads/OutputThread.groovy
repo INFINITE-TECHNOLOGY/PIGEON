@@ -34,14 +34,14 @@ abstract class OutputThread extends Thread {
         this.outputQueue = outputQueue
         this.inputThread = inputThread
         (1..outputQueue.normalThreadCount).each {
-            SenderThread senderThread = new SenderThread(this, it, applicationContext.environment.getProperty("pigeonOutPluginsDir"))
+            SenderThread senderThread = new SenderThread(this, it)
             applicationContext.autowireCapableBeanFactory.autowireBean(senderThread)
             senderThreadRobin.add(senderThread)
             senderThread.start()
         }
     }
 
-    @BlackBox(level = CarburetorLevel.METHOD)
+    @BlackBox(level = CarburetorLevel.METHOD, suppressExceptions = true)
     void senderEnqueue(OutputMessage outputMessage) {
         SenderThread senderThread = ++senderThreadRobin.iterator()
         outputMessage.status = MessageStatuses.WAITING.value()

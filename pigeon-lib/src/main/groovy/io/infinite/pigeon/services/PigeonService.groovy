@@ -70,7 +70,9 @@ class PigeonService {
                     }
                 }
                 inputThreadsByName.put(inputThread.inputQueue.name, inputThread)
-                inputThread.start()
+                if (inputThread.inputQueue.dbScanEnabled) {
+                    inputThread.start()
+                }
             }
         }
     }

@@ -1,6 +1,5 @@
 package io.infinite.pigeon.threads
 
-
 import groovy.transform.ToString
 import groovy.util.logging.Slf4j
 import io.infinite.blackbox.BlackBox
@@ -16,7 +15,9 @@ import io.infinite.pigeon.repositories.HttpLogRepository
 import io.infinite.pigeon.repositories.OutputMessageRepository
 import io.infinite.supplies.ast.exceptions.ExceptionUtils
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 
+import javax.annotation.PostConstruct
 import java.util.concurrent.LinkedBlockingQueue
 
 @BlackBox(level = CarburetorLevel.METHOD)
@@ -30,33 +31,29 @@ class SenderThread extends Thread {
     @Autowired
     OutputMessageRepository outputMessageRepository
 
+    @Value('${pigeonOutPluginsDir}')
+    String pigeonOutPluginsDir
+
     OutputThread outputThread
 
     LinkedBlockingQueue<OutputMessage> sendingQueue = new LinkedBlockingQueue<>()
 
     GroovyScriptEngine groovyScriptEngine
 
-    SenderThread(OutputThread outputThread, Integer id, String pigeonOutPluginsDir) {
+    SenderThread(OutputThread outputThread, Integer id) {
         super(new ThreadGroup("SENDER"), outputThread.name + "_SENDER_" + id)
         this.outputThread = outputThread
-        this.groovyScriptEngine = new GroovyScriptEngine(pigeonOutPluginsDir, this.class.classLoader)
+    }
+
+    @PostConstruct
+    void initGroovyScriptEngine() {
+        groovyScriptEngine = new GroovyScriptEngine(pigeonOutPluginsDir, this.class.classLoader)
     }
 
     @Override
     void run() {
         while (true) {
-            while (!sendingQueue.isEmpty()) {
-                try {
-                    sendMessage(sendingQueue.poll())
-                } catch (Exception e) {
-                    println("Sender thread exception.")
-                    println(new ExceptionUtils().stacktrace(e))
-                    log.error("Sender thread exception.", e)
-                }
-            }
-            synchronized (this) {
-                this.wait()
-            }
+            sendMessage(sendingQueue.take())
         }
     }
 
@@ -68,6 +65,7 @@ class SenderThread extends Thread {
         return httpRequest
     }
 
+    @BlackBox(level = CarburetorLevel.METHOD, suppressExceptions = true)
     void sendMessage(OutputMessage outputMessage) {
         try {
             Binding binding = new Binding()

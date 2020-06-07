@@ -10,7 +10,6 @@ import io.infinite.pigeon.entities.OutputMessage
 import io.infinite.pigeon.other.MessageStatusSets
 import io.infinite.pigeon.other.MessageStatuses
 import io.infinite.pigeon.repositories.InputMessageRepository
-import io.infinite.supplies.ast.exceptions.ExceptionUtils
 import org.springframework.beans.factory.annotation.Autowired
 
 @BlackBox(level = CarburetorLevel.METHOD)
@@ -32,7 +31,7 @@ class InputThread extends Thread {
         this.inputQueue = inputQueue
     }
 
-    @BlackBox(level = CarburetorLevel.ERROR)
+    @BlackBox(level = CarburetorLevel.ERROR, suppressExceptions = true)
     void mainCycle() {
         Set<InputMessage> inputMessages = inputMessageRepository.findByInputQueueNameAndStatus(inputQueue.name, MessageStatusSets.INPUT_NEW_MESSAGE_STATUSES.value())
         if (inputMessages.size() > 0) {
@@ -90,14 +89,8 @@ class InputThread extends Thread {
     @BlackBox(level = CarburetorLevel.METHOD)
     void run() {
         while (true) {
-            try {
-                mainCycle()
-                sleep(inputQueue.pollPeriodMilliseconds)
-            } catch (Exception e) {
-                println("Input thread exception.")
-                println(new ExceptionUtils().stacktrace(e))
-                log.error("Input thread exception.", e)
-            }
+            mainCycle()
+            sleep(inputQueue.pollPeriodMilliseconds)
         }
     }
 
