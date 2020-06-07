@@ -1,22 +1,25 @@
 package io.infinite.pigeon.threads
 
-import groovy.time.TimeCategory
-import groovy.transform.CompileDynamic
+
+import groovy.transform.ToString
 import groovy.util.logging.Slf4j
 import io.infinite.blackbox.BlackBox
 import io.infinite.carburetor.CarburetorLevel
 import io.infinite.pigeon.config.OutputQueue
-import io.infinite.pigeon.other.MessageStatusSets
 import io.infinite.pigeon.entities.OutputMessage
+import io.infinite.pigeon.other.MessageStatusSets
 import io.infinite.supplies.ast.exceptions.ExceptionUtils
-import org.springframework.context.ApplicationContext
 
-@BlackBox
+import java.time.Duration
+import java.time.Instant
+
+@BlackBox(level = CarburetorLevel.METHOD)
 @Slf4j
+@ToString(includeNames = true, includeFields = true, includeSuper = true)
 class OutputThreadRetry extends OutputThread {
 
-    OutputThreadRetry(OutputQueue outputQueue, InputThread inputThread, ApplicationContext applicationContext) {
-        super(outputQueue, inputThread, applicationContext)
+    OutputThreadRetry(OutputQueue outputQueue, InputThread inputThread) {
+        super(outputQueue, inputThread)
         senderThreadRobin.clear()
         name = name + "_RETRY"
         (1..outputQueue.retryThreadCount).each {
@@ -29,12 +32,8 @@ class OutputThreadRetry extends OutputThread {
     }
 
     @BlackBox(level = CarburetorLevel.ERROR)
-    @CompileDynamic
     LinkedHashSet<OutputMessage> masterQuery(String outputQueueName) {
-        Date maxLastSendDate
-        use(TimeCategory) {
-            maxLastSendDate = (new Date() - outputQueue.resendIntervalSeconds.seconds)
-        }
+        Date maxLastSendDate = (Instant.now() - Duration.ofSeconds(outputQueue.resendIntervalSeconds)).toDate()
         return outputMessageRepository.masterQueryRetry(outputQueueName, MessageStatusSets.OUTPUT_RETRY_MESSAGE_STATUSES.value(), outputQueue.maxRetryCount, maxLastSendDate)
     }
 

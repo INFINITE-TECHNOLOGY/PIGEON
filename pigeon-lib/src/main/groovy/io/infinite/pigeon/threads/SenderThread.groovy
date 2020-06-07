@@ -1,14 +1,17 @@
 package io.infinite.pigeon.threads
 
+
+import groovy.transform.ToString
 import groovy.util.logging.Slf4j
 import io.infinite.blackbox.BlackBox
-import io.infinite.pigeon.config.OutputQueue
+import io.infinite.carburetor.CarburetorLevel
 import io.infinite.http.HttpRequest
 import io.infinite.http.HttpResponse
 import io.infinite.http.SenderAbstract
-import io.infinite.pigeon.other.MessageStatuses
+import io.infinite.pigeon.config.OutputQueue
 import io.infinite.pigeon.entities.HttpLog
 import io.infinite.pigeon.entities.OutputMessage
+import io.infinite.pigeon.other.MessageStatuses
 import io.infinite.pigeon.repositories.HttpLogRepository
 import io.infinite.pigeon.repositories.OutputMessageRepository
 import io.infinite.supplies.ast.exceptions.ExceptionUtils
@@ -16,8 +19,9 @@ import org.springframework.beans.factory.annotation.Autowired
 
 import java.util.concurrent.LinkedBlockingQueue
 
-@BlackBox
+@BlackBox(level = CarburetorLevel.METHOD)
 @Slf4j
+@ToString(includeNames = true, includeFields = true, includeSuper = true)
 class SenderThread extends Thread {
 
     @Autowired
@@ -64,7 +68,6 @@ class SenderThread extends Thread {
         return httpRequest
     }
 
-    @BlackBox
     void sendMessage(OutputMessage outputMessage) {
         try {
             Binding binding = new Binding()

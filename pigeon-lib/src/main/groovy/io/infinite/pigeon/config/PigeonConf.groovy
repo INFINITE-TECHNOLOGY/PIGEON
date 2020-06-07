@@ -7,6 +7,6 @@ import groovy.transform.ToString
 @JsonIgnoreProperties(ignoreUnknown = true)
 class PigeonConf {
 
-    InputQueue[] inputQueues
+    List<InputQueue> inputQueues = []
 
 }

@@ -19,9 +19,8 @@ class OutputQueue {
     String conversionModuleName
     String senderClassName = "io.infinite.pigeon.http.SenderDefaultHttps"
     Long pollPeriodMillisecondsRetry = 60000
-    Long recoveryTryPeriodMillisecondsRetry = 60000
-    Map<String, Object> httpProperties = new HashMap<>()
-    Map<String, Object> extensions = new HashMap<>()
+    Map<String, Object> httpProperties = [:]
+    Map<String, Object> extensions = [:]
     Boolean enabled = true
 
 }

@@ -1,18 +1,20 @@
 package io.infinite.pigeon.threads
 
+import groovy.transform.ToString
 import groovy.util.logging.Slf4j
 import io.infinite.blackbox.BlackBox
 import io.infinite.carburetor.CarburetorLevel
 import io.infinite.pigeon.config.OutputQueue
+import io.infinite.pigeon.entities.OutputMessage
 import io.infinite.pigeon.other.MessageStatuses
 import io.infinite.pigeon.other.RoundRobin
-import io.infinite.pigeon.entities.OutputMessage
 import io.infinite.pigeon.repositories.OutputMessageRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationContext
 
-@BlackBox
+@BlackBox(level = CarburetorLevel.METHOD)
 @Slf4j
+@ToString(includeNames = true, includeFields = true, includeSuper = true)
 abstract class OutputThread extends Thread {
 
     InputThread inputThread
@@ -24,7 +26,10 @@ abstract class OutputThread extends Thread {
     @Autowired
     OutputMessageRepository outputMessageRepository
 
-    OutputThread(OutputQueue outputQueue, InputThread inputThread, ApplicationContext applicationContext) {
+    @Autowired
+    ApplicationContext applicationContext
+
+    OutputThread(OutputQueue outputQueue, InputThread inputThread) {
         super(new ThreadGroup("OUTPUT"), outputQueue.name + "_OUTPUT")
         this.outputQueue = outputQueue
         this.inputThread = inputThread

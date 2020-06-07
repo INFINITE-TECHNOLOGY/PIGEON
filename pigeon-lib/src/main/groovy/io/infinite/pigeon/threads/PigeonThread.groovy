@@ -1,32 +1,30 @@
-package io.infinite.pigeon
+package io.infinite.pigeon.threads
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import groovy.transform.ToString
 import groovy.util.logging.Slf4j
 import io.infinite.blackbox.BlackBox
+import io.infinite.carburetor.CarburetorLevel
 import io.infinite.pigeon.config.PigeonConf
-import io.infinite.pigeon.other.MessageStatusSets
-import io.infinite.pigeon.other.MessageStatuses
 import io.infinite.pigeon.entities.InputMessage
 import io.infinite.pigeon.entities.OutputMessage
+import io.infinite.pigeon.other.MessageStatusSets
+import io.infinite.pigeon.other.MessageStatuses
 import io.infinite.pigeon.repositories.InputMessageRepository
 import io.infinite.pigeon.repositories.OutputMessageRepository
-import io.infinite.pigeon.threads.InputThread
-import io.infinite.pigeon.threads.OutputThread
-import io.infinite.pigeon.threads.OutputThreadNormal
-import io.infinite.pigeon.threads.OutputThreadRetry
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.boot.CommandLineRunner
-import org.springframework.boot.SpringApplication
-import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.context.ApplicationContext
 import org.springframework.core.io.FileSystemResource
-import org.springframework.hateoas.config.EnableHypermediaSupport
+import org.springframework.stereotype.Component
 
-@EnableHypermediaSupport(type = EnableHypermediaSupport.HypermediaType.HAL)
-@SpringBootApplication
+import javax.annotation.PostConstruct
+
+@ToString(includeNames = true, includeFields = true, includeSuper = true)
 @Slf4j
-class App implements CommandLineRunner {
+@Component
+@BlackBox(level = CarburetorLevel.METHOD)
+class PigeonThread extends Thread {
 
     @Autowired
     ApplicationContext applicationContext
@@ -40,19 +38,49 @@ class App implements CommandLineRunner {
     @Value('${pigeonConfFile}')
     FileSystemResource pigeonConfigResource
 
-    static void main(String[] args) {
-        SpringApplication.run(App.class, args)
+    List<InputThread> inputThreads = []
+
+    @PostConstruct
+    void init() {
+        cleanup()
+        log.info("Using Pigeon.json: " + pigeonConfigResource.getFile().getCanonicalPath())
+        PigeonConf pigeon = new ObjectMapper().readValue(pigeonConfigResource.getFile().getText(), PigeonConf.class)
+        pigeon.inputQueues.each { inputQueue ->
+            if (inputQueue.enabled) {
+                InputThread inputThread = new InputThread(inputQueue)
+                applicationContext.autowireCapableBeanFactory.autowireBean(inputThread)
+                inputQueue.outputQueues.each { outputQueue ->
+                    if (outputQueue.enabled) {
+                        OutputThread outputThreadNormal
+                        outputThreadNormal = new OutputThreadNormal(outputQueue, inputThread)
+                        applicationContext.getAutowireCapableBeanFactory().autowireBean(outputThreadNormal)
+                        outputThreadNormal.start()
+                        inputThread.outputThreadsNormal.add(outputThreadNormal)
+                        if (outputQueue.maxRetryCount > 0) {
+                            OutputThread outputThreadRetry
+                            outputThreadRetry = new OutputThreadRetry(outputQueue, inputThread)
+                            applicationContext.getAutowireCapableBeanFactory().autowireBean(outputThreadRetry)
+                            outputThreadRetry.start()
+                            inputThread.outputThreadsRetry.add(outputThreadRetry)
+                        }
+                    }
+                }
+                inputThreads.add(inputThread)
+            }
+        }
     }
 
     @Override
-    void run(String... args) throws Exception {
-        runWithLogging()
+    void run() {
+        inputThreads.each { inputThread ->
+            if (inputThread.inputQueue.dbScanEnabled) {
+                inputThread.start()
+            }
+        }
+        log.info("Started Pigeon.")
     }
 
-    @BlackBox
-    void runWithLogging() {
-        log.info("Using Pigeon.json: " + pigeonConfigResource.getFile().getCanonicalPath())
-        PigeonConf pigeon = new ObjectMapper().readValue(pigeonConfigResource.getFile().getText(), PigeonConf.class)
+    void cleanup() {
         Set<InputMessage> delayedMessages = inputMessageRepository.findByMessageStatusList(MessageStatusSets.INPUT_RENEW_MESSAGE_STATUSES.value())
         delayedMessages.each {
             it.status = MessageStatuses.RENEWED.value()
@@ -65,32 +93,6 @@ class App implements CommandLineRunner {
         }
         outputMessageRepository.saveAll(renewedMessages)
         outputMessageRepository.flush()
-        pigeon.inputQueues.each { inputQueue ->
-            if (inputQueue.enabled) {
-                InputThread inputThread = new InputThread(inputQueue)
-                applicationContext.getAutowireCapableBeanFactory().autowireBean(inputThread)
-                inputQueue.outputQueues.each { outputQueue ->
-                    if (outputQueue.enabled) {
-                        OutputThread outputThreadNormal
-                        outputThreadNormal = new OutputThreadNormal(outputQueue, inputThread, applicationContext)
-                        applicationContext.getAutowireCapableBeanFactory().autowireBean(outputThreadNormal)
-                        outputThreadNormal.start()
-                        inputThread.outputThreadsNormal.add(outputThreadNormal)
-                        if (outputQueue.maxRetryCount > 0) {
-                            OutputThread outputThreadRetry
-                            outputThreadRetry = new OutputThreadRetry(outputQueue, inputThread, applicationContext)
-                            applicationContext.getAutowireCapableBeanFactory().autowireBean(outputThreadRetry)
-                            outputThreadRetry.start()
-                            inputThread.outputThreadsRetry.add(outputThreadRetry)
-                        }
-                    }
-                }
-                if (inputQueue.dbScan) {
-                    inputThread.start()
-                }
-            }
-        }
-        log.info("Started Pigeon.")
     }
 
 }

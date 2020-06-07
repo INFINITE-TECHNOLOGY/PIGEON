@@ -15,6 +15,7 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.web.filter.CommonsRequestLoggingFilter
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
+
 /**
  * Taken from: https://blog.jdriven.com/2016/11/handling-yaml-format-rest-spring-boot/
  */
@@ -53,11 +54,11 @@ class WebMvcConfiguration implements WebMvcConfigurer {
      */
     CommonsRequestLoggingFilter logFilter() {
         CommonsRequestLoggingFilter filter = new CommonsRequestLoggingFilter()
-        filter.includeQueryString= true
-        filter.includePayload= true
-        filter.maxPayloadLength= 100000
-        filter.includeHeaders= false
-        filter.afterMessagePrefix= "REQUEST DATA : "
+        filter.includeQueryString = true
+        filter.includePayload = true
+        filter.maxPayloadLength = 100000
+        filter.includeHeaders = false
+        filter.afterMessagePrefix = "REQUEST DATA : "
         return filter
     }
 

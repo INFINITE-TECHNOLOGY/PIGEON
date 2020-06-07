@@ -18,8 +18,8 @@ interface InputMessageRepository extends JpaRepository<InputMessage, Long> {
     )
 
     Set<InputMessage> findByExternalIdAndSourceName(
-             String externalId,
-             String sourceName
+            String externalId,
+            String sourceName
     )
 
     @Query("""select count(i.id) from InputMessage i

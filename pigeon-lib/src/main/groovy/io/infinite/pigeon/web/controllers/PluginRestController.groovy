@@ -3,6 +3,7 @@ package io.infinite.pigeon.web.controllers
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import groovy.transform.Memoized
 import io.infinite.blackbox.BlackBox
+import io.infinite.carburetor.CarburetorLevel
 import io.infinite.pigeon.repositories.InputMessageRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
@@ -21,7 +22,7 @@ import javax.xml.bind.annotation.XmlAccessorType
 @Component
 @XmlAccessorType(XmlAccessType.NONE)
 @RestController
-@BlackBox
+@BlackBox(level = CarburetorLevel.METHOD)
 class PluginRestController {
 
     @Value('${pigeonInputPluginsRestDir}')

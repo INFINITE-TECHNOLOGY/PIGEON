@@ -9,8 +9,8 @@ class InputQueue {
 
     String name
     Long pollPeriodMilliseconds = 500
-    OutputQueue[] outputQueues
+    List<OutputQueue> outputQueues = []
     Boolean enabled = true
-    Boolean dbScan = false
+    Boolean dbScanEnabled = false
 
 }
