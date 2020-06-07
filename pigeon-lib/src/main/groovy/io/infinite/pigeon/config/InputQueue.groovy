@@ -1,14 +1,16 @@
-package io.infinite.pigeon.model
+package io.infinite.pigeon.config
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import groovy.transform.ToString
 
 @ToString(includeNames = true, includeFields = true)
+@JsonIgnoreProperties(ignoreUnknown = true)
 class InputQueue {
 
     String name
     Long pollPeriodMilliseconds = 500
-    Long recoveryTryPeriodMilliseconds = 60000
     OutputQueue[] outputQueues
     Boolean enabled = true
+    Boolean dbScan = false
 
 }

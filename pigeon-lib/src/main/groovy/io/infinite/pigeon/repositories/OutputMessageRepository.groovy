@@ -1,6 +1,6 @@
-package io.infinite.pigeon.mvc.repositories
+package io.infinite.pigeon.repositories
 
-import io.infinite.pigeon.mvc.entities.OutputMessage
+import io.infinite.pigeon.entities.OutputMessage
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
@@ -38,6 +38,14 @@ interface OutputMessageRepository extends JpaRepository<OutputMessage, Long> {
     LinkedHashSet<OutputMessage> findByInputExternalIdAndSourceName(
             @Param("externalId") String externalId,
             @Param("sourceName") String sourceName
+    )
+
+    @Query("""select o from OutputMessage o
+        where status in :messageStatusList
+        and outputQueueName = :outputQueueName""")
+    Set<OutputMessage> findByStatusListAndOutputQueueName(
+            @Param("messageStatusList") List<String> messageStatusList,
+            @Param("outputQueueName") String outputQueueName
     )
 
 }

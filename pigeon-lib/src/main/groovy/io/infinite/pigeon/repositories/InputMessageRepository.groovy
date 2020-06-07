@@ -1,6 +1,6 @@
-package io.infinite.pigeon.mvc.repositories
+package io.infinite.pigeon.repositories
 
-import io.infinite.pigeon.mvc.entities.InputMessage
+import io.infinite.pigeon.entities.InputMessage
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
@@ -40,6 +40,14 @@ interface InputMessageRepository extends JpaRepository<InputMessage, Long> {
             where status in :messageStatusList""")
     Set<InputMessage> findByMessageStatusList(
             @Param("messageStatusList") List<String> messageStatusList
+    )
+
+    @Query("""select i from InputMessage i
+            where status in :messageStatusList
+            and i.inputQueueName = :inputQueueName""")
+    Set<InputMessage> findByStatusListAndInputQueueName(
+            @Param("messageStatusList") List<String> messageStatusList,
+            @Param("inputQueueName") String inputQueueName
     )
 
 }

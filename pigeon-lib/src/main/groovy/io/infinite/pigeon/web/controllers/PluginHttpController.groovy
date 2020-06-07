@@ -1,9 +1,9 @@
-package io.infinite.pigeon.mvc.controllers
+package io.infinite.pigeon.web.controllers
 
 
 import groovy.transform.Memoized
 import io.infinite.blackbox.BlackBox
-import io.infinite.pigeon.mvc.repositories.InputMessageRepository
+import io.infinite.pigeon.repositories.InputMessageRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Controller

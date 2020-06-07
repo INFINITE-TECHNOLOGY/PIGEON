@@ -1,4 +1,4 @@
-package io.infinite.pigeon.mvc.entities
+package io.infinite.pigeon.entities
 
 import groovy.transform.ToString
 

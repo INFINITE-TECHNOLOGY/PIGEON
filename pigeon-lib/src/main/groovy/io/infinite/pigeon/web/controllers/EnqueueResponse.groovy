@@ -1,4 +1,4 @@
-package io.infinite.pigeon.mvc.controllers
+package io.infinite.pigeon.web.controllers
 
 import groovy.transform.ToString
 

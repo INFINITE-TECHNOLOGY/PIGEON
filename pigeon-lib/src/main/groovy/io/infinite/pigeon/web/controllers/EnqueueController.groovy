@@ -1,11 +1,11 @@
-package io.infinite.pigeon.mvc.controllers
+package io.infinite.pigeon.web.controllers
 
 import groovy.json.JsonBuilder
 import groovy.util.logging.Slf4j
 import io.infinite.blackbox.BlackBox
 import io.infinite.pigeon.other.MessageStatuses
-import io.infinite.pigeon.mvc.entities.InputMessage
-import io.infinite.pigeon.mvc.repositories.InputMessageRepository
+import io.infinite.pigeon.entities.InputMessage
+import io.infinite.pigeon.repositories.InputMessageRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Controller
@@ -55,7 +55,7 @@ class EnqueueController {
         inputMessage.sourceName = sourceName
         inputMessage.inputQueueName = inputQueueName
         inputMessage.payload = payload
-        inputMessage.status = MessageStatuses.NEW
+        inputMessage.status = MessageStatuses.ENQUEUED
         inputMessage.queryParams = new JsonBuilder(httpServletRequest.parameterMap).toString()
         inputMessageRepository.saveAndFlush(inputMessage)
         EnqueueResponse enqueueResponse = new EnqueueResponse()

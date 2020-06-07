@@ -3,13 +3,13 @@ package io.infinite.pigeon
 import com.fasterxml.jackson.databind.ObjectMapper
 import groovy.util.logging.Slf4j
 import io.infinite.blackbox.BlackBox
-import io.infinite.pigeon.model.Pigeon
+import io.infinite.pigeon.config.PigeonConf
 import io.infinite.pigeon.other.MessageStatusSets
 import io.infinite.pigeon.other.MessageStatuses
-import io.infinite.pigeon.mvc.entities.InputMessage
-import io.infinite.pigeon.mvc.entities.OutputMessage
-import io.infinite.pigeon.mvc.repositories.InputMessageRepository
-import io.infinite.pigeon.mvc.repositories.OutputMessageRepository
+import io.infinite.pigeon.entities.InputMessage
+import io.infinite.pigeon.entities.OutputMessage
+import io.infinite.pigeon.repositories.InputMessageRepository
+import io.infinite.pigeon.repositories.OutputMessageRepository
 import io.infinite.pigeon.threads.InputThread
 import io.infinite.pigeon.threads.OutputThread
 import io.infinite.pigeon.threads.OutputThreadNormal
@@ -52,7 +52,7 @@ class App implements CommandLineRunner {
     @BlackBox
     void runWithLogging() {
         log.info("Using Pigeon.json: " + pigeonConfigResource.getFile().getCanonicalPath())
-        Pigeon pigeon = new ObjectMapper().readValue(pigeonConfigResource.getFile().getText(), Pigeon.class)
+        PigeonConf pigeon = new ObjectMapper().readValue(pigeonConfigResource.getFile().getText(), PigeonConf.class)
         Set<InputMessage> delayedMessages = inputMessageRepository.findByMessageStatusList(MessageStatusSets.INPUT_RENEW_MESSAGE_STATUSES.value())
         delayedMessages.each {
             it.status = MessageStatuses.RENEWED.value()
@@ -85,7 +85,9 @@ class App implements CommandLineRunner {
                         }
                     }
                 }
-                inputThread.start()
+                if (inputQueue.dbScan) {
+                    inputThread.start()
+                }
             }
         }
         log.info("Started Pigeon.")

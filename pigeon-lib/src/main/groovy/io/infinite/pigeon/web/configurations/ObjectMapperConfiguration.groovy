@@ -1,4 +1,4 @@
-package io.infinite.pigeon.mvc.conf
+package io.infinite.pigeon.web.configurations
 
 
 import com.fasterxml.jackson.databind.ObjectMapper

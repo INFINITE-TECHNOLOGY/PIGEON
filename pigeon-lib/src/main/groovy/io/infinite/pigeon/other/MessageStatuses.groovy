@@ -12,7 +12,8 @@ enum MessageStatuses {
     DUPLICATE("duplicate"),
     RENEWED("renewed"),
     SENDING("sending"),
-    SPLIT("split")
+    SPLIT("split"),
+    ENQUEUED("enqueued"),
 
     private final String messageStatus
 
