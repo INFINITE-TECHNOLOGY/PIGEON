@@ -11,6 +11,7 @@ import io.infinite.pigeon.other.RoundRobin
 import io.infinite.pigeon.repositories.OutputMessageRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationContext
+import org.springframework.context.annotation.Scope
 import org.springframework.stereotype.Component
 
 import javax.annotation.PostConstruct
@@ -18,9 +19,9 @@ import javax.annotation.PostConstruct
 @BlackBox(level = CarburetorLevel.METHOD)
 @Slf4j
 @ToString(includeNames = true, includeFields = true, includeSuper = true)
+@Component
+@Scope("prototype")
 abstract class OutputThread extends Thread {
-
-    InputThread inputThread
 
     OutputQueue outputQueue
 
@@ -32,17 +33,15 @@ abstract class OutputThread extends Thread {
     @Autowired
     ApplicationContext applicationContext
 
-    OutputThread(OutputQueue outputQueue, InputThread inputThread) {
+    OutputThread(OutputQueue outputQueue) {
         super(new ThreadGroup("OUTPUT"), outputQueue.name + "_OUTPUT")
         this.outputQueue = outputQueue
-        this.inputThread = inputThread
     }
 
     @PostConstruct
     void initSenderThreads() {
-        (1..outputQueue.normalThreadCount).each {
-            SenderThread senderThread = new SenderThread(this, it)
-            applicationContext.autowireCapableBeanFactory.autowireBean(senderThread)
+        (1..outputQueue.normalThreadCount).each { threadCounter ->
+            SenderThread senderThread = applicationContext.getBean(SenderThread.class, outputQueue, "_" + threadCounter)
             senderThreadRobin.add(senderThread)
             senderThread.start()
         }

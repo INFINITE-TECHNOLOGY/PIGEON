@@ -11,10 +11,14 @@ import io.infinite.pigeon.other.MessageStatusSets
 import io.infinite.pigeon.other.MessageStatuses
 import io.infinite.pigeon.repositories.InputMessageRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.annotation.Scope
+import org.springframework.stereotype.Component
 
 @BlackBox(level = CarburetorLevel.METHOD)
 @Slf4j
 @ToString(includeNames = true, includeFields = true, includeSuper = true)
+@Component
+@Scope("prototype")
 class InputThread extends Thread {
 
     InputQueue inputQueue

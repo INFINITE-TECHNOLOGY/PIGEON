@@ -1,6 +1,5 @@
 package io.infinite.pigeon.threads
 
-
 import groovy.transform.ToString
 import groovy.util.logging.Slf4j
 import io.infinite.blackbox.BlackBox
@@ -8,7 +7,8 @@ import io.infinite.carburetor.CarburetorLevel
 import io.infinite.pigeon.config.OutputQueue
 import io.infinite.pigeon.entities.OutputMessage
 import io.infinite.pigeon.other.MessageStatusSets
-import io.infinite.supplies.ast.exceptions.ExceptionUtils
+import org.springframework.context.annotation.Scope
+import org.springframework.stereotype.Component
 
 import java.time.Duration
 import java.time.Instant
@@ -16,16 +16,16 @@ import java.time.Instant
 @BlackBox(level = CarburetorLevel.METHOD)
 @Slf4j
 @ToString(includeNames = true, includeFields = true, includeSuper = true)
+@Component
+@Scope("prototype")
 class OutputThreadRetry extends OutputThread {
 
-    OutputThreadRetry(OutputQueue outputQueue, InputThread inputThread) {
-        super(outputQueue, inputThread)
+    OutputThreadRetry(OutputQueue outputQueue) {
+        super(outputQueue)
         senderThreadRobin.clear()
         name = name + "_RETRY"
-        (1..outputQueue.retryThreadCount).each {
-            SenderThread senderThread = new SenderThread(this, it)
-            senderThread.name = senderThread.name + "_RETRY"
-            applicationContext.autowireCapableBeanFactory.autowireBean(senderThread)
+        (1..outputQueue.retryThreadCount).each { threadCounter ->
+            SenderThread senderThread = applicationContext.getBean(SenderThread.class, outputQueue, "_RETRY_" + threadCounter)
             senderThreadRobin.add(senderThread)
             senderThread.start()
         }
@@ -37,7 +37,7 @@ class OutputThreadRetry extends OutputThread {
         return outputMessageRepository.masterQueryRetry(outputQueueName, MessageStatusSets.OUTPUT_RETRY_MESSAGE_STATUSES.value(), outputQueue.maxRetryCount, maxLastSendDate)
     }
 
-    @BlackBox(level = CarburetorLevel.ERROR)
+    @BlackBox(level = CarburetorLevel.ERROR, suppressExceptions = true)
     void mainCycle() {
         Set<OutputMessage> outputMessages = masterQuery(outputQueue.name)
         if (outputMessages.size() > 0) {
@@ -51,14 +51,8 @@ class OutputThreadRetry extends OutputThread {
     @BlackBox(level = CarburetorLevel.METHOD)
     void run() {
         while (true) {
-            try {
-                mainCycle()
-                sleep(outputQueue.pollPeriodMillisecondsRetry)
-            } catch (Exception e) {
-                println("Output retry thread exception.")
-                println(new ExceptionUtils().stacktrace(e))
-                log.error("Output retry thread exception.", e)
-            }
+            mainCycle()
+            sleep(outputQueue.pollPeriodMillisecondsRetry)
         }
     }
 

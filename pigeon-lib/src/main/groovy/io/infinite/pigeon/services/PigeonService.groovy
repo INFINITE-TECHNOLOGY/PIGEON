@@ -54,19 +54,14 @@ class PigeonService {
         PigeonConf pigeon = new ObjectMapper().readValue(pigeonConfigResource.getFile().getText(), PigeonConf.class)
         pigeon.inputQueues.each { inputQueue ->
             if (inputQueue.enabled) {
-                InputThread inputThread = new InputThread(inputQueue)
-                applicationContext.autowireCapableBeanFactory.autowireBean(inputThread)
+                InputThread inputThread = applicationContext.getBean(InputThread.class, inputQueue)
                 inputQueue.outputQueues.each { outputQueue ->
                     if (outputQueue.enabled) {
-                        OutputThread outputThreadNormal
-                        outputThreadNormal = new OutputThreadNormal(outputQueue, inputThread)
-                        applicationContext.getAutowireCapableBeanFactory().autowireBean(outputThreadNormal)
+                        OutputThreadNormal outputThreadNormal = applicationContext.getBean(OutputThreadNormal.class, outputQueue)
                         outputThreadNormal.start()
                         inputThread.outputThreadsNormal.add(outputThreadNormal)
                         if (outputQueue.maxRetryCount > 0) {
-                            OutputThread outputThreadRetry
-                            outputThreadRetry = new OutputThreadRetry(outputQueue, inputThread)
-                            applicationContext.getAutowireCapableBeanFactory().autowireBean(outputThreadRetry)
+                            OutputThreadRetry outputThreadRetry = applicationContext.getBean(OutputThreadRetry.class, outputQueue)
                             outputThreadRetry.start()
                             inputThread.outputThreadsRetry.add(outputThreadRetry)
                         }

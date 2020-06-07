@@ -2,6 +2,7 @@ package io.infinite.pigeon.config
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import groovy.transform.ToString
+import io.infinite.http.SenderDefaultHttps
 
 @ToString(includeNames = true, includeFields = true)
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -17,7 +18,7 @@ class OutputQueue {
     Integer normalThreadCount = 4
     Integer retryThreadCount = 0
     String conversionModuleName
-    String senderClassName = "io.infinite.pigeon.http.SenderDefaultHttps"
+    String senderClassName = SenderDefaultHttps.name
     Long pollPeriodMillisecondsRetry = 60000
     Map<String, Object> httpProperties = [:]
     Map<String, Object> extensions = [:]

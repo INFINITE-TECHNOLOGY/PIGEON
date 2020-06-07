@@ -16,6 +16,8 @@ import io.infinite.pigeon.repositories.OutputMessageRepository
 import io.infinite.supplies.ast.exceptions.ExceptionUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.context.annotation.Scope
+import org.springframework.stereotype.Component
 
 import javax.annotation.PostConstruct
 import java.util.concurrent.LinkedBlockingQueue
@@ -23,6 +25,8 @@ import java.util.concurrent.LinkedBlockingQueue
 @BlackBox(level = CarburetorLevel.METHOD)
 @Slf4j
 @ToString(includeNames = true, includeFields = true, includeSuper = true)
+@Component
+@Scope("prototype")
 class SenderThread extends Thread {
 
     @Autowired
@@ -34,15 +38,15 @@ class SenderThread extends Thread {
     @Value('${pigeonOutPluginsDir}')
     String pigeonOutPluginsDir
 
-    OutputThread outputThread
+    OutputQueue outputQueue
 
     LinkedBlockingQueue<OutputMessage> sendingQueue = new LinkedBlockingQueue<>()
 
     GroovyScriptEngine groovyScriptEngine
 
-    SenderThread(OutputThread outputThread, Integer id) {
-        super(new ThreadGroup("SENDER"), outputThread.name + "_SENDER_" + id)
-        this.outputThread = outputThread
+    SenderThread(OutputQueue outputQueue, String threadNameSuffix) {
+        super(new ThreadGroup("SENDER"), outputQueue.name + "_SENDER" + threadNameSuffix)
+        this.outputQueue = outputQueue
     }
 
     @PostConstruct
@@ -69,14 +73,14 @@ class SenderThread extends Thread {
     void sendMessage(OutputMessage outputMessage) {
         try {
             Binding binding = new Binding()
-            HttpRequest httpRequest = createHttpRequest(outputThread.outputQueue)
+            HttpRequest httpRequest = createHttpRequest(outputQueue)
             binding.setVariable("outputMessage", outputMessage)
-            binding.setVariable("outputQueue", outputThread.outputQueue)
+            binding.setVariable("outputQueue", outputQueue)
             binding.setVariable("inputMessage", outputMessage.inputMessage)
             binding.setVariable("httpRequest", httpRequest)
             /*\/\/\/\/\/\/\/\/*///<<<<conversion happens here
             try {
-                groovyScriptEngine.run(outputThread.outputQueue.conversionModuleName, binding)
+                groovyScriptEngine.run(outputQueue.conversionModuleName, binding)
             } catch (Exception e) {
                 log.warn("Output plugin exception (Output Message ${outputMessage.id})")
                 outputMessage.exceptionString = new ExceptionUtils().stacktrace(e)
@@ -85,7 +89,7 @@ class SenderThread extends Thread {
                 return
             }
             /*/\/\/\/\/\/\/\/\*/
-            SenderAbstract senderAbstract = Class.forName(outputThread.outputQueue.senderClassName).newInstance() as SenderAbstract
+            SenderAbstract senderAbstract = Class.forName(outputQueue.senderClassName).newInstance() as SenderAbstract
             outputMessage.status = MessageStatuses.SENDING.value()
             outputMessage.attemptsCount = outputMessage.attemptsCount + 1
             outputMessage = outputMessageRepository.saveAndFlush(outputMessage)
@@ -130,7 +134,7 @@ class SenderThread extends Thread {
 
     @Override
     String toString() {
-        return "Thread: " + name + "; OutputQueue: " + outputThread.outputQueue.toString() + "; messages: " + sendingQueue.toString()
+        return "Thread: " + name + "; OutputQueue: " + outputQueue.toString() + "; messages: " + sendingQueue.toString()
     }
 
 }
