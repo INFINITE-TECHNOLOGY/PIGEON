@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired
 @BlackBox(level = CarburetorLevel.METHOD)
 @Slf4j
 @ToString(includeNames = true, includeFields = true, includeSuper = true)
-@BlackBox(level = CarburetorLevel.METHOD)
 class InputThread extends Thread {
 
     InputQueue inputQueue

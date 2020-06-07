@@ -1,4 +1,4 @@
-package io.infinite.pigeon.threads
+package io.infinite.pigeon.services
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import groovy.transform.ToString
@@ -12,19 +12,23 @@ import io.infinite.pigeon.other.MessageStatusSets
 import io.infinite.pigeon.other.MessageStatuses
 import io.infinite.pigeon.repositories.InputMessageRepository
 import io.infinite.pigeon.repositories.OutputMessageRepository
+import io.infinite.pigeon.threads.InputThread
+import io.infinite.pigeon.threads.OutputThread
+import io.infinite.pigeon.threads.OutputThreadNormal
+import io.infinite.pigeon.threads.OutputThreadRetry
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.ApplicationContext
 import org.springframework.core.io.FileSystemResource
-import org.springframework.stereotype.Component
+import org.springframework.stereotype.Service
 
 import javax.annotation.PostConstruct
 
-@ToString(includeNames = true, includeFields = true, includeSuper = true)
+@ToString(includeNames = true, includeFields = true)
 @Slf4j
-@Component
+@Service
 @BlackBox(level = CarburetorLevel.METHOD)
-class PigeonThread extends Thread {
+class PigeonService {
 
     @Autowired
     ApplicationContext applicationContext
@@ -38,7 +42,7 @@ class PigeonThread extends Thread {
     @Value('${pigeonConfFile}')
     FileSystemResource pigeonConfigResource
 
-    List<InputThread> inputThreads = []
+    Map<String, InputThread> inputThreadsByName = [:]
 
     @PostConstruct
     void init() {
@@ -65,19 +69,10 @@ class PigeonThread extends Thread {
                         }
                     }
                 }
-                inputThreads.add(inputThread)
-            }
-        }
-    }
-
-    @Override
-    void run() {
-        inputThreads.each { inputThread ->
-            if (inputThread.inputQueue.dbScanEnabled) {
+                inputThreadsByName.put(inputThread.inputQueue.name, inputThread)
                 inputThread.start()
             }
         }
-        log.info("Started Pigeon.")
     }
 
     void cleanup() {
