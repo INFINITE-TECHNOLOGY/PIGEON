@@ -11,5 +11,6 @@ class InputQueue {
     Long pollPeriodMilliseconds = 500
     List<OutputQueue> outputQueues = []
     Boolean enabled = true
+    Boolean enableScanDB = true
 
 }

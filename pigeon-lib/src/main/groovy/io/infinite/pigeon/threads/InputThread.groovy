@@ -36,7 +36,7 @@ class InputThread extends Thread {
     }
 
     @BlackBox(level = CarburetorLevel.ERROR, suppressExceptions = true)
-    void mainCycle() {
+    void dbScan() {
         Set<InputMessage> inputMessages = inputMessageRepository.findByInputQueueNameAndStatus(inputQueue.name, MessageStatusSets.INPUT_NEW_MESSAGE_STATUSES.value())
         if (inputMessages.size() > 0) {
             inputMessages.each { inputMessage ->
@@ -92,8 +92,8 @@ class InputThread extends Thread {
     @Override
     @BlackBox(level = CarburetorLevel.METHOD)
     void run() {
-        while (true) {
-            mainCycle()
+        while (inputQueue.enableScanDB) {
+            dbScan()
             sleep(inputQueue.pollPeriodMilliseconds)
         }
     }

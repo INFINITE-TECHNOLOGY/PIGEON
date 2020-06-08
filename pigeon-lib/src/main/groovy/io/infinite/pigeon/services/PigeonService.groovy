@@ -13,7 +13,6 @@ import io.infinite.pigeon.other.MessageStatuses
 import io.infinite.pigeon.repositories.InputMessageRepository
 import io.infinite.pigeon.repositories.OutputMessageRepository
 import io.infinite.pigeon.threads.InputThread
-import io.infinite.pigeon.threads.OutputThread
 import io.infinite.pigeon.threads.OutputThreadNormal
 import io.infinite.pigeon.threads.OutputThreadRetry
 import org.springframework.beans.factory.annotation.Autowired
@@ -42,9 +41,6 @@ class PigeonService {
     @Value('${pigeonConfFile}')
     FileSystemResource pigeonConfigResource
 
-    @Value('${pigeonEnableScanDB:true}')
-    Boolean pigeonEnableScanDB
-
     Map<String, InputThread> inputThreadsByName = [:]
 
     @PostConstruct
@@ -68,9 +64,7 @@ class PigeonService {
                     }
                 }
                 inputThreadsByName.put(inputThread.inputQueue.name, inputThread)
-                if (pigeonEnableScanDB) {
-                    inputThread.start()
-                }
+                inputThread.start()
             }
         }
     }
