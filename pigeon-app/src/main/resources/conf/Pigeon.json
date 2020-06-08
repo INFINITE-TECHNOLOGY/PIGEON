@@ -7,6 +7,18 @@
           "name": "GOOGLE",
           "url": "https://google.com",
           "conversionModuleName": "GET.groovy"
+        },
+        {
+          "name": "SELF_SIGNED",
+          "url": "https://self-signed.badssl.com/",
+          "conversionModuleName": "GET.groovy",
+          "senderClassName": "io.infinite.http.SenderDefaultHttpsUnsecure"
+        },
+        {
+          "name": "DOMAIN_NAME_MISMATCH",
+          "url": "https://wrong.host.badssl.com/",
+          "conversionModuleName": "GET.groovy",
+          "senderClassName": "io.infinite.http.SenderDefaultHttpsUnsecure"
         }
       ]
     }

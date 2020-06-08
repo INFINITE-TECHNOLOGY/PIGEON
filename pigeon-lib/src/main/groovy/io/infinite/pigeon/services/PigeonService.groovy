@@ -42,7 +42,7 @@ class PigeonService {
     @Value('${pigeonConfFile}')
     FileSystemResource pigeonConfigResource
 
-    @Value('${pigeonEnableScanDB}')
+    @Value('${pigeonEnableScanDB:true}')
     Boolean pigeonEnableScanDB
 
     Map<String, InputThread> inputThreadsByName = [:]

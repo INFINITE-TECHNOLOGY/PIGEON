@@ -17,7 +17,7 @@ import org.springframework.hateoas.config.EnableHypermediaSupport
 class PigeonApp implements CommandLineRunner {
 
     @Autowired
-    PigeonService pigeonThread
+    PigeonService pigeonService
 
     static void main(String[] args) {
         SpringApplication.run(PigeonApp.class, args)
@@ -25,6 +25,7 @@ class PigeonApp implements CommandLineRunner {
 
     @Override
     void run(String... args) throws Exception {
+        log.debug("pigeonService", pigeonService)
         log.info("Pigeon started.")
     }
 
