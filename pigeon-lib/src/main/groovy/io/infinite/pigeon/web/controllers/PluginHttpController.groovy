@@ -3,7 +3,7 @@ package io.infinite.pigeon.web.controllers
 
 import groovy.transform.Memoized
 import io.infinite.blackbox.BlackBox
-import io.infinite.carburetor.CarburetorLevel
+import io.infinite.blackbox.BlackBoxLevel
 import io.infinite.pigeon.repositories.InputMessageRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
 @Controller
-@BlackBox(level = CarburetorLevel.METHOD)
+@BlackBox(level = BlackBoxLevel.METHOD)
 class PluginHttpController {
 
     @Value('${pigeonInputPluginsHttpDir}')

@@ -3,7 +3,7 @@ package io.infinite.pigeon.threads
 import groovy.transform.ToString
 import groovy.util.logging.Slf4j
 import io.infinite.blackbox.BlackBox
-import io.infinite.carburetor.CarburetorLevel
+import io.infinite.blackbox.BlackBoxLevel
 import io.infinite.pigeon.config.OutputQueue
 import io.infinite.pigeon.entities.OutputMessage
 import io.infinite.pigeon.other.MessageStatusSets
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component
 import java.time.Duration
 import java.time.Instant
 
-@BlackBox(level = CarburetorLevel.METHOD)
+@BlackBox(level = BlackBoxLevel.METHOD)
 @Slf4j
 @ToString(includeNames = true, includeFields = true, includeSuper = true)
 @Component
@@ -31,14 +31,14 @@ class OutputThreadRetry extends OutputThread {
         }
     }
 
-    @BlackBox(level = CarburetorLevel.ERROR)
+    @BlackBox(level = BlackBoxLevel.ERROR)
     LinkedHashSet<OutputMessage> masterQuery(String outputQueueName) {
         Date maxLastSendDate = (Instant.now() - Duration.ofSeconds(outputQueue.resendIntervalSeconds)).toDate()
         return outputMessageRepository.masterQueryRetry(outputQueueName, MessageStatusSets.OUTPUT_RETRY_MESSAGE_STATUSES.value(), outputQueue.maxRetryCount, maxLastSendDate)
     }
 
-    @BlackBox(level = CarburetorLevel.ERROR, suppressExceptions = true)
-    void mainCycle() {
+    @BlackBox(level = BlackBoxLevel.ERROR, suppressExceptions = true)
+    void scanRetry() {
         Set<OutputMessage> outputMessages = masterQuery(outputQueue.name)
         if (outputMessages.size() > 0) {
             outputMessages.each { outputMessage ->
@@ -48,10 +48,10 @@ class OutputThreadRetry extends OutputThread {
     }
 
     @Override
-    @BlackBox(level = CarburetorLevel.METHOD)
+    @BlackBox(level = BlackBoxLevel.METHOD)
     void run() {
         while (true) {
-            mainCycle()
+            scanRetry()
             sleep(outputQueue.pollPeriodMillisecondsRetry)
         }
     }

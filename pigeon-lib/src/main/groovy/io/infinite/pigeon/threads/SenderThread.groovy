@@ -3,7 +3,7 @@ package io.infinite.pigeon.threads
 import groovy.transform.ToString
 import groovy.util.logging.Slf4j
 import io.infinite.blackbox.BlackBox
-import io.infinite.carburetor.CarburetorLevel
+import io.infinite.blackbox.BlackBoxLevel
 import io.infinite.http.HttpRequest
 import io.infinite.http.HttpResponse
 import io.infinite.http.SenderAbstract
@@ -22,7 +22,7 @@ import org.springframework.stereotype.Component
 import javax.annotation.PostConstruct
 import java.util.concurrent.LinkedBlockingQueue
 
-@BlackBox(level = CarburetorLevel.METHOD)
+@BlackBox(level = BlackBoxLevel.METHOD)
 @Slf4j
 @ToString(includeNames = true, includeFields = true, includeSuper = true)
 @Component
@@ -69,7 +69,7 @@ class SenderThread extends Thread {
         return httpRequest
     }
 
-    @BlackBox(level = CarburetorLevel.METHOD, suppressExceptions = true)
+    @BlackBox(level = BlackBoxLevel.METHOD, suppressExceptions = true)
     void sendMessage(OutputMessage outputMessage) {
         try {
             Binding binding = new Binding()

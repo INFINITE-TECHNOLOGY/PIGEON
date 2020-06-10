@@ -3,7 +3,7 @@ package io.infinite.pigeon.web.controllers
 import groovy.json.JsonBuilder
 import groovy.util.logging.Slf4j
 import io.infinite.blackbox.BlackBox
-import io.infinite.carburetor.CarburetorLevel
+import io.infinite.blackbox.BlackBoxLevel
 import io.infinite.pigeon.entities.InputMessage
 import io.infinite.pigeon.other.MessageStatuses
 import io.infinite.pigeon.repositories.InputMessageRepository
@@ -21,7 +21,7 @@ import org.springframework.web.server.ResponseStatusException
 import javax.servlet.http.HttpServletRequest
 
 @Controller
-@BlackBox(level = CarburetorLevel.METHOD)
+@BlackBox(level = BlackBoxLevel.METHOD)
 @Slf4j
 class EnqueueController {
 

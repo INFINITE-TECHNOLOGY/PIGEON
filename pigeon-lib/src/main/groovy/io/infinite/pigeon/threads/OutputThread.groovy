@@ -3,7 +3,7 @@ package io.infinite.pigeon.threads
 import groovy.transform.ToString
 import groovy.util.logging.Slf4j
 import io.infinite.blackbox.BlackBox
-import io.infinite.carburetor.CarburetorLevel
+import io.infinite.blackbox.BlackBoxLevel
 import io.infinite.pigeon.config.OutputQueue
 import io.infinite.pigeon.entities.OutputMessage
 import io.infinite.pigeon.other.MessageStatuses
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component
 
 import javax.annotation.PostConstruct
 
-@BlackBox(level = CarburetorLevel.METHOD)
+@BlackBox(level = BlackBoxLevel.METHOD)
 @Slf4j
 @ToString(includeNames = true, includeFields = true, includeSuper = true)
 @Component
@@ -47,7 +47,7 @@ abstract class OutputThread extends Thread {
         }
     }
 
-    @BlackBox(level = CarburetorLevel.METHOD, suppressExceptions = true)
+    @BlackBox(level = BlackBoxLevel.METHOD, suppressExceptions = true)
     void senderEnqueue(OutputMessage outputMessage) {
         SenderThread senderThread = ++senderThreadRobin.iterator()
         outputMessage.status = MessageStatuses.WAITING.value()

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import groovy.transform.ToString
 import groovy.util.logging.Slf4j
 import io.infinite.blackbox.BlackBox
-import io.infinite.carburetor.CarburetorLevel
+import io.infinite.blackbox.BlackBoxLevel
 import io.infinite.pigeon.config.PigeonConf
 import io.infinite.pigeon.entities.InputMessage
 import io.infinite.pigeon.entities.OutputMessage
@@ -26,8 +26,10 @@ import javax.annotation.PostConstruct
 @ToString(includeNames = true, includeFields = true)
 @Slf4j
 @Service
-@BlackBox(level = CarburetorLevel.METHOD)
+@BlackBox(level = BlackBoxLevel.METHOD)
 class PigeonService {
+
+    static UUID staticUUID = UUID.randomUUID()
 
     @Autowired
     ApplicationContext applicationContext

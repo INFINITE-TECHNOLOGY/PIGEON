@@ -1,8 +1,6 @@
 package io.infinite.pigeon.other
 
-import io.infinite.supplies.ast.exceptions.RuntimeException
-
-class PigeonException extends RuntimeException {
+class PigeonException extends Exception {
 
     PigeonException(String message) {
         super(message)

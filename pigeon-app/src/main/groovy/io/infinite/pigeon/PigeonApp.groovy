@@ -2,8 +2,9 @@ package io.infinite.pigeon
 
 import groovy.util.logging.Slf4j
 import io.infinite.blackbox.BlackBox
-import io.infinite.carburetor.CarburetorLevel
+import io.infinite.blackbox.BlackBoxLevel
 import io.infinite.pigeon.services.PigeonService
+import org.slf4j.MDC
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.SpringApplication
@@ -12,7 +13,7 @@ import org.springframework.hateoas.config.EnableHypermediaSupport
 
 @EnableHypermediaSupport(type = EnableHypermediaSupport.HypermediaType.HAL)
 @SpringBootApplication
-@BlackBox(level = CarburetorLevel.METHOD)
+@BlackBox(level = BlackBoxLevel.METHOD)
 @Slf4j
 class PigeonApp implements CommandLineRunner {
 
@@ -20,6 +21,7 @@ class PigeonApp implements CommandLineRunner {
     PigeonService pigeonService
 
     static void main(String[] args) {
+        MDC.put("instanceUUID", PigeonService.staticUUID.toString())
         SpringApplication.run(PigeonApp.class, args)
     }
 

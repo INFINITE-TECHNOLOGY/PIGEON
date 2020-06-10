@@ -19,6 +19,12 @@
           "url": "https://wrong.host.badssl.com/",
           "conversionModuleName": "GET.groovy",
           "senderClassName": "io.infinite.http.SenderDefaultHttpsUnsecure"
+        },
+        {
+          "name": "PLAINTEXT",
+          "url": "http://http.badssl.com/",
+          "conversionModuleName": "GET.groovy",
+          "senderClassName": "io.infinite.http.SenderDefaultHttps"
         }
       ]
     }

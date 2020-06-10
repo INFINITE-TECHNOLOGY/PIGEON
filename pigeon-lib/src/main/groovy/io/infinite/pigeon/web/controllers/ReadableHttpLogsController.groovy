@@ -3,7 +3,7 @@ package io.infinite.pigeon.web.controllers
 
 import groovy.util.logging.Slf4j
 import io.infinite.blackbox.BlackBox
-import io.infinite.carburetor.CarburetorLevel
+import io.infinite.blackbox.BlackBoxLevel
 import io.infinite.pigeon.entities.HttpLog
 import io.infinite.pigeon.repositories.HttpLogRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody
 import javax.servlet.http.HttpServletRequest
 
 @Controller
-@BlackBox(level = CarburetorLevel.METHOD)
+@BlackBox(level = BlackBoxLevel.METHOD)
 @Slf4j
 class ReadableHttpLogsController {
 

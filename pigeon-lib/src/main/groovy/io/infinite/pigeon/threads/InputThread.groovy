@@ -3,7 +3,7 @@ package io.infinite.pigeon.threads
 import groovy.transform.ToString
 import groovy.util.logging.Slf4j
 import io.infinite.blackbox.BlackBox
-import io.infinite.carburetor.CarburetorLevel
+import io.infinite.blackbox.BlackBoxLevel
 import io.infinite.pigeon.config.InputQueue
 import io.infinite.pigeon.entities.InputMessage
 import io.infinite.pigeon.entities.OutputMessage
@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Scope
 import org.springframework.stereotype.Component
 
-@BlackBox(level = CarburetorLevel.METHOD)
+@BlackBox(level = BlackBoxLevel.METHOD)
 @Slf4j
 @ToString(includeNames = true, includeFields = true, includeSuper = true)
 @Component
@@ -35,7 +35,7 @@ class InputThread extends Thread {
         this.inputQueue = inputQueue
     }
 
-    @BlackBox(level = CarburetorLevel.ERROR, suppressExceptions = true)
+    @BlackBox(level = BlackBoxLevel.ERROR, suppressExceptions = true)
     void dbScan() {
         Set<InputMessage> inputMessages = inputMessageRepository.findByInputQueueNameAndStatus(inputQueue.name, MessageStatusSets.INPUT_NEW_MESSAGE_STATUSES.value())
         if (inputMessages.size() > 0) {
@@ -45,7 +45,7 @@ class InputThread extends Thread {
         }
     }
 
-    @BlackBox(level = CarburetorLevel.ERROR)
+    @BlackBox(level = BlackBoxLevel.ERROR)
     OutputMessage createOutputMessage(InputMessage inputMessage, OutputThread outputThread, MessageStatuses messageStatus) {
         OutputMessage outputMessage = new OutputMessage(inputMessage)
         outputMessage.outputQueueName = outputThread.outputQueue.name
@@ -55,7 +55,7 @@ class InputThread extends Thread {
         return outputMessage
     }
 
-    @BlackBox(level = CarburetorLevel.METHOD)
+    @BlackBox(level = BlackBoxLevel.METHOD)
     void splitInput(InputMessage inputMessage) {
         if (inputMessageRepository.findDuplicates(inputMessage.sourceName, inputMessage.inputQueueName, inputMessage.externalId, inputMessage.id, MessageStatuses.SPLIT.value()) == 0) {
             if (inputMessage.status != MessageStatuses.RENEWED.value()) {
@@ -90,7 +90,7 @@ class InputThread extends Thread {
     }
 
     @Override
-    @BlackBox(level = CarburetorLevel.METHOD)
+    @BlackBox(level = BlackBoxLevel.METHOD)
     void run() {
         while (inputQueue.enableScanDB) {
             dbScan()
