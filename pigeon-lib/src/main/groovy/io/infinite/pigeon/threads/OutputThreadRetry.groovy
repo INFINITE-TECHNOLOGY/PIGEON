@@ -31,15 +31,14 @@ class OutputThreadRetry extends OutputThread {
         }
     }
 
-    @BlackBox(level = BlackBoxLevel.ERROR)
-    LinkedHashSet<OutputMessage> masterQuery(String outputQueueName) {
-        Date maxLastSendDate = (Instant.now() - Duration.ofSeconds(outputQueue.resendIntervalSeconds)).toDate()
-        return outputMessageRepository.masterQueryRetry(outputQueueName, MessageStatusSets.OUTPUT_RETRY_MESSAGE_STATUSES.value(), outputQueue.maxRetryCount, maxLastSendDate)
-    }
-
     @BlackBox(level = BlackBoxLevel.ERROR, suppressExceptions = true)
-    void scanRetry() {
-        Set<OutputMessage> outputMessages = masterQuery(outputQueue.name)
+    void dbScanRetry() {
+        Set<OutputMessage> outputMessages = outputMessageRepository.takeForRetry(
+                outputQueue.name,
+                MessageStatusSets.OUTPUT_RETRY_MESSAGE_STATUSES.value(),
+                outputQueue.maxRetryCount,
+                (Instant.now() - Duration.ofSeconds(outputQueue.resendIntervalSeconds)).toDate()
+        ).sort { it.id }
         if (outputMessages.size() > 0) {
             outputMessages.each { outputMessage ->
                 senderEnqueue(outputMessage)
@@ -51,7 +50,7 @@ class OutputThreadRetry extends OutputThread {
     @BlackBox(level = BlackBoxLevel.METHOD)
     void run() {
         while (true) {
-            scanRetry()
+            dbScanRetry()
             sleep(outputQueue.pollPeriodMillisecondsRetry)
         }
     }

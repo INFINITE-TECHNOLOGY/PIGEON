@@ -2,6 +2,7 @@ package io.infinite.pigeon.repositories
 
 import io.infinite.pigeon.entities.OutputMessage
 import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 import org.springframework.data.rest.core.annotation.RepositoryRestResource
@@ -12,13 +13,14 @@ interface OutputMessageRepository extends JpaRepository<OutputMessage, Long> {
     @Query("select coalesce(max(m.id), 0) from OutputMessage m")
     Long getMaxId()
 
-    @Query("""select o from OutputMessage o
+    @Modifying(clearAutomatically=true, flushAutomatically = true)
+    @Query("""update OutputMessage o
+        set o.lastSendTime = CURRENT_TIMESTAMP
         where outputQueueName = :outputQueueName
         and status in :messageStatusList
         and attemptsCount < :maxRetryCount
-        and lastSendTime < :maxLastSendTime
-        order by id asc""")
-    LinkedHashSet<OutputMessage> masterQueryRetry(
+        and lastSendTime < :maxLastSendTime""")
+    LinkedHashSet<OutputMessage> takeForRetry(
             @Param("outputQueueName") String outputQueueName,
             @Param("messageStatusList") List<String> messageStatusList,
             @Param("maxRetryCount") Integer maxRetryCount,
