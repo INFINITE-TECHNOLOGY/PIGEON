@@ -39,9 +39,9 @@ dependencies {
     compile 'org.codehaus.groovy:groovy-all:2.5.4'
     compile 'org.springframework.boot:spring-boot-starter-data-rest'
     compile 'org.springframework.boot:spring-boot-starter-data-jpa'
-    compile "io.i-t:bobbin:4.0.3"
+    compile "io.i-t:bobbin:4.0.4"
     compile 'io.i-t:blackbox:2.0.1'
-    compile 'io.i-t:http:1.0.5'
+    compile 'io.i-t:http:1.0.6'
     compile 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.9.8'
     compile 'com.h2database:h2:1.4.197'
     compile group: 'com.amazonaws', name: 'aws-java-sdk-s3', version: '1.11.449'

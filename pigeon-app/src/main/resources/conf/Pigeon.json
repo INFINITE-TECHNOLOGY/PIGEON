@@ -21,10 +21,14 @@
           "senderClassName": "io.infinite.http.SenderDefaultHttpsUnsecure"
         },
         {
-          "name": "PLAINTEXT",
-          "url": "http://http.badssl.com/",
+          "name": "NO_CONNECTION",
+          "url": "https://localhost:1234/",
           "conversionModuleName": "GET.groovy",
-          "senderClassName": "io.infinite.http.SenderDefaultHttps"
+          "senderClassName": "io.infinite.http.SenderDefaultHttps",
+          "maxRetryCount": 4,
+          "normalThreadCount": 4,
+          "retryThreadCount": 1,
+          "resendIntervalSeconds": 30
         }
       ]
     }

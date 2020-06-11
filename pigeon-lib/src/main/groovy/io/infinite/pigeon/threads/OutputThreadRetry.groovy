@@ -7,9 +7,12 @@ import io.infinite.blackbox.BlackBoxLevel
 import io.infinite.pigeon.config.OutputQueue
 import io.infinite.pigeon.entities.OutputMessage
 import io.infinite.pigeon.other.MessageStatusSets
+import io.infinite.pigeon.services.PigeonService
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Scope
 import org.springframework.stereotype.Component
 
+import javax.annotation.PostConstruct
 import java.time.Duration
 import java.time.Instant
 
@@ -24,6 +27,10 @@ class OutputThreadRetry extends OutputThread {
         super(outputQueue)
         senderThreadRobin.clear()
         name = name + "_RETRY"
+    }
+
+    @PostConstruct
+    void initSenderRetryThreads() {
         (1..outputQueue.retryThreadCount).each { threadCounter ->
             SenderThread senderThread = applicationContext.getBean(SenderThread.class, outputQueue, "_RETRY_" + threadCounter)
             senderThreadRobin.add(senderThread)
@@ -33,13 +40,22 @@ class OutputThreadRetry extends OutputThread {
 
     @BlackBox(level = BlackBoxLevel.ERROR, suppressExceptions = true)
     void dbScanRetry() {
-        Set<OutputMessage> outputMessages = outputMessageRepository.takeForRetry(
+        Date lastSendTime = (Instant.now() - Duration.ofSeconds(outputQueue.resendIntervalSeconds)).toDate()
+        Integer countToRetry = outputMessageRepository.markForRetry(
                 outputQueue.name,
                 MessageStatusSets.OUTPUT_RETRY_MESSAGE_STATUSES.value(),
                 outputQueue.maxRetryCount,
-                (Instant.now() - Duration.ofSeconds(outputQueue.resendIntervalSeconds)).toDate()
-        ).sort { it.id }
-        if (outputMessages.size() > 0) {
+                lastSendTime,
+                PigeonService.staticUUID
+        )
+        if (countToRetry > 0) {
+            LinkedHashSet<OutputMessage> outputMessages = outputMessageRepository.selectForRetry(
+                    outputQueue.name,
+                    MessageStatusSets.OUTPUT_RETRY_MESSAGE_STATUSES.value(),
+                    outputQueue.maxRetryCount,
+                    lastSendTime,
+                    PigeonService.staticUUID
+            )
             outputMessages.each { outputMessage ->
                 senderEnqueue(outputMessage)
             }

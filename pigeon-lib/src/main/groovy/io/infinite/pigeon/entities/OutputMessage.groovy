@@ -1,6 +1,7 @@
 package io.infinite.pigeon.entities
 
 import groovy.transform.ToString
+import io.infinite.pigeon.services.PigeonService
 
 import javax.persistence.*
 
@@ -29,6 +30,8 @@ class OutputMessage {
     String outputThreadName
 
     String lastSenderThreadName
+
+    UUID instanceUUID = PigeonService.staticUUID
 
     Date insertTime = new Date()
 
