@@ -17,12 +17,11 @@ interface OutputMessageRepository extends JpaRepository<OutputMessage, Long> {
     @Transactional
     @Modifying(clearAutomatically=true, flushAutomatically = true)
     @Query("""update OutputMessage o
-        set o.lastSendTime = CURRENT_TIMESTAMP
+        set instanceUUID = :instanceUUID
         where outputQueueName = :outputQueueName
         and status in :messageStatusList
         and attemptsCount < :maxRetryCount
-        and lastSendTime < :maxLastSendTime
-        and instanceUUID = :instanceUUID""")
+        and lastSendTime < :maxLastSendTime""")
     Integer markForRetry(
             @Param("outputQueueName") String outputQueueName,
             @Param("messageStatusList") List<String> messageStatusList,
