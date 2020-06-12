@@ -1,6 +1,7 @@
 package io.infinite.pigeon.entities
 
 import groovy.transform.ToString
+import io.infinite.pigeon.services.PigeonService
 
 import javax.persistence.*
 
@@ -39,5 +40,7 @@ class InputMessage {
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "Input2output")
     Set<OutputMessage> outputMessages = new HashSet<>()
+
+    UUID instanceUUID = PigeonService.staticUUID
 
 }

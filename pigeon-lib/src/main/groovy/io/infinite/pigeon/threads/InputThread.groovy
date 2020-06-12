@@ -10,6 +10,7 @@ import io.infinite.pigeon.entities.OutputMessage
 import io.infinite.pigeon.other.MessageStatusSets
 import io.infinite.pigeon.other.MessageStatuses
 import io.infinite.pigeon.repositories.InputMessageRepository
+import io.infinite.pigeon.services.PigeonService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Scope
 import org.springframework.stereotype.Component
@@ -36,9 +37,18 @@ class InputThread extends Thread {
     }
 
     @BlackBox(level = BlackBoxLevel.ERROR, suppressExceptions = true)
-    void dbScan() {
-        Set<InputMessage> inputMessages = inputMessageRepository.findByInputQueueNameAndStatus(inputQueue.name, MessageStatusSets.INPUT_NEW_MESSAGE_STATUSES.value())
-        if (inputMessages.size() > 0) {
+    void dbScanSplit() {
+        Integer countToSplit = inputMessageRepository.markForSplit(
+                inputQueue.name,
+                MessageStatusSets.INPUT_NEW_MESSAGE_STATUSES.value(),
+                PigeonService.staticUUID
+        )
+        if (countToSplit > 0) {
+            LinkedHashSet<InputMessage> inputMessages = inputMessageRepository.selectForSplit(
+                    inputQueue.name,
+                    MessageStatusSets.INPUT_NEW_MESSAGE_STATUSES.value(),
+                    PigeonService.staticUUID
+            )
             inputMessages.each { inputMessage ->
                 splitInput(inputMessage)
             }
@@ -92,8 +102,8 @@ class InputThread extends Thread {
     @Override
     @BlackBox(level = BlackBoxLevel.METHOD)
     void run() {
-        while (inputQueue.enableScanDB) {
-            dbScan()
+        while (inputQueue.enableScanDB) {//use same approach as in output retry thread
+            dbScanSplit()
             sleep(inputQueue.pollPeriodMilliseconds)
         }
     }
