@@ -29,8 +29,9 @@ class OutputThreadRetry extends OutputThread {
         name = name + "_RETRY"
     }
 
+    @Override
     @PostConstruct
-    void initSenderRetryThreads() {
+    void initSenderThreads() {
         (1..outputQueue.retryThreadCount).each { threadCounter ->
             SenderThread senderThread = applicationContext.getBean(SenderThread.class, outputQueue, "_RETRY_" + threadCounter)
             senderThreadRobin.add(senderThread)

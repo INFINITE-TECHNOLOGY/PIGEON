@@ -1,6 +1,7 @@
 format: dateTime + delimiter + MDC.get("instanceUUID") + delimiter + level + delimiter + threadName + delimiter + className + delimiter + message
 destinations:
   - name: io.infinite.bobbin.config.ConsoleDestinationConfig
+    formatThrowable: "%format%"
     levels: [warn, error, info]
   - name: io.infinite.bobbin.config.FileDestinationConfig
     levels: [warn, error]
