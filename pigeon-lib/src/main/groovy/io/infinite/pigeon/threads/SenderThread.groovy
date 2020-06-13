@@ -82,7 +82,7 @@ class SenderThread extends Thread {
             try {
                 groovyScriptEngine.run(outputQueue.conversionModuleName, binding)
             } catch (Exception e) {
-                log.warn("Output plugin exception (Output Message ${outputMessage.id})")
+                log.warn("Output plugin exception (Output Message ${outputMessage.id})", e)
                 outputMessage.exceptionString = new ExceptionUtils().stacktrace(e)
                 outputMessage.status = MessageStatuses.EXCEPTION.value()
                 outputMessageRepository.saveAndFlush(outputMessage)
@@ -107,7 +107,7 @@ class SenderThread extends Thread {
         } catch (Exception e) {
             outputMessage.status = MessageStatuses.EXCEPTION.value()
             outputMessage.exceptionString = new ExceptionUtils().stacktrace(e)
-            log.warn("Sending exception (Output Message ${outputMessage.id})")
+            log.warn("Sending exception (Output Message ${outputMessage.id})", e)
         } finally {
             outputMessageRepository.saveAndFlush(outputMessage)
         }

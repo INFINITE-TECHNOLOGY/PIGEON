@@ -1,11 +1,14 @@
 format: dateTime + delimiter + MDC.get("instanceUUID") + delimiter + level + delimiter + threadName + delimiter + className + delimiter + message
 destinations:
   - name: io.infinite.bobbin.config.ConsoleDestinationConfig
-    formatThrowable: "%format%"
+    formatThrowable: "%format% + delimiter + throwable"
     levels: [warn, error, info]
   - name: io.infinite.bobbin.config.FileDestinationConfig
-    levels: [warn, error]
-    fileName: ("./LOGS/WARNINGS_AND_ERRORS_${date}.log")
+    levels: [warn]
+    fileName: ("./LOGS/WARNINGS_${date}.log")
+  - name: io.infinite.bobbin.config.FileDestinationConfig
+    levels: [error]
+    fileName: ("./LOGS/ERRORS_${date}.log")
   - name: io.infinite.bobbin.config.FileDestinationConfig
     packages: [org.springframework.web]
     fileName: ("./LOGS/SPRING_WEB/SPRING_WEB_${date}.log")
