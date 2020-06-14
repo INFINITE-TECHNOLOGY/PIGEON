@@ -1,9 +1,9 @@
 package conf.plugins.output
 
 import io.infinite.http.HttpRequest
-import io.infinite.pigeon.config.OutputQueue
-import io.infinite.pigeon.entities.InputMessage
-import io.infinite.pigeon.entities.OutputMessage
+import io.infinite.pigeon.conf.OutputQueue
+import io.infinite.pigeon.springdatarest.entities.InputMessage
+import io.infinite.pigeon.springdatarest.entities.OutputMessage
 
 InputMessage inputMessage = binding.getVariable("inputMessage") as InputMessage
 OutputMessage outputMessage = binding.getVariable("outputMessage") as OutputMessage

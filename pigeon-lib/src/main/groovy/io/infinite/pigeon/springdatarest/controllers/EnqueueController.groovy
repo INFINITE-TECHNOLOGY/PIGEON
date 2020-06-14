@@ -1,14 +1,14 @@
-package io.infinite.pigeon.web.controllers
+package io.infinite.pigeon.springdatarest.controllers
 
 import groovy.json.JsonBuilder
 import groovy.util.logging.Slf4j
 import io.infinite.blackbox.BlackBox
 import io.infinite.blackbox.BlackBoxLevel
-import io.infinite.pigeon.entities.InputMessage
+import io.infinite.pigeon.springdatarest.entities.InputMessage
 import io.infinite.pigeon.other.MessageStatuses
-import io.infinite.pigeon.repositories.InputMessageRepository
+import io.infinite.pigeon.springdatarest.repositories.InputMessageRepository
 import io.infinite.pigeon.threads.InputThread
-import io.infinite.pigeon.services.PigeonService
+import io.infinite.pigeon.springdatarest.services.PigeonService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpStatus

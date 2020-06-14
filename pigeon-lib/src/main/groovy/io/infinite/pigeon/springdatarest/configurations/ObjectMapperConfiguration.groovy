@@ -1,4 +1,4 @@
-package io.infinite.pigeon.web.configurations
+package io.infinite.pigeon.springdatarest.configurations
 
 
 import com.fasterxml.jackson.databind.ObjectMapper

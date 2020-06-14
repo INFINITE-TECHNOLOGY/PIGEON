@@ -4,11 +4,10 @@ import groovy.transform.ToString
 import groovy.util.logging.Slf4j
 import io.infinite.blackbox.BlackBox
 import io.infinite.blackbox.BlackBoxLevel
-import io.infinite.pigeon.config.OutputQueue
-import io.infinite.pigeon.entities.OutputMessage
+import io.infinite.pigeon.conf.OutputQueue
+import io.infinite.pigeon.springdatarest.entities.OutputMessage
 import io.infinite.pigeon.other.MessageStatusSets
-import io.infinite.pigeon.services.PigeonService
-import org.springframework.beans.factory.annotation.Autowired
+import io.infinite.pigeon.springdatarest.services.PigeonService
 import org.springframework.context.annotation.Scope
 import org.springframework.stereotype.Component
 

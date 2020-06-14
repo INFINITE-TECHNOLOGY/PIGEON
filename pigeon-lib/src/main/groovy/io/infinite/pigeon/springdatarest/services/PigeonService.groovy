@@ -1,17 +1,17 @@
-package io.infinite.pigeon.services
+package io.infinite.pigeon.springdatarest.services
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import groovy.transform.ToString
 import groovy.util.logging.Slf4j
 import io.infinite.blackbox.BlackBox
 import io.infinite.blackbox.BlackBoxLevel
-import io.infinite.pigeon.config.PigeonConf
-import io.infinite.pigeon.entities.InputMessage
-import io.infinite.pigeon.entities.OutputMessage
+import io.infinite.pigeon.conf.PigeonConf
+import io.infinite.pigeon.springdatarest.entities.InputMessage
+import io.infinite.pigeon.springdatarest.entities.OutputMessage
 import io.infinite.pigeon.other.MessageStatusSets
 import io.infinite.pigeon.other.MessageStatuses
-import io.infinite.pigeon.repositories.InputMessageRepository
-import io.infinite.pigeon.repositories.OutputMessageRepository
+import io.infinite.pigeon.springdatarest.repositories.InputMessageRepository
+import io.infinite.pigeon.springdatarest.repositories.OutputMessageRepository
 import io.infinite.pigeon.threads.InputThread
 import io.infinite.pigeon.threads.OutputThreadNormal
 import io.infinite.pigeon.threads.OutputThreadRetry

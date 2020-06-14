@@ -1,4 +1,4 @@
-package io.infinite.pigeon.config
+package io.infinite.pigeon.conf
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import groovy.transform.ToString

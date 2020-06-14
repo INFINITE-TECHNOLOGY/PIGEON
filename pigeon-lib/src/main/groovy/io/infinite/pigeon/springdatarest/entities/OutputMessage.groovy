@@ -1,7 +1,7 @@
-package io.infinite.pigeon.entities
+package io.infinite.pigeon.springdatarest.entities
 
 import groovy.transform.ToString
-import io.infinite.pigeon.services.PigeonService
+import io.infinite.pigeon.springdatarest.services.PigeonService
 
 import javax.persistence.*
 

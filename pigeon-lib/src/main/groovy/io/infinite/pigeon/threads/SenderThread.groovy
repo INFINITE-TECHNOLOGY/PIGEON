@@ -7,12 +7,12 @@ import io.infinite.blackbox.BlackBoxLevel
 import io.infinite.http.HttpRequest
 import io.infinite.http.HttpResponse
 import io.infinite.http.SenderAbstract
-import io.infinite.pigeon.config.OutputQueue
-import io.infinite.pigeon.entities.HttpLog
-import io.infinite.pigeon.entities.OutputMessage
+import io.infinite.pigeon.conf.OutputQueue
+import io.infinite.pigeon.springdatarest.entities.HttpLog
+import io.infinite.pigeon.springdatarest.entities.OutputMessage
 import io.infinite.pigeon.other.MessageStatuses
-import io.infinite.pigeon.repositories.HttpLogRepository
-import io.infinite.pigeon.repositories.OutputMessageRepository
+import io.infinite.pigeon.springdatarest.repositories.HttpLogRepository
+import io.infinite.pigeon.springdatarest.repositories.OutputMessageRepository
 import io.infinite.supplies.ast.exceptions.ExceptionUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
@@ -89,7 +89,7 @@ class SenderThread extends Thread {
                 return
             }
             /*/\/\/\/\/\/\/\/\*/
-            SenderAbstract senderAbstract = Class.forName(outputQueue.senderClassName).newInstance() as SenderAbstract
+            SenderAbstract senderAbstract = Class.forName(fixOldPackageName(outputQueue.senderClassName)).newInstance() as SenderAbstract
             outputMessage.status = MessageStatuses.SENDING.value()
             outputMessage.attemptsCount = outputMessage.attemptsCount + 1
             outputMessage = outputMessageRepository.saveAndFlush(outputMessage)
@@ -135,6 +135,10 @@ class SenderThread extends Thread {
     @Override
     String toString() {
         return "Thread: " + name + "; OutputQueue: " + outputQueue.toString() + "; messages: " + sendingQueue.toString()
+    }
+
+    String fixOldPackageName(String oldPackageName) {
+        return oldPackageName.replace("io.infinite.pigeon.http.", "io.infinite.http.")
     }
 
 }

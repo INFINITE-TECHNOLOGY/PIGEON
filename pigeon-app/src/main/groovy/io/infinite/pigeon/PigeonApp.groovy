@@ -3,7 +3,7 @@ package io.infinite.pigeon
 import groovy.util.logging.Slf4j
 import io.infinite.blackbox.BlackBox
 import io.infinite.blackbox.BlackBoxLevel
-import io.infinite.pigeon.services.PigeonService
+import io.infinite.pigeon.springdatarest.services.PigeonService
 import org.slf4j.MDC
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.CommandLineRunner

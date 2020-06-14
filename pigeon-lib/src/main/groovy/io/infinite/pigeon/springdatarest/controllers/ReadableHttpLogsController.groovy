@@ -1,11 +1,11 @@
-package io.infinite.pigeon.web.controllers
+package io.infinite.pigeon.springdatarest.controllers
 
 
 import groovy.util.logging.Slf4j
 import io.infinite.blackbox.BlackBox
 import io.infinite.blackbox.BlackBoxLevel
-import io.infinite.pigeon.entities.HttpLog
-import io.infinite.pigeon.repositories.HttpLogRepository
+import io.infinite.pigeon.springdatarest.entities.HttpLog
+import io.infinite.pigeon.springdatarest.repositories.HttpLogRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Controller
