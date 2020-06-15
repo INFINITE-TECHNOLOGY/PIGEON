@@ -9,7 +9,7 @@ plugins {
     id "idea"
     id "jacoco"
     id "org.springframework.boot" version "2.2.6.RELEASE"
-    id "io.spring.dependency-management" version "1.0.6.RELEASE"
+    id "io.spring.dependency-management" version "1.0.9.RELEASE"
     id "enterprise.groovy.plugin" version "1.0.5"
 }
 
@@ -20,7 +20,7 @@ bootJar {
     version = '1.1.0'
 }
 
-ext['groovy.version'] = '2.5.4'
+ext['groovy.version'] = '2.5.10'
 sourceCompatibility = 1.8
 group = "io.i-t"
 version = "1.1.0"
@@ -31,7 +31,6 @@ repositories {
     maven {
         url "https://dl.bintray.com/infinite-technology/io.i-t"
     }
-    mavenLocal()
 }
 
 sourceSets {
@@ -40,8 +39,8 @@ sourceSets {
 }
 
 dependencies {
+    compile 'org.codehaus.groovy:groovy-all:2.5.10'
     compile project(':pigeon-lib')
-    compile 'org.codehaus.groovy:groovy-all:2.5.4'
 }
 
 task sourceJar(type: Jar) {
