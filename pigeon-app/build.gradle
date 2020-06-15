@@ -23,7 +23,7 @@ bootJar {
 ext['groovy.version'] = '2.5.10'
 sourceCompatibility = 1.8
 group = "io.i-t"
-version = "1.1.0"
+version = "1.1.1"
 description = "HTTP Message Broker"
 
 repositories {
