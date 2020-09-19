@@ -1,15 +1,5 @@
-# Infinite Technology ∞ Pigeon 🕊
 
-|Attribute\Release type|Stable|
-|----------------------|------|
-|Version|1.0.x|
-|Branch|[master](https://github.com/INFINITE-TECHNOLOGY/PIGEON)|
-|CI Build status|[![Build Status](https://travis-ci.com/INFINITE-TECHNOLOGY/PIGEON.svg?branch=master)](https://travis-ci.com/INFINITE-TECHNOLOGY/PIGEON)|
-|Test coverage|[![codecov](https://codecov.io/gh/INFINITE-TECHNOLOGY/PIGEON/branch/master/graphs/badge.svg)](https://codecov.io/gh/INFINITE-TECHNOLOGY/PIGEON/branch/master/graphs)|
-|Library (Maven)|[oss.jfrog.org snapshot](https://oss.jfrog.org/artifactory/webapp/#/artifacts/browse/tree/General/oss-snapshot-local/io/infinite/pigeon/1.0.0-SNAPSHOT)|
-|Heroku|![Heroku](https://heroku-badge.herokuapp.com/?app=pigeon-public&root=/pigeon/inputMessages)|
-
-## Purpose
+## Introduction
 
 `Pigeon` is an end-user server application (HTTP Message Broker) designed for distribution of text messages in HTTP format.
 
@@ -38,10 +28,6 @@ It is having some useful features to help survive in the daily routines and bure
 - Complete documentation
 - Simple configuration using only 1 file
 - Supports enterprise security features
-
-## Documentation
-
-* [**Pigeon Documentation**](https://github.com/INFINITE-TECHNOLOGY/PIGEON/wiki)
 
 ## Technology stack
 
